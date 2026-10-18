@@ -26,9 +26,19 @@ USASPENDING_PARSED_JSONL = PARSED_DIR / "usaspending_awards.jsonl"
 TEXT_CHUNKS_JSONL = PARSED_DIR / "text_chunks.jsonl"
 FIGURE_BBOXES_JSON = FIGURES_DIR / "figure_bboxes.json"
 
+# Storage paths
+TRI_GRAPH_DB_PATH = STORAGE_DIR / "meia_tri_graph_registry.db"
+ORG_GRAPHML_PATH = STORAGE_DIR / "org_kg.graphml"
+TECH_GRAPHML_PATH = STORAGE_DIR / "tech_kg.graphml"
+CRM_GRAPHML_PATH = STORAGE_DIR / "crm_graph.graphml"
+FEDERATED_GRAPHML_PATH = STORAGE_DIR / "federated_epistemic_graph.graphml"
+VDB_CHUNKS_PATH = STORAGE_DIR / "vdb_chunks_contextual.json"
+VDB_ENTITIES_PATH = STORAGE_DIR / "vdb_entities.json"
+
 # Multimodal extraction parameters
 RENDER_DPI = 180
 MAX_CHUNK_TOKENS = 400
 CHUNK_OVERLAP_TOKENS = 50
 EMBEDDING_MODEL_NAME = "BAAI/bge-large-en-v1.5"
 EMBEDDING_DIM = 1024
+

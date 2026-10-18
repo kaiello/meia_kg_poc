@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="edge_id" attr.type="string"/>
+<key id="d5" for="edge" attr.name="edge_type" attr.type="string"/>
+<key id="d4" for="node" attr.name="skos_concepts" attr.type="string"/>
+<key id="d3" for="node" attr.name="bfo_category" attr.type="string"/>
+<key id="d2" for="node" attr.name="graph_domain" attr.type="string"/>
+<key id="d1" for="node" attr.name="label" attr.type="string"/>
+<key id="d0" for="graph" attr.name="name" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">MEIA CRM Graph</data>
+<node id="crm:submission_26705">
+  <data key="d1">Vulcan Submission #26705 (Albacore)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_triaged">
+  <data key="d1">Stage: Triaged</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:poc_cameron_matthews">
+  <data key="d1">Technical POC: Cameron Matthews (US Navy Civ)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">Role</data>
+  <data key="d4">["twenty_crm:Person"]</data>
+</node>
+<node id="crm:obs_26705_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): Rapid scale requires a clear d</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): $5M-10M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): $500K/unit now at 1 unit/month</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): SECRET // REL FVEY</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:submission_25615">
+  <data key="d1">Vulcan Submission #25615 (Voltage Vessels, LLC)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_submitted">
+  <data key="d1">Stage: Submitted</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:obs_25615_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): Scales through U.S. compoundin</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): &lt;$5M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): $8 to $15 per kg pellet. $100.</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): I do not have an active securi</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:submission_27268">
+  <data key="d1">Vulcan Submission #27268 (T2S Solutions (T2S, LLC))</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_sme_review">
+  <data key="d1">Stage: SME Review</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:obs_27268_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): SW solution currently integrat</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): $5M-10M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): TBD, Gov purpose rights SW; co</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): TOP SECRET // SCI (4-Pack)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<edge source="crm:submission_26705" target="crm:stage_triaged" id="0">
+  <data key="d5">[:IN_PIPELINE_STAGE]</data>
+  <data key="d6">edge:crm:submission_26705_crm:stage_triaged</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:poc_cameron_matthews" id="0">
+  <data key="d5">[:DESIGNATES_CONTACT]</data>
+  <data key="d6">edge:crm:submission_26705_crm:poc_cameron_matthews</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q4_supply_constraints" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_26705_crm:obs_26705_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q5_funding_to_scale" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_26705_crm:obs_26705_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q6_unit_cost" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_26705_crm:obs_26705_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q12_security_preference" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_26705_crm:obs_26705_q12_security_preference</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:stage_submitted" id="0">
+  <data key="d5">[:IN_PIPELINE_STAGE]</data>
+  <data key="d6">edge:crm:submission_25615_crm:stage_submitted</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q4_supply_constraints" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_25615_crm:obs_25615_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q5_funding_to_scale" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_25615_crm:obs_25615_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q6_unit_cost" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_25615_crm:obs_25615_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q12_security_preference" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_25615_crm:obs_25615_q12_security_preference</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:stage_sme_review" id="0">
+  <data key="d5">[:IN_PIPELINE_STAGE]</data>
+  <data key="d6">edge:crm:submission_27268_crm:stage_sme_review</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q4_supply_constraints" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_27268_crm:obs_27268_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q5_funding_to_scale" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_27268_crm:obs_27268_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q6_unit_cost" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_27268_crm:obs_27268_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q12_security_preference" id="0">
+  <data key="d5">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d6">edge:crm:submission_27268_crm:obs_27268_q12_security_preference</data>
+</edge>
+</graph></graphml>

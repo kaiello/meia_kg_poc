@@ -1,0 +1,358 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="edge_id" attr.type="string"/>
+<key id="d5" for="edge" attr.name="edge_type" attr.type="string"/>
+<key id="d4" for="node" attr.name="skos_concepts" attr.type="string"/>
+<key id="d3" for="node" attr.name="bfo_category" attr.type="string"/>
+<key id="d2" for="node" attr.name="graph_domain" attr.type="string"/>
+<key id="d1" for="node" attr.name="label" attr.type="string"/>
+<key id="d0" for="graph" attr.name="name" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">MEIA Organization Graph</data>
+<node id="org:albacore">
+  <data key="d1">Albacore</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:albacore_subcat">
+  <data key="d1">Albacore Classification: Startup</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="org:voltage_vessels">
+  <data key="d1">Voltage Vessels, LLC</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:voltage_vessels_subcat">
+  <data key="d1">Voltage Vessels, LLC Classification: Startup</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="org:t2s_solutions">
+  <data key="d1">T2S Solutions (T2S, LLC)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:t2s_solutions_subcat">
+  <data key="d1">T2S Solutions (T2S, LLC) Classification: </data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="org:fluor_federal">
+  <data key="d1">Fluor Federal Services Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:fluor_corp">
+  <data key="d1">FLUOR CORPORATION</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:dedt0007774">
+  <data key="d1">Contract DEDT0007774 ($505,920,242.52)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr423f00000123">
+  <data key="d1">Contract 70FBR423F00000123 ($115,969,886.24)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8024f00000079">
+  <data key="d1">Contract 70FB8024F00000079 ($115,542,591.92)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8024f00000039">
+  <data key="d1">Contract 70FB8024F00000039 ($102,520,254.28)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8021f00000130">
+  <data key="d1">Contract 70FB8021F00000130 ($43,156,624.20)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8026f00000077">
+  <data key="d1">Contract 70FB8026F00000077 ($38,440,010.75)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr425f00000042">
+  <data key="d1">Contract 70FBR425F00000042 ($33,266,722.30)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8023f00000036">
+  <data key="d1">Contract 70FB8023F00000036 ($17,914,219.90)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr425f00000054">
+  <data key="d1">Contract 70FBR425F00000054 ($13,760,584.89)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8019f00000026">
+  <data key="d1">Contract 70FB8019F00000026 ($12,991,275.02)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="org:klas_gov">
+  <data key="d1">Klas Government Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:parent_nllhg2hknsh3">
+  <data key="d1">KLAS TELECOM SERVICES INC.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:m0026411p0469">
+  <data key="d1">Contract M0026411P0469 ($740,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:w91rus15p0115">
+  <data key="d1">Contract W91RUS15P0115 ($627,892.10)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:djf151200p0008575">
+  <data key="d1">Contract DJF151200P0008575 ($604,053.45)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:0001">
+  <data key="d1">Contract 0001 ($400,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa445214c0018">
+  <data key="d1">Contract FA445214C0018 ($323,769.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:19aqmm20p2084">
+  <data key="d1">Contract 19AQMM20P2084 ($258,790.68)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa701412c3024">
+  <data key="d1">Contract FA701412C3024 ($256,794.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:w91rus21p0061">
+  <data key="d1">Contract W91RUS21P0061 ($226,475.25)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:19aqmm19p2308">
+  <data key="d1">Contract 19AQMM19P2308 ($181,255.50)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa570217p0174">
+  <data key="d1">Contract FA570217P0174 ($150,417.97)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="org:uei_l3t9vhgp44d1">
+  <data key="d1">L3T9VHGP44D1</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:prometheus_intelligence_inc">
+  <data key="d1">Prometheus Intelligence, Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:parent_pw8dt7rk5261">
+  <data key="d1">PROMETHEUS INTELLIGENCE, INC.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:w91crb26pa025">
+  <data key="d1">Contract W91CRB26PA025 ($937,500.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:692m1526p00126">
+  <data key="d1">Contract 692M1526P00126 ($248,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa864926p0253">
+  <data key="d1">Contract FA864926P0253 ($108,605.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="org:prometheus_intelligence">
+  <data key="d1">Prometheus Intelligence Technology LLC</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="award:697dck_24_c_00237">
+  <data key="d1">Contract 697DCK-24-C-00237 ($2,398,500.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<edge source="org:albacore" target="org_class:albacore_subcat" id="0">
+  <data key="d5">[:CLASSIFIED_UNDER]</data>
+  <data key="d6">edge:org:albacore_org_class:albacore_subcat</data>
+</edge>
+<edge source="org:voltage_vessels" target="org_class:voltage_vessels_subcat" id="0">
+  <data key="d5">[:CLASSIFIED_UNDER]</data>
+  <data key="d6">edge:org:voltage_vessels_org_class:voltage_vessels_subcat</data>
+</edge>
+<edge source="org:t2s_solutions" target="org_class:t2s_solutions_subcat" id="0">
+  <data key="d5">[:CLASSIFIED_UNDER]</data>
+  <data key="d6">edge:org:t2s_solutions_org_class:t2s_solutions_subcat</data>
+</edge>
+<edge source="org:fluor_federal" target="org:fluor_corp" id="0">
+  <data key="d5">[:SUBSIDIARY_OF]</data>
+  <data key="d6">edge:org:fluor_federal_org:fluor_corp</data>
+</edge>
+<edge source="org:fluor_federal" target="award:dedt0007774" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:dedt0007774</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr423f00000123" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fbr423f00000123</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8024f00000079" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8024f00000079</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8024f00000039" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8024f00000039</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8021f00000130" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8021f00000130</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8026f00000077" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8026f00000077</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr425f00000042" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fbr425f00000042</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8023f00000036" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8023f00000036</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr425f00000054" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fbr425f00000054</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8019f00000026" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:fluor_federal_award:70fb8019f00000026</data>
+</edge>
+<edge source="org:klas_gov" target="org:parent_nllhg2hknsh3" id="0">
+  <data key="d5">[:SUBSIDIARY_OF]</data>
+  <data key="d6">edge:org:klas_gov_org:parent_nllhg2hknsh3</data>
+</edge>
+<edge source="org:klas_gov" target="award:m0026411p0469" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:m0026411p0469</data>
+</edge>
+<edge source="org:klas_gov" target="award:w91rus15p0115" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:w91rus15p0115</data>
+</edge>
+<edge source="org:klas_gov" target="award:djf151200p0008575" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:djf151200p0008575</data>
+</edge>
+<edge source="org:klas_gov" target="award:0001" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:0001</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa445214c0018" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:fa445214c0018</data>
+</edge>
+<edge source="org:klas_gov" target="award:19aqmm20p2084" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:19aqmm20p2084</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa701412c3024" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:fa701412c3024</data>
+</edge>
+<edge source="org:klas_gov" target="award:w91rus21p0061" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:w91rus21p0061</data>
+</edge>
+<edge source="org:klas_gov" target="award:19aqmm19p2308" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:19aqmm19p2308</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa570217p0174" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:klas_gov_award:fa570217p0174</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="org:parent_pw8dt7rk5261" id="0">
+  <data key="d5">[:SUBSIDIARY_OF]</data>
+  <data key="d6">edge:org:prometheus_intelligence_inc_org:parent_pw8dt7rk5261</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:w91crb26pa025" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:prometheus_intelligence_inc_award:w91crb26pa025</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:692m1526p00126" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:prometheus_intelligence_inc_award:692m1526p00126</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:fa864926p0253" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:prometheus_intelligence_inc_award:fa864926p0253</data>
+</edge>
+<edge source="org:prometheus_intelligence" target="award:697dck_24_c_00237" id="0">
+  <data key="d5">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d6">edge:org:prometheus_intelligence_award:697dck_24_c_00237</data>
+</edge>
+</graph></graphml>

@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="edge_id" attr.type="string"/>
+<key id="d5" for="edge" attr.name="edge_type" attr.type="string"/>
+<key id="d4" for="node" attr.name="skos_concepts" attr.type="string"/>
+<key id="d3" for="node" attr.name="bfo_category" attr.type="string"/>
+<key id="d2" for="node" attr.name="graph_domain" attr.type="string"/>
+<key id="d1" for="node" attr.name="label" attr.type="string"/>
+<key id="d0" for="graph" attr.name="name" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">MEIA Technology Graph</data>
+<node id="tech:ghostfin_uuv">
+  <data key="d1">Ghostfin: Long-Range, Hybrid Electric Medium UUV</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:UnmannedUnderwaterVehicles", "meia:CounterC5ISRT", "meia:CollaborativeAutonomy"]</data>
+</node>
+<node id="eval:ghostfin_uuv_readiness">
+  <data key="d1">Readiness: TRL-6 MRL-8 IRL-6</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_ghostfin_uuv">
+  <data key="d1">Operational Problem: Ghostfin: Long-Range, Hybrid Electr</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="tech:ghostfin_range">
+  <data key="d1">1000 nautical miles</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_endurance">
+  <data key="d1">30 days</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_payload">
+  <data key="d1">250 lbs modular payload</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_portability">
+  <data key="d1">4-man carryable</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_propulsion">
+  <data key="d1">hybrid-electric powertrain</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="demo:sonic_spear_26">
+  <data key="d1">SONIC SPEAR 26 Exercise</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:silent_swarm_26">
+  <data key="d1">Silent Swarm 2026</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:repmus_26">
+  <data key="d1">NATO REPMUS / Maritime Big Play</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:nswc_pc_purchase">
+  <data key="d1">NSWC Panama City T&amp;E</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:afsim_ghostfin">
+  <data key="d1">AFSIM Engagement Simulation Model</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="tech:voltvessel_energy">
+  <data key="d1">VoltVessel Maritime High-Density Energy Module</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:PowerAndEnergyStorage", "meia:ContestedLogistics"]</data>
+</node>
+<node id="eval:voltvessel_energy_readiness">
+  <data key="d1">Readiness: TRL-8 MRL-9 IRL-7</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_voltvessel_energy">
+  <data key="d1">Operational Problem: VoltVessel Maritime High-Density En</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="tech:tactical_microgrid">
+  <data key="d1">Tactical Micro-Grid Hybrid Energy &amp; Storage System</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:PowerAndEnergyStorage", "meia:ExpeditionaryEnergy"]</data>
+</node>
+<node id="eval:tactical_microgrid_readiness">
+  <data key="d1">Readiness: TRL-5 MRL-3 IRL-7</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_tactical_microgrid">
+  <data key="d1">Operational Problem: Tactical Micro-Grid Hybrid Energy &amp;</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="tech:klas_voyager">
+  <data key="d1">Klas Voyager Modular Tactical Communications</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:TacticalCommunications", "meia:C5ISRT"]</data>
+</node>
+<node id="tech:prometheus_energy_ai">
+  <data key="d1">Prometheus Spatial Energy Optimization Engine</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:ArtificialIntelligence", "meia:OperationalEnergy"]</data>
+</node>
+<edge source="tech:ghostfin_uuv" target="eval:ghostfin_uuv_readiness" id="0">
+  <data key="d5">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_eval:ghostfin_uuv_readiness</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:jop_ghostfin_uuv" id="0">
+  <data key="d5">[:ADDRESSES_JOP]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:jop_ghostfin_uuv</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_range" id="0">
+  <data key="d5">[:CLAIMS_CAPABILITY]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:ghostfin_range</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_endurance" id="0">
+  <data key="d5">[:CLAIMS_CAPABILITY]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:ghostfin_endurance</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_payload" id="0">
+  <data key="d5">[:CLAIMS_CAPABILITY]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:ghostfin_payload</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_portability" id="0">
+  <data key="d5">[:CLAIMS_CAPABILITY]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:ghostfin_portability</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_propulsion" id="0">
+  <data key="d5">[:CLAIMS_CAPABILITY]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_tech:ghostfin_propulsion</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:sonic_spear_26" id="0">
+  <data key="d5">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_demo:sonic_spear_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:silent_swarm_26" id="0">
+  <data key="d5">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_demo:silent_swarm_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:repmus_26" id="0">
+  <data key="d5">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_demo:repmus_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:nswc_pc_purchase" id="0">
+  <data key="d5">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_demo:nswc_pc_purchase</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:afsim_ghostfin" id="0">
+  <data key="d5">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d6">edge:tech:ghostfin_uuv_demo:afsim_ghostfin</data>
+</edge>
+<edge source="tech:voltvessel_energy" target="eval:voltvessel_energy_readiness" id="0">
+  <data key="d5">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d6">edge:tech:voltvessel_energy_eval:voltvessel_energy_readiness</data>
+</edge>
+<edge source="tech:voltvessel_energy" target="tech:jop_voltvessel_energy" id="0">
+  <data key="d5">[:ADDRESSES_JOP]</data>
+  <data key="d6">edge:tech:voltvessel_energy_tech:jop_voltvessel_energy</data>
+</edge>
+<edge source="tech:tactical_microgrid" target="eval:tactical_microgrid_readiness" id="0">
+  <data key="d5">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d6">edge:tech:tactical_microgrid_eval:tactical_microgrid_readiness</data>
+</edge>
+<edge source="tech:tactical_microgrid" target="tech:jop_tactical_microgrid" id="0">
+  <data key="d5">[:ADDRESSES_JOP]</data>
+  <data key="d6">edge:tech:tactical_microgrid_tech:jop_tactical_microgrid</data>
+</edge>
+</graph></graphml>

@@ -1,0 +1,1039 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d9" for="edge" attr.name="match_method" attr.type="string"/>
+<key id="d8" for="edge" attr.name="link_id" attr.type="string"/>
+<key id="d7" for="edge" attr.name="edge_id" attr.type="string"/>
+<key id="d6" for="edge" attr.name="edge_type" attr.type="string"/>
+<key id="d5" for="node" attr.name="locator_type" attr.type="string"/>
+<key id="d4" for="node" attr.name="skos_concepts" attr.type="string"/>
+<key id="d3" for="node" attr.name="bfo_category" attr.type="string"/>
+<key id="d2" for="node" attr.name="graph_domain" attr.type="string"/>
+<key id="d1" for="node" attr.name="label" attr.type="string"/>
+<key id="d0" for="graph" attr.name="name" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">MEIA Federated Epistemic Graph</data>
+<node id="org:albacore">
+  <data key="d1">Albacore</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:albacore_subcat">
+  <data key="d1">Albacore Classification: Startup</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="tech:ghostfin_uuv">
+  <data key="d1">Ghostfin: Long-Range, Hybrid Electric Medium UUV</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:UnmannedUnderwaterVehicles", "meia:CounterC5ISRT", "meia:CollaborativeAutonomy"]</data>
+</node>
+<node id="eval:ghostfin_uuv_readiness">
+  <data key="d1">Readiness: TRL-6 MRL-8 IRL-6</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_ghostfin_uuv">
+  <data key="d1">Operational Problem: Ghostfin: Long-Range, Hybrid Electr</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="tech:ghostfin_range">
+  <data key="d1">1000 nautical miles</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_endurance">
+  <data key="d1">30 days</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_payload">
+  <data key="d1">250 lbs modular payload</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_portability">
+  <data key="d1">4-man carryable</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="tech:ghostfin_propulsion">
+  <data key="d1">hybrid-electric powertrain</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:CapabilityClaim"]</data>
+</node>
+<node id="demo:sonic_spear_26">
+  <data key="d1">SONIC SPEAR 26 Exercise</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:silent_swarm_26">
+  <data key="d1">Silent Swarm 2026</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:repmus_26">
+  <data key="d1">NATO REPMUS / Maritime Big Play</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:nswc_pc_purchase">
+  <data key="d1">NSWC Panama City T&amp;E</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="demo:afsim_ghostfin">
+  <data key="d1">AFSIM Engagement Simulation Model</data>
+  <data key="d2">TECH</data>
+  <data key="d3">Process</data>
+  <data key="d4">["meia:DemonstrationEvent"]</data>
+</node>
+<node id="crm:submission_26705">
+  <data key="d1">Vulcan Submission #26705 (Albacore)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_triaged">
+  <data key="d1">Stage: Triaged</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:poc_cameron_matthews">
+  <data key="d1">Technical POC: Cameron Matthews (US Navy Civ)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">Role</data>
+  <data key="d4">["twenty_crm:Person"]</data>
+</node>
+<node id="crm:obs_26705_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): Rapid scale requires a clear d</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): $5M-10M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): $500K/unit now at 1 unit/month</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_26705_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): SECRET // REL FVEY</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="org:voltage_vessels">
+  <data key="d1">Voltage Vessels, LLC</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:voltage_vessels_subcat">
+  <data key="d1">Voltage Vessels, LLC Classification: Startup</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="tech:voltvessel_energy">
+  <data key="d1">VoltVessel Maritime High-Density Energy Module</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:PowerAndEnergyStorage", "meia:ContestedLogistics"]</data>
+</node>
+<node id="eval:voltvessel_energy_readiness">
+  <data key="d1">Readiness: TRL-8 MRL-9 IRL-7</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_voltvessel_energy">
+  <data key="d1">Operational Problem: VoltVessel Maritime High-Density En</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="crm:submission_25615">
+  <data key="d1">Vulcan Submission #25615 (Voltage Vessels, LLC)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_submitted">
+  <data key="d1">Stage: Submitted</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:obs_25615_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): Scales through U.S. compoundin</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): &lt;$5M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): $8 to $15 per kg pellet. $100.</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_25615_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): I do not have an active securi</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="org:t2s_solutions">
+  <data key="d1">T2S Solutions (T2S, LLC)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:SmallBusiness", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org_class:t2s_solutions_subcat">
+  <data key="d1">T2S Solutions (T2S, LLC) Classification: </data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:SocioeconomicDesignation"]</data>
+</node>
+<node id="tech:tactical_microgrid">
+  <data key="d1">Tactical Micro-Grid Hybrid Energy &amp; Storage System</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:PowerAndEnergyStorage", "meia:ExpeditionaryEnergy"]</data>
+</node>
+<node id="eval:tactical_microgrid_readiness">
+  <data key="d1">Readiness: TRL-5 MRL-3 IRL-7</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:ReadinessAssessment"]</data>
+</node>
+<node id="tech:jop_tactical_microgrid">
+  <data key="d1">Operational Problem: Tactical Micro-Grid Hybrid Energy &amp;</data>
+  <data key="d2">TECH</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["meia:JointOperationalProblem"]</data>
+</node>
+<node id="crm:submission_27268">
+  <data key="d1">Vulcan Submission #27268 (T2S Solutions (T2S, LLC))</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CapabilitySubmission"]</data>
+</node>
+<node id="crm:stage_sme_review">
+  <data key="d1">Stage: SME Review</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:PipelineStage"]</data>
+</node>
+<node id="crm:obs_27268_q4_supply_constraints">
+  <data key="d1">Commercial Obs (q4_supply_constraints): SW solution currently integrat</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q5_funding_to_scale">
+  <data key="d1">Commercial Obs (q5_funding_to_scale): $5M-10M</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q6_unit_cost">
+  <data key="d1">Commercial Obs (q6_unit_cost): TBD, Gov purpose rights SW; co</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="crm:obs_27268_q12_security_preference">
+  <data key="d1">Commercial Obs (q12_security_preference): TOP SECRET // SCI (4-Pack)</data>
+  <data key="d2">CRM</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["twenty_crm:CommercialObservation"]</data>
+</node>
+<node id="org:fluor_federal">
+  <data key="d1">Fluor Federal Services Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:fluor_corp">
+  <data key="d1">FLUOR CORPORATION</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:dedt0007774">
+  <data key="d1">Contract DEDT0007774 ($505,920,242.52)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr423f00000123">
+  <data key="d1">Contract 70FBR423F00000123 ($115,969,886.24)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8024f00000079">
+  <data key="d1">Contract 70FB8024F00000079 ($115,542,591.92)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8024f00000039">
+  <data key="d1">Contract 70FB8024F00000039 ($102,520,254.28)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8021f00000130">
+  <data key="d1">Contract 70FB8021F00000130 ($43,156,624.20)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8026f00000077">
+  <data key="d1">Contract 70FB8026F00000077 ($38,440,010.75)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr425f00000042">
+  <data key="d1">Contract 70FBR425F00000042 ($33,266,722.30)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8023f00000036">
+  <data key="d1">Contract 70FB8023F00000036 ($17,914,219.90)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fbr425f00000054">
+  <data key="d1">Contract 70FBR425F00000054 ($13,760,584.89)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:70fb8019f00000026">
+  <data key="d1">Contract 70FB8019F00000026 ($12,991,275.02)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="org:klas_gov">
+  <data key="d1">Klas Government Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:parent_nllhg2hknsh3">
+  <data key="d1">KLAS TELECOM SERVICES INC.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:m0026411p0469">
+  <data key="d1">Contract M0026411P0469 ($740,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:w91rus15p0115">
+  <data key="d1">Contract W91RUS15P0115 ($627,892.10)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:djf151200p0008575">
+  <data key="d1">Contract DJF151200P0008575 ($604,053.45)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:0001">
+  <data key="d1">Contract 0001 ($400,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa445214c0018">
+  <data key="d1">Contract FA445214C0018 ($323,769.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:19aqmm20p2084">
+  <data key="d1">Contract 19AQMM20P2084 ($258,790.68)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa701412c3024">
+  <data key="d1">Contract FA701412C3024 ($256,794.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:w91rus21p0061">
+  <data key="d1">Contract W91RUS21P0061 ($226,475.25)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:19aqmm19p2308">
+  <data key="d1">Contract 19AQMM19P2308 ($181,255.50)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa570217p0174">
+  <data key="d1">Contract FA570217P0174 ($150,417.97)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="tech:klas_voyager">
+  <data key="d1">Klas Voyager Modular Tactical Communications</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:TacticalCommunications", "meia:C5ISRT"]</data>
+</node>
+<node id="org:uei_l3t9vhgp44d1">
+  <data key="d1">L3T9VHGP44D1</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:prometheus_intelligence_inc">
+  <data key="d1">Prometheus Intelligence, Inc.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="org:parent_pw8dt7rk5261">
+  <data key="d1">PROMETHEUS INTELLIGENCE, INC.</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:ParentCorporation"]</data>
+</node>
+<node id="award:w91crb26pa025">
+  <data key="d1">Contract W91CRB26PA025 ($937,500.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:692m1526p00126">
+  <data key="d1">Contract 692M1526P00126 ($248,000.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="award:fa864926p0253">
+  <data key="d1">Contract FA864926P0253 ($108,605.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="org:prometheus_intelligence">
+  <data key="d1">Prometheus Intelligence Technology LLC</data>
+  <data key="d2">ORG</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["org:FederalPrimeContractor", "org:DefenseIndustrialBase"]</data>
+</node>
+<node id="award:697dck_24_c_00237">
+  <data key="d1">Contract 697DCK-24-C-00237 ($2,398,500.00)</data>
+  <data key="d2">ORG</data>
+  <data key="d3">InformationContentEntity</data>
+  <data key="d4">["org:ContractAward", "org:FPDSPrimeAward"]</data>
+</node>
+<node id="tech:prometheus_energy_ai">
+  <data key="d1">Prometheus Spatial Energy Optimization Engine</data>
+  <data key="d2">TECH</data>
+  <data key="d3">MaterialEntity</data>
+  <data key="d4">["osra:ArtificialIntelligence", "meia:OperationalEnergy"]</data>
+</node>
+<node id="evid:vulcan_26705_c1">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C1</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c2">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C2</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c3">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C3</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c4">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C4</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c5">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C5</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c6">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C6</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c7">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C7</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c8">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C8</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c9">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C9</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c10">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C10</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c11">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C11</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c12">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C12</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c13">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C13</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c14">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C14</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c15">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C15</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c16">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C16</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c17">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C17</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c18">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C18</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c19">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C19</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c20">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C20</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c21">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C21</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c22">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C22</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c23">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C23</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c24">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C24</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c25">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C25</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c26">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C26</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c27">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C27</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c28">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C28</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c29">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C29</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c30">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C30</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c31">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C31</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c32">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C32</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c33">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C33</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c34">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C34</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c35">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C35</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c36">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C36</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c37">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C37</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c38">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C38</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c39">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C39</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c40">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C40</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c41">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C41</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c42">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C42</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c43">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C43</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c44">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C44</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c45">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C45</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c46">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C46</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c47">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C47</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c48">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C48</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c49">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C49</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<node id="evid:vulcan_26705_c50">
+  <data key="d1">MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C50</data>
+  <data key="d2">EVIDENCE</data>
+  <data key="d5">SPREADSHEET_CELL</data>
+</node>
+<edge source="org:albacore" target="org_class:albacore_subcat" id="0">
+  <data key="d6">[:CLASSIFIED_UNDER]</data>
+  <data key="d7">edge:org:albacore_org_class:albacore_subcat</data>
+</edge>
+<edge source="org:albacore" target="tech:ghostfin_uuv" id="0">
+  <data key="d6">[:DEVELOPS_OFFERING]</data>
+  <data key="d8">link:org:albacore_tech:ghostfin_uuv</data>
+  <data key="d9">CAGE_EXACT</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="eval:ghostfin_uuv_readiness" id="0">
+  <data key="d6">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_eval:ghostfin_uuv_readiness</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:jop_ghostfin_uuv" id="0">
+  <data key="d6">[:ADDRESSES_JOP]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:jop_ghostfin_uuv</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_range" id="0">
+  <data key="d6">[:CLAIMS_CAPABILITY]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:ghostfin_range</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_endurance" id="0">
+  <data key="d6">[:CLAIMS_CAPABILITY]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:ghostfin_endurance</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_payload" id="0">
+  <data key="d6">[:CLAIMS_CAPABILITY]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:ghostfin_payload</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_portability" id="0">
+  <data key="d6">[:CLAIMS_CAPABILITY]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:ghostfin_portability</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="tech:ghostfin_propulsion" id="0">
+  <data key="d6">[:CLAIMS_CAPABILITY]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_tech:ghostfin_propulsion</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:sonic_spear_26" id="0">
+  <data key="d6">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_demo:sonic_spear_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:silent_swarm_26" id="0">
+  <data key="d6">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_demo:silent_swarm_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:repmus_26" id="0">
+  <data key="d6">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_demo:repmus_26</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:nswc_pc_purchase" id="0">
+  <data key="d6">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_demo:nswc_pc_purchase</data>
+</edge>
+<edge source="tech:ghostfin_uuv" target="demo:afsim_ghostfin" id="0">
+  <data key="d6">[:PARTICIPATED_IN_DEMO]</data>
+  <data key="d7">edge:tech:ghostfin_uuv_demo:afsim_ghostfin</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:stage_triaged" id="0">
+  <data key="d6">[:IN_PIPELINE_STAGE]</data>
+  <data key="d7">edge:crm:submission_26705_crm:stage_triaged</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:poc_cameron_matthews" id="0">
+  <data key="d6">[:DESIGNATES_CONTACT]</data>
+  <data key="d7">edge:crm:submission_26705_crm:poc_cameron_matthews</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q4_supply_constraints" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_26705_crm:obs_26705_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q5_funding_to_scale" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_26705_crm:obs_26705_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q6_unit_cost" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_26705_crm:obs_26705_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_26705" target="crm:obs_26705_q12_security_preference" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_26705_crm:obs_26705_q12_security_preference</data>
+</edge>
+<edge source="crm:submission_26705" target="org:albacore" id="0">
+  <data key="d6">[:SUBMITTED_BY_ORG]</data>
+  <data key="d8">link:crm:submission_26705_org:albacore</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="crm:submission_26705" target="tech:ghostfin_uuv" id="0">
+  <data key="d6">[:EVALUATES_OFFERING]</data>
+  <data key="d8">link:crm:submission_26705_tech:ghostfin_uuv</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="org:voltage_vessels" target="org_class:voltage_vessels_subcat" id="0">
+  <data key="d6">[:CLASSIFIED_UNDER]</data>
+  <data key="d7">edge:org:voltage_vessels_org_class:voltage_vessels_subcat</data>
+</edge>
+<edge source="org:voltage_vessels" target="tech:voltvessel_energy" id="0">
+  <data key="d6">[:DEVELOPS_OFFERING]</data>
+  <data key="d8">link:org:voltage_vessels_tech:voltvessel_energy</data>
+  <data key="d9">CAGE_EXACT</data>
+</edge>
+<edge source="tech:voltvessel_energy" target="eval:voltvessel_energy_readiness" id="0">
+  <data key="d6">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d7">edge:tech:voltvessel_energy_eval:voltvessel_energy_readiness</data>
+</edge>
+<edge source="tech:voltvessel_energy" target="tech:jop_voltvessel_energy" id="0">
+  <data key="d6">[:ADDRESSES_JOP]</data>
+  <data key="d7">edge:tech:voltvessel_energy_tech:jop_voltvessel_energy</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:stage_submitted" id="0">
+  <data key="d6">[:IN_PIPELINE_STAGE]</data>
+  <data key="d7">edge:crm:submission_25615_crm:stage_submitted</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q4_supply_constraints" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_25615_crm:obs_25615_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q5_funding_to_scale" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_25615_crm:obs_25615_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q6_unit_cost" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_25615_crm:obs_25615_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_25615" target="crm:obs_25615_q12_security_preference" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_25615_crm:obs_25615_q12_security_preference</data>
+</edge>
+<edge source="crm:submission_25615" target="org:voltage_vessels" id="0">
+  <data key="d6">[:SUBMITTED_BY_ORG]</data>
+  <data key="d8">link:crm:submission_25615_org:voltage_vessels</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="crm:submission_25615" target="tech:voltvessel_energy" id="0">
+  <data key="d6">[:EVALUATES_OFFERING]</data>
+  <data key="d8">link:crm:submission_25615_tech:voltvessel_energy</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="org:t2s_solutions" target="org_class:t2s_solutions_subcat" id="0">
+  <data key="d6">[:CLASSIFIED_UNDER]</data>
+  <data key="d7">edge:org:t2s_solutions_org_class:t2s_solutions_subcat</data>
+</edge>
+<edge source="org:t2s_solutions" target="tech:tactical_microgrid" id="0">
+  <data key="d6">[:DEVELOPS_OFFERING]</data>
+  <data key="d8">link:org:t2s_solutions_tech:tactical_microgrid</data>
+  <data key="d9">VULCAN_ROW</data>
+</edge>
+<edge source="tech:tactical_microgrid" target="eval:tactical_microgrid_readiness" id="0">
+  <data key="d6">[:HAS_READINESS_ASSESSMENT]</data>
+  <data key="d7">edge:tech:tactical_microgrid_eval:tactical_microgrid_readiness</data>
+</edge>
+<edge source="tech:tactical_microgrid" target="tech:jop_tactical_microgrid" id="0">
+  <data key="d6">[:ADDRESSES_JOP]</data>
+  <data key="d7">edge:tech:tactical_microgrid_tech:jop_tactical_microgrid</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:stage_sme_review" id="0">
+  <data key="d6">[:IN_PIPELINE_STAGE]</data>
+  <data key="d7">edge:crm:submission_27268_crm:stage_sme_review</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q4_supply_constraints" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_27268_crm:obs_27268_q4_supply_constraints</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q5_funding_to_scale" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_27268_crm:obs_27268_q5_funding_to_scale</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q6_unit_cost" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_27268_crm:obs_27268_q6_unit_cost</data>
+</edge>
+<edge source="crm:submission_27268" target="crm:obs_27268_q12_security_preference" id="0">
+  <data key="d6">[:HAS_COMMERCIAL_OBSERVATION]</data>
+  <data key="d7">edge:crm:submission_27268_crm:obs_27268_q12_security_preference</data>
+</edge>
+<edge source="crm:submission_27268" target="org:t2s_solutions" id="0">
+  <data key="d6">[:SUBMITTED_BY_ORG]</data>
+  <data key="d8">link:crm:submission_27268_org:t2s_solutions</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="crm:submission_27268" target="tech:tactical_microgrid" id="0">
+  <data key="d6">[:EVALUATES_OFFERING]</data>
+  <data key="d8">link:crm:submission_27268_tech:tactical_microgrid</data>
+  <data key="d9">VULCAN_ID_EXACT</data>
+</edge>
+<edge source="org:fluor_federal" target="org:fluor_corp" id="0">
+  <data key="d6">[:SUBSIDIARY_OF]</data>
+  <data key="d7">edge:org:fluor_federal_org:fluor_corp</data>
+</edge>
+<edge source="org:fluor_federal" target="award:dedt0007774" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:dedt0007774</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr423f00000123" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fbr423f00000123</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8024f00000079" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8024f00000079</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8024f00000039" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8024f00000039</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8021f00000130" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8021f00000130</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8026f00000077" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8026f00000077</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr425f00000042" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fbr425f00000042</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8023f00000036" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8023f00000036</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fbr425f00000054" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fbr425f00000054</data>
+</edge>
+<edge source="org:fluor_federal" target="award:70fb8019f00000026" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:fluor_federal_award:70fb8019f00000026</data>
+</edge>
+<edge source="org:klas_gov" target="org:parent_nllhg2hknsh3" id="0">
+  <data key="d6">[:SUBSIDIARY_OF]</data>
+  <data key="d7">edge:org:klas_gov_org:parent_nllhg2hknsh3</data>
+</edge>
+<edge source="org:klas_gov" target="award:m0026411p0469" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:m0026411p0469</data>
+</edge>
+<edge source="org:klas_gov" target="award:w91rus15p0115" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:w91rus15p0115</data>
+</edge>
+<edge source="org:klas_gov" target="award:djf151200p0008575" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:djf151200p0008575</data>
+</edge>
+<edge source="org:klas_gov" target="award:0001" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:0001</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa445214c0018" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:fa445214c0018</data>
+</edge>
+<edge source="org:klas_gov" target="award:19aqmm20p2084" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:19aqmm20p2084</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa701412c3024" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:fa701412c3024</data>
+</edge>
+<edge source="org:klas_gov" target="award:w91rus21p0061" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:w91rus21p0061</data>
+</edge>
+<edge source="org:klas_gov" target="award:19aqmm19p2308" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:19aqmm19p2308</data>
+</edge>
+<edge source="org:klas_gov" target="award:fa570217p0174" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:klas_gov_award:fa570217p0174</data>
+</edge>
+<edge source="org:klas_gov" target="tech:klas_voyager" id="0">
+  <data key="d6">[:DEVELOPS_OFFERING]</data>
+  <data key="d8">link:org:klas_gov_tech:klas_voyager</data>
+  <data key="d9">UEI_EXACT</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="org:parent_pw8dt7rk5261" id="0">
+  <data key="d6">[:SUBSIDIARY_OF]</data>
+  <data key="d7">edge:org:prometheus_intelligence_inc_org:parent_pw8dt7rk5261</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:w91crb26pa025" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:prometheus_intelligence_inc_award:w91crb26pa025</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:692m1526p00126" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:prometheus_intelligence_inc_award:692m1526p00126</data>
+</edge>
+<edge source="org:prometheus_intelligence_inc" target="award:fa864926p0253" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:prometheus_intelligence_inc_award:fa864926p0253</data>
+</edge>
+<edge source="org:prometheus_intelligence" target="award:697dck_24_c_00237" id="0">
+  <data key="d6">[:HOLDS_PRIME_AWARD]</data>
+  <data key="d7">edge:org:prometheus_intelligence_award:697dck_24_c_00237</data>
+</edge>
+<edge source="org:prometheus_intelligence" target="tech:prometheus_energy_ai" id="0">
+  <data key="d6">[:DEVELOPS_OFFERING]</data>
+  <data key="d8">link:org:prometheus_intelligence_tech:prometheus_energy_ai</data>
+  <data key="d9">UEI_EXACT</data>
+</edge>
+<edge source="tech:prometheus_energy_ai" target="award:697dck_24_c_00237" id="0">
+  <data key="d6">[:VALIDATED_BY_CONTRACT]</data>
+  <data key="d8">link:tech:prometheus_energy_ai_award:697dck_24_c_00237</data>
+  <data key="d9">AWARD_ID_EXACT</data>
+</edge>
+</graph></graphml>
