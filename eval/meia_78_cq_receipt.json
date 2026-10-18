@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "receipt_id": "receipt:meia:78cq:1792363788",
-  "generated_at": "2026-10-18T22:49:48.290844+00:00",
+  "receipt_id": "receipt:meia:78cq:1792364354",
+  "generated_at": "2026-10-18T22:59:14.130765+00:00",
   "cryptographic_fingerprints": {
     "meia_poc_manifest_sha256": "f30ffdd3ca88200c19f5ea31b3afe54e0872b7d57e722cfa2f48a0289d77f028",
     "tri_graph_registry_db_sha256": "e9cb58f07e924a1b3e4d4789ff95fe2b5b81ea803ca5e5a2834a525a19ac8e0a",
@@ -17,8 +17,8 @@
   },
   "scorecard": {
     "total_cqs": 78,
-    "elapsed_seconds": 12.2,
-    "avg_seconds_per_cq": 0.156,
+    "elapsed_seconds": 11.99,
+    "avg_seconds_per_cq": 0.154,
     "route_accuracy_pct": 100.0,
     "status_accuracy_pct": 100.0,
     "epistemic_audit_pass_rate_pct": 100.0,
