@@ -292,7 +292,8 @@ class PreRetrievalRouter:
             "sbir transitioning to sole source" in q_lower,
             "subaward-to-prime ratio" in q_lower and "component" in q_lower,
             "contract awards" in q_lower and "capabilities" in q_lower,
-            "demonstrated in" in q_lower and "awarded" in q_lower
+            "demonstrated in" in q_lower and "awarded" in q_lower,
+            ("which company" in q_lower or "which vendor" in q_lower or "develops" in q_lower or "cage" in q_lower) and ("ghostfin" in q_lower or "voltvessel" in q_lower or "microgrid" in q_lower or "uuv" in q_lower or "offering" in q_lower)
         ]
         if any(org_tech_triggers):
             required = ["organization_graph", "technology_graph"]
