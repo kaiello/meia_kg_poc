@@ -94,6 +94,10 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
         .badge-spine { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
         .badge-vectors { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
         .badge-airgap { background: rgba(34, 197, 94, 0.15); color: var(--status-green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-cell { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-chunk { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .badge-award { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-policy { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 
         .search-container {
             background: var(--surface-dark);
@@ -434,9 +438,24 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 document.getElementById('citationCount').innerText = citations.length + ' Anchors';
 
                 if (citations.length > 0) {
-                    citations.slice(0, 8).forEach((c, idx) => {
+                    citations.slice(0, 12).forEach((c, idx) => {
                         const li = document.createElement('li');
-                        li.innerText = `[${idx+1}] ${c}`;
+                        let badgeType = 'GRAPH';
+                        let badgeClass = 'badge-spine';
+                        if (c.includes('!')) {
+                            badgeType = 'CELL';
+                            badgeClass = 'badge-cell';
+                        } else if (c.startsWith('doc:')) {
+                            badgeType = 'CHUNK';
+                            badgeClass = 'badge-chunk';
+                        } else if (c.startsWith('usaspending:') || c.startsWith('node:award:') || c.startsWith('evid:award:')) {
+                            badgeType = 'AWARD';
+                            badgeClass = 'badge-award';
+                        } else if (c.startsWith('policy:')) {
+                            badgeType = 'POLICY';
+                            badgeClass = 'badge-policy';
+                        }
+                        li.innerHTML = `<span class="badge ${badgeClass}" style="margin-right: 6px; font-size: 10px; padding: 2px 6px;">[${badgeType}]</span>[${idx+1}] ${c}`;
                         cList.appendChild(li);
                     });
                 } else {

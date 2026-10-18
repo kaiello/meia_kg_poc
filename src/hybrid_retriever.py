@@ -92,6 +92,8 @@ class ScopedHybridRetriever:
             tables_to_query.append(("fts_tech", "TECH"))
         if "crm_graph" in selected_modules:
             tables_to_query.append(("fts_crm", "CRM"))
+        if not tables_to_query and "evidence_graph" in selected_modules:
+            tables_to_query.extend([("fts_org", "ORG"), ("fts_tech", "TECH"), ("fts_crm", "CRM")])
 
         for tbl, domain in tables_to_query:
             sql = f"SELECT node_id, rank, all_text FROM {tbl} WHERE {tbl} MATCH ? ORDER BY rank ASC LIMIT ?"
@@ -130,6 +132,8 @@ class ScopedHybridRetriever:
             allowed_domains.add("TECH")
         if "crm_graph" in selected_modules:
             allowed_domains.add("CRM")
+        if not allowed_domains and "evidence_graph" in selected_modules:
+            allowed_domains.update(["ORG", "TECH", "CRM"])
 
         dense_matches = []
 

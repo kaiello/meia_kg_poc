@@ -277,15 +277,30 @@ class PreRetrievalRouter:
             "module capability gate", "where that module is disabled", "afsim digital engineering"
         ]
         if any(pt in q_lower for pt in provenance_triggers):
+            req_modules = ["evidence_graph", "technology_graph", "organization_graph", "crm_graph"]
+            if "where that module is disabled" in q_lower or "module capability gate" in q_lower:
+                missing = [m for m in ["evidence_graph", "technology_graph"] if m not in context.enabled_modules]
+                if missing:
+                    return RoutingDecision(
+                        route_profile=RoutingProfile.FAIL_CLOSED_GATE,
+                        status="INSUFFICIENT_DEPLOYED_CAPABILITY",
+                        selected_modules=[m for m in req_modules if m in context.enabled_modules],
+                        resolved_entities=resolved_ents,
+                        expanded_terms=expanded_terms,
+                        clean_query=query,
+                        confidence=1.0,
+                        reasons=[f"Required modules {missing} are disabled in active deployment profile (CQ-76 Invariant)"]
+                    )
+            avail_modules = [m for m in req_modules if m in context.enabled_modules]
             return RoutingDecision(
                 route_profile=RoutingProfile.FAIL_CLOSED_GATE,
                 status="SUPPORTED",
-                selected_modules=["evidence_graph"],
+                selected_modules=avail_modules if avail_modules else ["evidence_graph"],
                 resolved_entities=resolved_ents,
                 expanded_terms=expanded_terms,
                 clean_query=query,
                 confidence=0.95,
-                reasons=["Routing to Evidence Graph for exact cell/chunk locators and provenance trace (CQ-73 to CQ-75)"]
+                reasons=["Routing to Evidence Graph and Federated Ledger for exact cell/chunk locators and provenance trace (CQ-73 to CQ-75)"]
             )
 
         # 4. Check Pairwise Joins (D1, D2, D3)

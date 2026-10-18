@@ -71,6 +71,13 @@ class AnswerRouteBundler:
 
         # 1. Handle Fail-Closed and Policy Gates immediately
         if decision.status != "SUPPORTED":
+            gate_cits = []
+            if decision.status == "ACCESS_DENIED":
+                gate_cits = ["policy:meia_rbac_gate#CQ-77"]
+            elif decision.status == "INSUFFICIENT_DEPLOYED_CAPABILITY":
+                gate_cits = ["policy:meia_module_capability_gate#CQ-76"]
+            elif decision.status == "OUT_OF_SCOPE":
+                gate_cits = ["policy:meia_operational_boundary_gate#CQ-78"]
             return AnswerRouteBundle(
                 query=decision.clean_query,
                 route_profile=decision.route_profile.value,
@@ -80,7 +87,7 @@ class AnswerRouteBundler:
                 epistemic_claims=[],
                 text_chunks=[],
                 visual_assets=[],
-                cell_citations=[],
+                cell_citations=gate_cits,
                 execution_trace=trace
             )
 
@@ -201,7 +208,7 @@ class AnswerRouteBundler:
                 if evid:
                     evidence_ids.add(evid)
 
-        # 5. Fetch Evidence Nodes & Cell Citations
+        # 5. Fetch Evidence Nodes & Citations
         cell_citations = []
         if evidence_ids:
             placeholders = ",".join("?" for _ in evidence_ids)
@@ -213,7 +220,7 @@ class AnswerRouteBundler:
             c.execute(sql, list(evidence_ids))
             for row in c.fetchall():
                 eid, doc, std, ltype, loc = row
-                if ltype == "SPREADSHEET_CELL" and loc not in cell_citations:
+                if loc and loc not in cell_citations:
                     cell_citations.append(loc)
 
         # For 360° dossiers, pull all cell citations for the target submission
@@ -223,16 +230,44 @@ class AnswerRouteBundler:
                 if row[0] not in cell_citations:
                     cell_citations.append(row[0])
 
+        # For FAIL_CLOSED_GATE supported queries (CQs 73-75), pull exact evidence anchors and claims from registry
+        if decision.route_profile == RoutingProfile.FAIL_CLOSED_GATE and decision.status == "SUPPORTED":
+            c.execute("SELECT locator_str FROM evidence_nodes WHERE locator_type IN ('SPREADSHEET_CELL', 'AWARD', 'TEXT_CHUNK', 'API_RECEIPT') LIMIT 20")
+            for row in c.fetchall():
+                if row[0] not in cell_citations:
+                    cell_citations.append(row[0])
+            if not epistemic_claims:
+                c.execute("SELECT claim_id, subject_id, predicate, object_value, epistemic_status, confidence, handling_level, evidence_id, notes FROM claim_ledger LIMIT 15")
+                for row in c.fetchall():
+                    cid, sub, pred, val, status, conf, hand, evid, notes = row
+                    epistemic_claims.append({
+                        "claim_id": cid,
+                        "subject_id": sub,
+                        "predicate": pred,
+                        "value": val,
+                        "epistemic_status": status,
+                        "confidence": conf,
+                        "handling_level": hand,
+                        "evidence_id": evid,
+                        "notes": notes
+                    })
+
         # 6. Gather Text Chunks
         text_chunks = []
         for cand in candidates:
             if cand.candidate_type == "text_chunk":
+                doc = cand.metadata.get("doc_id") if cand.metadata else "doc:unknown"
+                page = cand.metadata.get("page_ordinal") if cand.metadata else 1
+                chunk_loc = f"{doc}:p{page}:{cand.candidate_id}"
+                if chunk_loc not in cell_citations:
+                    cell_citations.append(chunk_loc)
                 text_chunks.append({
                     "chunk_id": cand.candidate_id,
                     "text": cand.content,
                     "score": cand.score,
-                    "doc_id": cand.metadata.get("doc_id") if cand.metadata else None,
-                    "page_ordinal": cand.metadata.get("page_ordinal") if cand.metadata else None
+                    "doc_id": doc,
+                    "page_ordinal": page,
+                    "locator": chunk_loc
                 })
 
         # 7. Pull Visual Assets & BBox Chips

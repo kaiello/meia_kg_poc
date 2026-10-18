@@ -113,10 +113,12 @@ def run_benchmark(gold_path: Path, report_path: Path) -> Dict[str, Any]:
     total_status_match = sum(1 for r in results if r["status_match"])
     total_audit_passed = sum(1 for r in results if r["audit_passed"])
     total_zero_promotions = sum(1 for r in results if r["promotions_count"] == 0)
+    total_cqs_with_citations = sum(1 for r in results if r["citations_count"] > 0)
 
     route_acc = (total_route_match / total_cqs) * 100
     status_acc = (total_status_match / total_cqs) * 100
     audit_rate = (total_audit_passed / total_cqs) * 100
+    citation_cov = (total_cqs_with_citations / total_cqs) * 100
     elapsed = time.time() - start_time
 
     summary = {
@@ -126,6 +128,7 @@ def run_benchmark(gold_path: Path, report_path: Path) -> Dict[str, Any]:
         "status_accuracy_pct": round(status_acc, 1),
         "epistemic_audit_pass_rate_pct": round(audit_rate, 1),
         "zero_promotions_rate_pct": round((total_zero_promotions / total_cqs) * 100, 1),
+        "citation_coverage_pct": round(citation_cov, 1),
         "profile_breakdown": {
             p: {
                 "total": profile_counts[p],
@@ -152,7 +155,8 @@ def _generate_markdown_report(summary: Dict[str, Any], results: List[Dict[str, A
     lines.append("| :--- | :---: | :---: | :---: |")
     lines.append(f"| **Route@1 Accuracy** | $\\ge 98.0\\%$ | **{summary['route_accuracy_pct']}%** | {'PASS' if summary['route_accuracy_pct'] >= 95.0 else 'WARN'} |")
     lines.append(f"| **Status & Gate Accuracy** | $100.0\\%$ | **{summary['status_accuracy_pct']}%** | {'PASS' if summary['status_accuracy_pct'] >= 95.0 else 'WARN'} |")
-    lines.append(f"| **Epistemic Audit Pass Rate (CQ-73)** | $100.0\\%$ | **{summary['epistemic_audit_pass_rate_pct']}%** | {'PASS' if summary['epistemic_audit_pass_rate_pct'] >= 95.0 else 'WARN'} |")
+    lines.append(f"| **Epistemic Locator Grounding (CQ-73)** | $100.0\\%$ | **{summary['epistemic_audit_pass_rate_pct']}%** | {'PASS' if summary['epistemic_audit_pass_rate_pct'] >= 95.0 else 'WARN'} |")
+    lines.append(f"| **Citation & Provenance Coverage** | $100.0\\%$ | **{summary['citation_coverage_pct']}%** | {'PASS' if summary['citation_coverage_pct'] == 100.0 else 'FAIL'} |")
     lines.append(f"| **Claim Promotion Firewall (CQ-75)** | $100.0\\%$ | **{summary['zero_promotions_rate_pct']}%** | {'PASS' if summary['zero_promotions_rate_pct'] == 100.0 else 'FAIL'} |\n")
 
     lines.append("## 2. Performance by Profile Breakdown\n")
@@ -176,15 +180,16 @@ def _generate_markdown_report(summary: Dict[str, Any], results: List[Dict[str, A
 
     lines.append("\n---\n")
     lines.append("## 3. Individual Competency Question Results\n")
-    lines.append("| ID | Query Summary | Expected Profile | Actual Profile | Route | Status | Audit |")
-    lines.append("| :--- | :--- | :--- | :--- | :---: | :---: | :---: |")
+    lines.append("| ID | Query Summary | Expected Profile | Actual Profile | Route | Status | Citations | Audit |")
+    lines.append("| :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: |")
 
     for r in results:
         q_brief = (r["query"][:55] + "...") if len(r["query"]) > 55 else r["query"]
         route_badge = "OK" if r["route_match"] else "FAIL"
         status_badge = "OK" if r["status_match"] else "FAIL"
         audit_badge = "OK" if r["audit_passed"] else "FAIL"
-        lines.append(f"| **{r['cq_id']}** | {q_brief} | `{r['expected_profile']}` | `{r['actual_profile']}` | {route_badge} | {status_badge} | {audit_badge} |")
+        cit_badge = f"{r['citations_count']} cits"
+        lines.append(f"| **{r['cq_id']}** | {q_brief} | `{r['expected_profile']}` | `{r['actual_profile']}` | {route_badge} | {status_badge} | {cit_badge} | {audit_badge} |")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:

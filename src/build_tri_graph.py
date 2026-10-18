@@ -454,6 +454,19 @@ def build_tri_graph() -> None:
     # 2. Ingest USASpending Federal History & Awards
     # =========================================================================
     logger.info("Ingesting USASpending awards from %s", USASPENDING_PARSED_JSONL)
+    
+    # Master USASpending API receipt and policy authority evidence nodes
+    add_evidence(
+        "evid:api:usaspending_vendor_history_2026",
+        "doc:usaspending_vendor_history_2026",
+        "USASpending API v2 FPDS Prime Awards 2026",
+        "API_RECEIPT",
+        "data/usaspending/usaspending_vendor_history_2026.jsonl"
+    )
+    add_evidence("evid:policy:meia_module_capability_gate", "doc:meia_governance_specification", "MEIA Node Capability Dependency Gate (CQ-76)", "POLICY", "policy:meia_module_capability_gate#CQ-76")
+    add_evidence("evid:policy:meia_rbac_gate", "doc:meia_governance_specification", "MEIA Mandatory RBAC/ABAC Gate (CQ-77)", "POLICY", "policy:meia_rbac_gate#CQ-77")
+    add_evidence("evid:policy:meia_operational_boundary_gate", "doc:meia_governance_specification", "MEIA Operational Boundary Gate (CQ-78)", "POLICY", "policy:meia_operational_boundary_gate#CQ-78")
+
     usa_records = []
     if USASPENDING_PARSED_JSONL.exists():
         with open(USASPENDING_PARSED_JSONL, "r", encoding="utf-8") as f:
@@ -522,6 +535,14 @@ def build_tri_graph() -> None:
             desc = contract.get("description") or ""
 
             award_node_id = f"award:{award_id.replace('-', '_').replace(':', '_').lower()}"
+            award_evid_id = f"evid:award_{award_id.replace('-', '_').replace(':', '_').lower()}"
+            add_evidence(
+                award_evid_id,
+                "doc:usaspending_vendor_history_2026",
+                f"USASpending Award {award_id}",
+                "AWARD",
+                f"usaspending:{award_id}"
+            )
             add_node(
                 award_node_id, "ORG", "InformationContentEntity",
                 skos=["org:ContractAward", "org:FPDSPrimeAward"],
@@ -536,7 +557,7 @@ def build_tri_graph() -> None:
                 label=f"Contract {award_id} (${float(amt):,.2f})"
             )
             add_edge(f"edge:{org_id}_{award_node_id}", org_id, award_node_id, "[:HOLDS_PRIME_AWARD]", "ORG")
-            add_claim(f"claim:{award_node_id}_obligation", org_id, "holds_federal_obligation", f"${float(amt):,.2f} ({agency})", "FPDS_OBLIGATED", 1.0, "PUBLIC", "api:usaspending_vendor_history_2026")
+            add_claim(f"claim:{award_node_id}_obligation", org_id, "holds_federal_obligation", f"${float(amt):,.2f} ({agency})", "FPDS_OBLIGATED", 1.0, "PUBLIC", award_evid_id)
 
             # Link Prometheus award to Tech-KG
             if award_id == "697DCK-24-C-00237":
