@@ -124,6 +124,22 @@ def run_benchmark(
         else:
             status_match = (act_status == exp_status)
 
+        # Workstream A1: Verify dynamic multi-vendor 360-degree executive dossiers (CQ-68 - CQ-72)
+        if cq_id in ("CQ-68", "CQ-69", "CQ-70", "CQ-71", "CQ-72"):
+            exp_vendor_name = {
+                "CQ-68": "Albacore",
+                "CQ-69": "Voltage Vessels",
+                "CQ-70": "T2S Solutions",
+                "CQ-71": "KLAS Government",
+                "CQ-72": "Prometheus"
+            }.get(cq_id)
+            if not ans.executive_dossier:
+                status_match = False
+            else:
+                dossier_corp_name = ans.executive_dossier.corporate_summary.get("legal_name", "")
+                if exp_vendor_name not in dossier_corp_name:
+                    status_match = False
+
         epistemic_audit = ans.epistemic_audit or {}
         audit_passed = epistemic_audit.get("audit_passed", False)
         locator_score = epistemic_audit.get("locator_grounding_score", 0.0)

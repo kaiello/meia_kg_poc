@@ -173,7 +173,11 @@ class PreRetrievalRouter:
         out_of_scope_patterns = [
             "acoustic signature", "decibel rating", "decibels at 30 knots",
             "radar cross section in dbsm", "nuclear warhead yield",
-            "stock price target 2030", "ceo personal net worth"
+            "stock price target 2030", "ceo personal net worth",
+            "crush depth", "maximum crush depth", "operating depth in meters",
+            "wingspan", "flight ceiling", "battery chemistry", "propellant chemistry",
+            "warhead yield", "mtbf", "mean time between failure",
+            "tax id", "ein number", "personal net worth", "stock price"
         ]
         for oos in out_of_scope_patterns:
             if oos in q_lower:
@@ -189,7 +193,12 @@ class PreRetrievalRouter:
                 )
 
         # 2. CQ-77: Access Control, PII, and Security Clearance Gate
-        is_pii_request = any(p in q_lower for p in ["poc phone", "poc personal phone", "phone number", "personal cell", "direct phone"])
+        is_pii_request = any(p in q_lower for p in [
+            "poc phone", "poc personal phone", "phone number", "personal cell", "direct phone",
+            "poc email", "email address", "personal email", "e-mail", "contact phone", "contact email",
+            "cell phone", "telephone number", "direct dial", "contact info", "contact details",
+            "personal contact", "poc personal contact"
+        ])
         is_classified_request = any(c in q_lower for c in ["top secret", "sci (4-pack)", "secret // rel fvey", "classified meeting detail"])
 
         if is_pii_request and context.clearance_level == "UNCLASSIFIED":

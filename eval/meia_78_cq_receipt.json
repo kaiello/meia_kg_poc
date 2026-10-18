@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "receipt_id": "receipt:meia:78cq:1792364354",
-  "generated_at": "2026-10-18T22:59:14.130765+00:00",
+  "receipt_id": "receipt:meia:78cq:1792366710",
+  "generated_at": "2026-10-18T23:38:30.109242+00:00",
   "cryptographic_fingerprints": {
     "meia_poc_manifest_sha256": "f30ffdd3ca88200c19f5ea31b3afe54e0872b7d57e722cfa2f48a0289d77f028",
-    "tri_graph_registry_db_sha256": "e9cb58f07e924a1b3e4d4789ff95fe2b5b81ea803ca5e5a2834a525a19ac8e0a",
+    "tri_graph_registry_db_sha256": "3135afad2e82f2f49bb7264828d4d66ad87f239690e36129ac34c22f969241ba",
     "vdb_chunks_contextual_sha256": "874ffeff7119a595e1f3dbe00fcaa34a9b126a6db931795f434ff2402fa883c6",
     "gold_78_cqs_sha256": "2fdbfee94ea941c7e77f72e8a0b2d8ba7257044e2b62f10e54ec0235f26f63c4"
   },
@@ -17,8 +17,8 @@
   },
   "scorecard": {
     "total_cqs": 78,
-    "elapsed_seconds": 11.99,
-    "avg_seconds_per_cq": 0.154,
+    "elapsed_seconds": 11.75,
+    "avg_seconds_per_cq": 0.151,
     "route_accuracy_pct": 100.0,
     "status_accuracy_pct": 100.0,
     "epistemic_audit_pass_rate_pct": 100.0,
@@ -97,7 +97,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 39,
+      "citations_count": 46,
       "figures_count": 2,
       "has_dossier": false,
       "has_context_packets": true
@@ -131,7 +131,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 16,
+      "citations_count": 21,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -216,7 +216,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 24,
+      "citations_count": 19,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -233,7 +233,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 15,
+      "citations_count": 16,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -318,7 +318,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 8,
+      "citations_count": 7,
       "figures_count": 2,
       "has_dossier": false,
       "has_context_packets": true
@@ -335,7 +335,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 10,
+      "citations_count": 16,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -420,7 +420,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 26,
+      "citations_count": 38,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -437,7 +437,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 25,
+      "citations_count": 28,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -454,7 +454,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 30,
+      "citations_count": 31,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -471,7 +471,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 24,
+      "citations_count": 25,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -505,7 +505,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 25,
+      "citations_count": 27,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -522,7 +522,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 32,
+      "citations_count": 34,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -534,12 +534,12 @@
       "actual_profile": "ROUTE_TECH",
       "route_match": true,
       "expected_status": "SUPPORTED",
-      "actual_status": "VERIFIED_GROUNDED",
+      "actual_status": "UNVERIFIED_VENDOR_CLAIM",
       "status_match": true,
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 34,
+      "citations_count": 19,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -556,7 +556,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 34,
+      "citations_count": 33,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -624,7 +624,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 31,
+      "citations_count": 30,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -641,7 +641,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 23,
+      "citations_count": 26,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -675,7 +675,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 34,
+      "citations_count": 35,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -947,7 +947,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 49,
+      "citations_count": 46,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -964,7 +964,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 56,
+      "citations_count": 57,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -998,7 +998,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 30,
+      "citations_count": 31,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1032,7 +1032,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 34,
+      "citations_count": 35,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1066,7 +1066,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 8,
+      "citations_count": 9,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1134,7 +1134,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 29,
+      "citations_count": 30,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1168,7 +1168,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 32,
+      "citations_count": 33,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1185,7 +1185,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 25,
+      "citations_count": 27,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1202,7 +1202,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 22,
+      "citations_count": 24,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1219,7 +1219,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 75,
+      "citations_count": 80,
       "figures_count": 3,
       "has_dossier": true,
       "has_context_packets": true
@@ -1270,7 +1270,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 87,
+      "citations_count": 89,
       "figures_count": 3,
       "has_dossier": true,
       "has_context_packets": true
@@ -1287,7 +1287,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 99,
+      "citations_count": 93,
       "figures_count": 3,
       "has_dossier": true,
       "has_context_packets": true
@@ -1321,7 +1321,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 49,
+      "citations_count": 50,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true
@@ -1338,7 +1338,7 @@
       "audit_passed": true,
       "locator_score": 1.0,
       "promotions_count": 0,
-      "citations_count": 48,
+      "citations_count": 49,
       "figures_count": 3,
       "has_dossier": false,
       "has_context_packets": true

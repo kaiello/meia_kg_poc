@@ -15,7 +15,7 @@ import mimetypes
 import os
 import sys
 from http import HTTPStatus
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 
@@ -437,6 +437,16 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         let currentAssetId = "meia_charter_2026_p1";
         let currentArm = "ARM_A_FULL_PAGE";
 
@@ -452,9 +462,17 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 const data = await res.json();
                 const diagImg = document.getElementById('diagramImage');
                 if (arm === 'ARM_B_FOCAL_CROP' && data.focal_crop_path) {
-                    diagImg.src = '/' + data.focal_crop_path;
+                    let cropSrc = data.focal_crop_path;
+                    if (cropSrc.startsWith('parsed/figures/crops/')) {
+                        cropSrc = '/api/figures/crops/' + cropSrc.replace('parsed/figures/crops/', '');
+                    } else if (cropSrc.startsWith('parsed/figures/')) {
+                        cropSrc = '/api/figures/' + cropSrc.replace('parsed/figures/', '');
+                    } else if (!cropSrc.startsWith('/')) {
+                        cropSrc = '/' + cropSrc;
+                    }
+                    diagImg.src = cropSrc;
                 } else {
-                    diagImg.src = data.full_page_path ? ('/' + data.full_page_path) : `/api/figures/${currentAssetId}.png`;
+                    diagImg.src = data.full_page_path ? ('/api/figures/' + data.full_page_path.replace('parsed/figures/', '')) : `/api/figures/${encodeURIComponent(currentAssetId)}.png`;
                 }
 
                 const chipContainer = document.getElementById('bboxChips');
@@ -545,16 +563,16 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                         let qualHtml = '';
                         if (p.qualifiers_and_notes && p.qualifiers_and_notes.length > 0) {
                             qualHtml = p.qualifiers_and_notes.map(q => 
-                                `<div class="packet-qualifier"><strong>${q.field_label}:</strong> ${q.content} <em>[${q.source_locator}]</em></div>`
+                                `<div class="packet-qualifier"><strong>${escapeHtml(q.field_label)}:</strong> ${escapeHtml(q.content)} <em>[${escapeHtml(q.source_locator)}]</em></div>`
                             ).join('');
                         }
                         div.innerHTML = `
                             <div class="packet-header">
-                                <span>${p.anchor_label}</span>
-                                <span class="badge badge-cell">${p.target_graph}</span>
+                                <span>${escapeHtml(p.anchor_label)}</span>
+                                <span class="badge badge-cell">${escapeHtml(p.target_graph)}</span>
                             </div>
                             <div style="font-size: 11px; color: #94a3b8; margin-bottom: 6px;">
-                                <code>${p.packet_id}</code> | Provenance: <strong>${Math.round(p.composite_provenance_score * 100)}%</strong>
+                                <code>${escapeHtml(p.packet_id)}</code> | Provenance: <strong>${Math.round(p.composite_provenance_score * 100)}%</strong>
                             </div>
                             ${qualHtml}
                         `;
@@ -589,7 +607,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                             badgeType = 'POLICY';
                             badgeClass = 'badge-policy';
                         }
-                        li.innerHTML = `<span class="badge ${badgeClass}" style="margin-right: 6px; font-size: 10px; padding: 2px 6px;">[${badgeType}]</span>[${idx+1}] ${c}`;
+                        li.innerHTML = `<span class="badge ${badgeClass}" style="margin-right: 6px; font-size: 10px; padding: 2px 6px;">[${badgeType}]</span>[${idx+1}] ${escapeHtml(c)}`;
                         cList.appendChild(li);
                     });
                 } else {
@@ -670,11 +688,11 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 items.forEach((it, idx) => {
                     rowsHtml += `
                         <tr style="border-bottom:1px solid #334155;">
-                            <td style="padding:8px; font-family:monospace; font-size:11px; color:#38bdf8;">${it.queue_id}</td>
-                            <td style="padding:8px; font-size:11px;"><span class="badge badge-spine">${it.item_type}</span></td>
-                            <td style="padding:8px; font-size:11px; color:#f8fafc;">${it.subject_id}</td>
-                            <td style="padding:8px; font-size:11px; color:#cbd5e1;">${it.proposed_value.substring(0, 50)}...</td>
-                            <td style="padding:8px; font-size:11px; color:#f59e0b; font-weight:600;">${it.review_status}</td>
+                            <td style="padding:8px; font-family:monospace; font-size:11px; color:#38bdf8;">${escapeHtml(it.queue_id)}</td>
+                            <td style="padding:8px; font-size:11px;"><span class="badge badge-spine">${escapeHtml(it.item_type)}</span></td>
+                            <td style="padding:8px; font-size:11px; color:#f8fafc;">${escapeHtml(it.subject_id)}</td>
+                            <td style="padding:8px; font-size:11px; color:#cbd5e1;">${escapeHtml(it.proposed_value.substring(0, 50))}...</td>
+                            <td style="padding:8px; font-size:11px; color:#f59e0b; font-weight:600;">${escapeHtml(it.review_status)}</td>
                         </tr>
                     `;
                 });
@@ -766,10 +784,21 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(resp).encode("utf-8"))
             return
 
-        if path.startswith("/api/figures/crops/"):
-            filename = path.replace("/api/figures/crops/", "")
-            crop_path = CROPS_DIR / filename
-            if crop_path.exists() and crop_path.is_file():
+        if path.startswith("/api/figures/crops/") or path.startswith("/parsed/figures/crops/"):
+            prefix = "/api/figures/crops/" if path.startswith("/api/figures/crops/") else "/parsed/figures/crops/"
+            rel_name = unquote(path[len(prefix):]).lstrip("/")
+            try:
+                crop_path = (CROPS_DIR / rel_name).resolve()
+                if not crop_path.is_relative_to(CROPS_DIR.resolve()):
+                    self.send_response(HTTPStatus.FORBIDDEN)
+                    self.end_headers()
+                    self.wfile.write(b"Forbidden: Path traversal detected")
+                    return
+                if not crop_path.exists() or not crop_path.is_file():
+                    self.send_response(HTTPStatus.NOT_FOUND)
+                    self.end_headers()
+                    self.wfile.write(b"Crop not found")
+                    return
                 mime, _ = mimetypes.guess_type(str(crop_path))
                 self.send_response(HTTPStatus.OK)
                 self.send_header("Content-Type", mime or "image/png")
@@ -778,16 +807,27 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                 with open(crop_path, "rb") as f:
                     self.wfile.write(f.read())
                 return
-            else:
-                self.send_response(HTTPStatus.NOT_FOUND)
+            except Exception as e:
+                self.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)
                 self.end_headers()
-                self.wfile.write(b"Crop not found")
+                self.wfile.write(str(e).encode("utf-8"))
                 return
 
-        if path.startswith("/api/figures/"):
-            filename = path.replace("/api/figures/", "")
-            fig_path = FIGURES_DIR / filename
-            if fig_path.exists() and fig_path.is_file():
+        if path.startswith("/api/figures/") or path.startswith("/parsed/figures/"):
+            prefix = "/api/figures/" if path.startswith("/api/figures/") else "/parsed/figures/"
+            rel_name = unquote(path[len(prefix):]).lstrip("/")
+            try:
+                fig_path = (FIGURES_DIR / rel_name).resolve()
+                if not fig_path.is_relative_to(FIGURES_DIR.resolve()):
+                    self.send_response(HTTPStatus.FORBIDDEN)
+                    self.end_headers()
+                    self.wfile.write(b"Forbidden: Path traversal detected")
+                    return
+                if not fig_path.exists() or not fig_path.is_file():
+                    self.send_response(HTTPStatus.NOT_FOUND)
+                    self.end_headers()
+                    self.wfile.write(b"Figure not found")
+                    return
                 mime, _ = mimetypes.guess_type(str(fig_path))
                 self.send_response(HTTPStatus.OK)
                 self.send_header("Content-Type", mime or "image/png")
@@ -796,10 +836,10 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                 with open(fig_path, "rb") as f:
                     self.wfile.write(f.read())
                 return
-            else:
-                self.send_response(HTTPStatus.NOT_FOUND)
+            except Exception as e:
+                self.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)
                 self.end_headers()
-                self.wfile.write(b"Figure not found")
+                self.wfile.write(str(e).encode("utf-8"))
                 return
 
         if path.startswith("/api/loc/inspect"):
@@ -875,6 +915,11 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         if url.path == "/api/query":
             content_length = int(self.headers.get("Content-Length", 0))
+            if content_length > 65536:
+                self.send_response(HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+                self.end_headers()
+                self.wfile.write(b"Payload Too Large (Max 64KB)")
+                return
             raw_body = self.rfile.read(content_length).decode("utf-8")
             try:
                 data = json.loads(raw_body)
@@ -914,7 +959,7 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
 
 
 def start_server(port: int = 8000):
-    server = HTTPServer(("127.0.0.1", port), MeiaWebHandler)
+    server = ThreadingHTTPServer(("127.0.0.1", port), MeiaWebHandler)
     logger.info("MEIA Web Visual Explorer serving on http://127.0.0.1:%d", port)
     try:
         server.serve_forever()

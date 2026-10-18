@@ -1,0 +1,611 @@
+{
+  "total_fields": 101,
+  "records": [
+    {
+      "sheet": "Company",
+      "field": "Legal Business Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Organization Type",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "UEI (Unique Entity ID)",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "CAGE Code",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Physical Address Line 1",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "City",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "State/Province",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "ZIP/Postal Code",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Country",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Date Added to CRM",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Lead Source",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Lead Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "DUNS Number",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Doing Business As",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Primary NAICS Code",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Primary NAICS Description",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Secondary NAICS Codes",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Primary PSC Code",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Congressional District",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Small Business Certified",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "8(a) Program Participant",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "8(a) Expiration Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "HUBZone Certified",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "WOSB Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "EDWOSB Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Veteran-Owned",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "SDVOSB Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Corporate Structure Type",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "State of Incorporation",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Country of Incorporation",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Parent Company Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Parent Company UEI",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Fiscal Year End Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Credit Card Accepted",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Debt Subject to Offset",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "EFT Enrolled",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Company Website",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Company Description",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Year Established",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Annual Revenue",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Number of Employees",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Tax ID (EIN)",
+      "encrypted": "y",
+      "sensitivity": "PII_ENCRYPTED"
+    },
+    {
+      "sheet": "Company",
+      "field": "Assigned Account Manager",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Last Contact Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Next Followup Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Relationship Strength",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Notes",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Custom Tags",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Industry Segments",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Profile Verified",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Verified By",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Company",
+      "field": "Verification Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary POC First Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary POC Last Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary POC Email",
+      "encrypted": "y",
+      "sensitivity": "PII_ENCRYPTED"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary POC Phone",
+      "encrypted": "y",
+      "sensitivity": "PII_ENCRYPTED"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary Reviewer POC Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Person",
+      "field": "Primary Reviewer POC Email",
+      "encrypted": "y",
+      "sensitivity": "PII_ENCRYPTED"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Technology/Product Name",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Technology Description",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Technology Differentiators",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Technology Readiness Level",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Manufacturing Readiness",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Integration Readiness",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Commercial vs Custom",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Capability Categories",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Mission Areas",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "Facility Clearance Level",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "FCL Expiration Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "ITAR Registered",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "CMMC Level",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "CMMC Certification Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Startegic_Opportunity",
+      "field": "ISO Certifications",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Opportunity",
+      "field": "Active Opportunities",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Opportunity",
+      "field": "Total Pipeline Value",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Opportunity",
+      "field": "Problem Understanding Score",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Opportunity",
+      "field": "Capability Contribution Score",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Federal_Compliance",
+      "field": "SAM Registration Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Federal_Compliance",
+      "field": "Exclusion/Debarment Status",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Federal_Compliance",
+      "field": "SAM Expiration Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Federal_Compliance",
+      "field": "SAM Last Update Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total Federal Spending (Last FY)",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total Federal Spending (All Time)",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Number Active Contracts",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Number Completed Contracts",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Average Contract Size",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Largest Contract Value",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Most Recent Award Date",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Primary Contracting Agency",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Number of Agencies",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total Contract Awards",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total Grant Awards",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total SBIR/STTR Awards",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Total OTA Awards",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Most Common Contract Type",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Percent Competed Awards",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Percent Sole Source",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Number of Protests Filed",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "GSA Schedule Number",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "GWAC Access",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    },
+    {
+      "sheet": "Award_History",
+      "field": "Prime vs Sub Ratio",
+      "encrypted": "",
+      "sensitivity": "CUI"
+    }
+  ]
+}

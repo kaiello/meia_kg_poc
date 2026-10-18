@@ -59,7 +59,8 @@ class AnswerRouteBundler:
     def assemble_bundle(
         self,
         decision: RoutingDecision,
-        candidates: List[RetrievedCandidate]
+        candidates: List[RetrievedCandidate],
+        context: Optional[CallerContext] = None
     ) -> AnswerRouteBundle:
         """Assembles facts, cross-graph links, claims, and multimodal evidence for candidates."""
         trace = {
@@ -194,8 +195,11 @@ class AnswerRouteBundler:
             WHERE subject_id IN ({placeholders})
             """
             c.execute(sql, all_relevant_node_ids)
+            caller_clearance = context.clearance_level if context else "SECRET"
             for row in c.fetchall():
                 cid, sub, pred, val, status, conf, hand, evid, notes = row
+                if caller_clearance == "UNCLASSIFIED" and hand in ["PII_ENCRYPTED", "SECRET", "TOP_SECRET"]:
+                    continue
                 epistemic_claims.append({
                     "claim_id": cid,
                     "subject_id": sub,
@@ -348,7 +352,7 @@ def assemble_answer_route(
 ) -> AnswerRouteBundle:
     """Convenience functional pipeline for Query -> Routing -> Scoped Retrieval -> Bundle Assembly."""
     decision, candidates = retrieve_hybrid_candidates(query, context, top_k=top_k)
-    return _BUNDLER.assemble_bundle(decision, candidates)
+    return _BUNDLER.assemble_bundle(decision, candidates, context=context)
 
 
 if __name__ == "__main__":

@@ -146,20 +146,43 @@ class LoCFigureInspector:
         clean_id = asset_id.replace("asset:", "").replace(".png", "")
         callouts = []
 
-        # Find matching entries in bbox registry
-        for doc_key, items in self.bbox_registry.items():
-            if clean_id in doc_key or doc_key in clean_id:
-                for itm in items:
-                    c_text = itm.get("text") or itm.get("caption") or itm.get("label", "")
-                    c_bbox = itm.get("bbox") or itm.get("normalized_bbox", [0.0, 0.0, 1.0, 1.0])
+        # 1. Search chips list from figure_bboxes.json
+        chips = self.bbox_registry.get("chips", [])
+        if isinstance(self.bbox_registry, list):
+            chips = self.bbox_registry
+
+        for itm in chips:
+            fig_img = itm.get("figure_image", "")
+            chip_id = itm.get("chip_id", "")
+            if clean_id.lower() in fig_img.lower() or clean_id.lower() in chip_id.lower():
+                c_text = itm.get("label") or itm.get("text") or itm.get("caption", "")
+                c_bbox = itm.get("bbox") or itm.get("normalized_bbox", [0.0, 0.0, 1.0, 1.0])
+                if c_text:
                     callouts.append({
-                        "label": itm.get("element_type", "Diagram Component"),
+                        "label": itm.get("source", "Diagram Component"),
                         "text": c_text,
                         "bbox": c_bbox,
                         "confidence": itm.get("confidence", 0.95)
                     })
+                    if len(callouts) >= 12:
+                        break
 
-        # If no specific registry items found, generate a baseline OCR callout
+        # 2. Check legacy dict items if present
+        if not callouts:
+            for doc_key, items in self.bbox_registry.items():
+                if doc_key not in ("figures", "chips") and (clean_id in doc_key or doc_key in clean_id):
+                    if isinstance(items, list):
+                        for itm in items:
+                            c_text = itm.get("text") or itm.get("caption") or itm.get("label", "")
+                            c_bbox = itm.get("bbox") or itm.get("normalized_bbox", [0.0, 0.0, 1.0, 1.0])
+                            callouts.append({
+                                "label": itm.get("element_type", "Diagram Component"),
+                                "text": c_text,
+                                "bbox": c_bbox,
+                                "confidence": itm.get("confidence", 0.95)
+                            })
+
+        # 3. If no specific registry items found, generate a baseline OCR callout
         if not callouts:
             callouts.append({
                 "label": "Callout Annotation",

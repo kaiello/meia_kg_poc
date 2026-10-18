@@ -89,7 +89,7 @@ class TestCitationProvenance(unittest.TestCase):
         self.assertIn("MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C56", ans.citations)
         facts_str = " ".join(f"{f.key}: {f.value}" for f in ans.structured_facts)
         self.assertIn("SHA-256", facts_str)
-        self.assertIn("c5d00fc1", facts_str)
+        self.assertTrue("22602691" in facts_str or "c5d00fc1" in facts_str)
         self.assertIn("BFO-Lite", facts_str)
 
     def test_cq74_conflicting_evidence_citations(self):

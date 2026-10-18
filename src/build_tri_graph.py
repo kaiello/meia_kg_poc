@@ -416,13 +416,13 @@ def build_tri_graph() -> None:
                 props={
                     "name": "Cameron Matthews",
                     "role_type": "Technical 1 POC",
-                    "email_encrypted": "cameron.a.matthews.civ@us.navy.mil",
-                    "phone_encrypted": "18508675230"
+                    "email_encrypted": "sha256:d87a4128f645b2e15bc3e284c8f5f64d04be2030f4cf32280d5d5a6b0c2a71bf",
+                    "phone_encrypted": "sha256:49f2b8a7c20c904faefd34e622b16bc5b067f92021571d7826359be26f50c058"
                 },
                 label="Technical POC: Cameron Matthews (US Navy Civ)"
             )
             add_edge(f"edge:{sub_id}_{poc_id}", sub_id, poc_id, "[:DESIGNATES_CONTACT]", "CRM")
-            add_claim(f"claim:{poc_id}_assignment", sub_id, "designated_technical_poc", "Cameron Matthews", "VENDOR_SELF_ASSERTED", 0.99, "PII_ENCRYPTED", f"evid:vulcan_{vid}_c39")
+            add_claim(f"claim:{poc_id}_assignment", sub_id, "designated_technical_poc", "Cameron Matthews (Contact Encrypted)", "VENDOR_SELF_ASSERTED", 0.99, "PII_ENCRYPTED", f"evid:vulcan_{vid}_c39")
 
         # Commercial Observations (Q4, Q5, Q6)
         comm_obs = [

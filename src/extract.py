@@ -5,13 +5,14 @@ Extracts data from:
 2. USASpending API JSON -> parsed/usaspending_awards.jsonl
 3. Company Data PDFs + Charter -> parsed/text_chunks.jsonl & parsed/figures/*.png + figure_bboxes.json
 """
+import hashlib
 import io
 import json
 import logging
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 
 # Ensure repo root is on sys.path
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -51,30 +52,97 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("meia.extract")
 
 
-def classify_vulcan_column(header: str, col_idx: int) -> tuple[str, str]:
+def load_crm_field_mapping_overrides() -> Dict[str, Tuple[str, str]]:
+    """Loads schema field classifications from CRM_Object_Field_Mapping.xlsx if available."""
+    mapping_path = REPO_ROOT / "data" / "CRM_Object_Field_Mapping.xlsx"
+    overrides = {}
+    if not mapping_path.exists():
+        return overrides
+
+    try:
+        wb = openpyxl.load_workbook(mapping_path, data_only=True)
+        audit_records = []
+        for sname in wb.sheetnames:
+            ws = wb[sname]
+            header_row = [str(c.value or "").strip() for c in ws[2]]
+            name_idx = None
+            enc_idx = None
+            for idx, h in enumerate(header_row):
+                if h.lower() == "field name":
+                    name_idx = idx
+                elif h.lower() == "encrypted":
+                    enc_idx = idx
+
+            if name_idx is not None:
+                for row in ws.iter_rows(min_row=3, values_only=True):
+                    fname = str(row[name_idx] or "").strip()
+                    is_enc = str(row[enc_idx] or "").strip().lower() if enc_idx is not None and enc_idx < len(row) else ""
+                    if fname:
+                        sens = "PII_ENCRYPTED" if is_enc in ("yes", "y", "true") else "CUI"
+                        overrides[fname.lower()] = ("CRM", sens)
+                        audit_records.append({"sheet": sname, "field": fname, "encrypted": is_enc, "sensitivity": sens})
+        
+        audit_file = REPO_ROOT / "parsed" / "crm_field_mapping_audit.json"
+        audit_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(audit_file, "w", encoding="utf-8") as af:
+            json.dump({"total_fields": len(audit_records), "records": audit_records}, af, indent=2)
+        logger.info("Loaded %d field mapping dispositions from %s", len(overrides), mapping_path.name)
+    except Exception as e:
+        logger.warning("Could not read CRM_Object_Field_Mapping.xlsx: %s", e)
+
+    return overrides
+
+
+def sanitize_pii_value(val: Any, header: str) -> str:
+    """Masks or tokenizes real PII (emails, phone numbers, ScoutCard URLs) to prevent repo leakage."""
+    if val is None:
+        return ""
+    s_val = str(val).strip()
+    if not s_val:
+        return ""
+    
+    h_lower = header.lower()
+    if "email" in h_lower:
+        digest = hashlib.sha256(s_val.encode("utf-8")).hexdigest()[:8]
+        return f"redacted_contact_{digest}@cui-redacted.local"
+    if "phone" in h_lower:
+        digest = hashlib.sha256(s_val.encode("utf-8")).hexdigest()[:8]
+        return f"REDACTED_PHONE_{digest}"
+    if "scoutcard" in s_val or "vulcan-sof.com" in s_val:
+        parts = s_val.split("/")
+        uid = parts[-1] if parts else "id"
+        return f"https://vulcan-sof.local/scoutcard/{uid}"
+    
+    return s_val
+
+
+def classify_vulcan_column(header: str, col_idx: int, overrides: Optional[Dict[str, Tuple[str, str]]] = None) -> tuple[str, str]:
     """Determines target graph domain and sensitivity level for a Vulcan column."""
     h = header.strip()
+    h_lower = h.lower()
+    if overrides and h_lower in overrides:
+        return overrides[h_lower]
     # PII sensitive
-    if any(k in h.lower() for k in ["email", "phone number", "phone"]):
+    if any(k in h_lower for k in ["email", "phone number", "phone"]):
         return "CRM", "PII_ENCRYPTED"
     # Tech domain
-    if any(k in h.lower() for k in ["problem understanding", "topic area", "capability contribution", 
+    if any(k in h_lower for k in ["problem understanding", "topic area", "capability contribution", 
                                      "unique competitive advantage", "measuring performance", 
                                      "technical maturity", "integration", "my capability is",
                                      "description", "differentiator", "trl", "mrl", "irl"]):
         return "TECH", "CUI"
     # Commercial & CRM domain
-    if any(k in h.lower() for k in ["funding to scale", "unit cost", "production / scalability", 
+    if any(k in h_lower for k in ["funding to scale", "unit cost", "production / scalability", 
                                      "product rights", "export controlled", "first submitted", 
                                      "last updated", "one-on-one meeting security preference"]):
         return "CRM", "COMMERCIAL_PROPRIETARY"
     # Org domain
-    if any(k in h.lower() for k in ["organization", "org type", "org category", "org subcategory",
+    if any(k in h_lower for k in ["organization", "org type", "org category", "org subcategory",
                                      "address", "city", "state", "zip code", "country", "citizenship",
                                      "website", "duns", "cage"]):
         return "ORG", "PUBLIC"
     # Stakeholders
-    if any(k in h.lower() for k in ["sponsor", "technical", "user", "maintainer", "collaborator", "poc"]):
+    if any(k in h_lower for k in ["sponsor", "technical", "user", "maintainer", "collaborator", "poc"]):
         return "CRM", "CUI"
     
     return "TECH", "PUBLIC"
@@ -96,6 +164,7 @@ def extract_vulcan_submissions(manifest: StandardManifest) -> List[Dict[str, Any
     populated_rows = [2, 3, 4]
     submissions = []
 
+    crm_overrides = load_crm_field_mapping_overrides()
     for r in populated_rows:
         row_id = ws.cell(r, 2).value  # Col 2: ID
         if not row_id:
@@ -104,7 +173,7 @@ def extract_vulcan_submissions(manifest: StandardManifest) -> List[Dict[str, Any
         row_dict = {
             "row_index": r,
             "vulcan_id": str(ws.cell(r, 2).value).strip(),
-            "vulcan_link": str(ws.cell(r, 1).value or "").strip(),
+            "vulcan_link": sanitize_pii_value(str(ws.cell(r, 1).value or "").strip(), "scoutcard"),
             "offering_name": str(ws.cell(r, 3).value or "").strip(),
             "description": str(ws.cell(r, 4).value or "").strip(),
             "differentiator": str(ws.cell(r, 5).value or "").strip(),
@@ -138,11 +207,14 @@ def extract_vulcan_submissions(manifest: StandardManifest) -> List[Dict[str, Any
         # Store fine-grained cell locators for every column 1-62
         for c in range(1, 63):
             val = ws.cell(r, c).value
-            target_graph, sensitivity = classify_vulcan_column(headers[c-1], c)
+            target_graph, sensitivity = classify_vulcan_column(headers[c-1], c, crm_overrides)
+            str_val = str(val) if val is not None else ""
+            if sensitivity == "PII_ENCRYPTED":
+                str_val = sanitize_pii_value(str_val, headers[c-1])
             cell_entry = {
                 "col_index": c,
                 "header": headers[c-1],
-                "value": str(val) if val is not None else "",
+                "value": str_val,
                 "locator": f"MEIA_TEM_Vulcan_Export.xlsx!{sheet_name}!R{r}C{c}",
                 "target_graph": target_graph,
                 "sensitivity": sensitivity

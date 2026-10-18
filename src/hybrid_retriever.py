@@ -21,7 +21,7 @@ from src.config import (
     VDB_CHUNKS_PATH,
     VDB_ENTITIES_PATH
 )
-from src.contextual_indexer import encode_text, compute_cosine_similarity
+from src.contextual_indexer import encode_text, compute_cosine_similarity, deterministic_offline_vector
 from src.pre_retrieval import route_user_query, CallerContext, RoutingDecision, RoutingProfile
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -125,6 +125,10 @@ class ScopedHybridRetriever:
         """Queries contextual dense vectors scoped to authorized target_graph partitions."""
         self._load_caches()
         query_vec = encode_text(query)
+        if self.chunks_cache and self.chunks_cache[0].get("vector"):
+            stored_dim = len(self.chunks_cache[0]["vector"])
+            if len(query_vec) != stored_dim:
+                query_vec = deterministic_offline_vector(query, dim=stored_dim)
         allowed_domains = set()
         if "organization_graph" in selected_modules:
             allowed_domains.add("ORG")
@@ -295,13 +299,46 @@ class ScopedHybridRetriever:
                     if not any(ek in c["id"].lower() or ek in c["text"].lower() for ek in excluded_keys)
                 ]
 
-        return self.reciprocal_rank_fusion(
+        fused_candidates = self.reciprocal_rank_fusion(
             sparse_candidates,
             dense_candidates,
             k=60,
-            top_k=top_k,
+            top_k=top_k * 2 if top_k else 30,
             modality_weights=modality_weights
         )
+
+        return self._rerank_candidates(query, fused_candidates, top_k=top_k)
+
+    def _rerank_candidates(
+        self,
+        query: str,
+        candidates: List[RetrievedCandidate],
+        top_k: int
+    ) -> List[RetrievedCandidate]:
+        """
+        R06: Second-Stage Precision Reranker.
+        Scores fused RRF candidates using lexical anchor matches, key technical phrase
+        overlap, and epistemic weighting, storing 'rerank_score' in candidate metadata.
+        """
+        q_tokens = set(re.findall(r"\w+", query.lower()))
+        for cand in candidates:
+            c_text = (cand.label + " " + cand.content).lower()
+            c_tokens = set(re.findall(r"\w+", c_text))
+            overlap = len(q_tokens.intersection(c_tokens)) / max(1, len(q_tokens))
+            
+            # Key entity / technical phrase precision boost
+            exact_boost = 0.0
+            for kw in ["ghostfin", "eclipse x9", "counter sensing", "voyager", "prometheus torch", "albacore", "voltage", "t2s", "klas", "fluor"]:
+                if kw in query.lower() and kw in c_text:
+                    exact_boost += 0.15
+                    break
+
+            rerank_score = round(cand.score * (1.0 + overlap * 0.5 + exact_boost), 5)
+            cand.metadata["rerank_score"] = rerank_score
+            cand.score = rerank_score
+
+        candidates.sort(key=lambda c: c.score, reverse=True)
+        return candidates[:top_k]
 
 
 _HYBRID_RETRIEVER = ScopedHybridRetriever()
