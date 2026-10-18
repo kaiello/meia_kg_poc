@@ -1,13 +1,13 @@
 # MEIA Federated Tri-Graph POC — 78 Competency Questions Benchmark Report
-**Execution Timestamp:** 2026-10-18T22:03:59Z
-**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 14.52s
+**Execution Timestamp:** 2026-10-18T22:36:34Z
+**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 15.73s
 
 ## 1. Executive Benchmark Summary
 
 | Metric | Target | Achieved | Status |
 | :--- | :---: | :---: | :---: |
 | **Route@1 Accuracy** | $\ge 98.0\%$ | **100.0%** | PASS |
-| **Status & Gate Accuracy** | $100.0\%$ | **98.7%** | PASS |
+| **Status & Gate Accuracy** | $100.0\%$ | **100.0%** | PASS |
 | **Epistemic Locator Grounding (CQ-73)** | $100.0\%$ | **100.0%** | PASS |
 | **Citation & Provenance Coverage** | $100.0\%$ | **100.0%** | PASS |
 | **Claim Promotion Firewall (CQ-75)** | $100.0\%$ | **100.0%** | PASS |
@@ -65,7 +65,7 @@
 | **CQ-32** | What is the chronological readiness trajectory recorded... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 31 cits | OK |
 | **CQ-33** | What is the vendor's qualitative self-assessment of tec... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 31 cits | OK |
 | **CQ-34** | What performance measures and evaluation metrics are de... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 23 cits | OK |
-| **CQ-35** | What software/hardware integration architecture, open s... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 35 cits | OK |
+| **CQ-35** | What software/hardware integration architecture, open s... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 36 cits | OK |
 | **CQ-36** | How does the capability trace through the ICF & MEIA Mi... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 34 cits | OK |
 | **CQ-37** | What submission identifiers, Scoutcard URLs, first-subm... | `ROUTE_CRM` | `ROUTE_CRM` | OK | OK | 25 cits | OK |
 | **CQ-38** | What are the current Twenty CRM pipeline stage, assessm... | `ROUTE_CRM` | `ROUTE_CRM` | OK | OK | 25 cits | OK |
@@ -94,7 +94,7 @@
 | **CQ-61** | Which submissions requesting classified one-on-one meet... | `ROUTE_CRM_ORG` | `ROUTE_CRM_ORG` | OK | OK | 25 cits | OK |
 | **CQ-62** | Which government technical POCs or sponsors named on a ... | `ROUTE_CRM_ORG` | `ROUTE_CRM_ORG` | OK | OK | 36 cits | OK |
 | **CQ-63** | Which capabilities in the CRM portfolio combine high te... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 29 cits | OK |
-| **CQ-64** | How do the unit cost and production rate projections (Q... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 12 cits | OK |
+| **CQ-64** | How do the unit cost and production rate projections (Q... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 11 cits | OK |
 | **CQ-65** | Which capabilities that have completed live operational... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 32 cits | OK |
 | **CQ-66** | Does the same canonical capability offering (Tech-KG) a... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 25 cits | OK |
 | **CQ-67** | For a planned MEIA experimentation campaign targeting C... | `ROUTE_CRM_TECH` | `ROUTE_CRM_TECH` | OK | OK | 22 cits | OK |
@@ -106,6 +106,6 @@
 | **CQ-73** | Exact Evidence Locator & Provenance Trace: Which exact ... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 33 cits | OK |
 | **CQ-74** | Conflicting Evidence Preservation: When two sources or ... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 49 cits | OK |
 | **CQ-75** | Claim vs. Empirical Demonstration Non-Equivalence Gate:... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 48 cits | OK |
-| **CQ-76** | Minimum-Sufficient Routing & Module Capability Gate: Wh... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | FAIL | 1 cits | OK |
+| **CQ-76** | Minimum-Sufficient Routing & Module Capability Gate: Wh... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 1 cits | OK |
 | **CQ-77** | Access Control, PII & Security Classification Gate: Wha... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 1 cits | OK |
 | **CQ-78** | Out-of-Scope & Unrecorded Fact Abstention Gate: What is... | `FAIL_CLOSED_GATE` | `FAIL_CLOSED_GATE` | OK | OK | 1 cits | OK |

@@ -26,6 +26,9 @@ if str(REPO_ROOT) not in sys.path:
 from src.config import FIGURES_DIR
 from src.pre_retrieval import CallerContext
 from src.grounded_answer import answer_query
+from src.figure_inspectors import CROPS_DIR, inspect_figure_loc, LoCInspectionArm
+from src.context_packet import ContextPacketBuilder
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("meia_web")
@@ -269,6 +272,54 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             font-family: monospace;
         }
 
+        .loc-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .loc-tab-btn {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .loc-tab-btn.active {
+            background: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+        }
+        .packet-card {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .packet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .packet-qualifier {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid #f59e0b;
+            padding: 4px 8px;
+            margin: 4px 0;
+            font-size: 11px;
+            color: #fde68a;
+            border-radius: 0 4px 4px 0;
+        }
+
+
         .citations-list {
             list-style: none;
             padding: 0;
@@ -352,15 +403,28 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
         <!-- Right Column: Multimodal Architecture Diagrams & Evidence Citations -->
         <div class="panel">
             <div class="panel-header">
-                <div class="panel-title">Multimodal Evidence & Architecture Diagram</div>
+                <div class="panel-title">Multimodal Evidence & Architecture Diagram (LoC V01)</div>
                 <span id="figureCount" class="badge badge-spine">0 Figures</span>
+            </div>
+            <div class="loc-tabs">
+                <button id="tabArmA" class="loc-tab-btn active" onclick="switchLoCArm('ARM_A_FULL_PAGE')">Arm A: Full 180 DPI</button>
+                <button id="tabArmB" class="loc-tab-btn" onclick="switchLoCArm('ARM_B_FOCAL_CROP')">Arm B: Focal Crop Chip</button>
+                <button id="tabArmC" class="loc-tab-btn" onclick="switchLoCArm('ARM_C_MULTIMODAL_CALLOUT')">Arm C: OCR Callouts</button>
             </div>
             <div id="diagramSection" class="diagram-container">
                 <img id="diagramImage" class="diagram-img" src="/api/figures/meia_charter_2026_p1.png" alt="Architecture Diagram" onerror="this.style.display='none'">
             </div>
             <div id="bboxChips" class="chips-container"></div>
 
-            <div class="panel-header" style="margin-top: 24px;">
+            <div class="panel-header" style="margin-top: 20px;">
+                <div class="panel-title">R03 Functional Context Packets</div>
+                <span id="packetCount" class="badge badge-cell">0 Packets</span>
+            </div>
+            <div id="packetContainer" style="max-height: 240px; overflow-y: auto;">
+                <p style="color: #64748b; font-size: 12px;">No context packets assembled.</p>
+            </div>
+
+            <div class="panel-header" style="margin-top: 20px;">
                 <div class="panel-title">Exact Grounding Citations (CQ-73)</div>
                 <span id="citationCount" class="badge badge-spine">0 Anchors</span>
             </div>
@@ -371,6 +435,41 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
     </div>
 
     <script>
+        let currentAssetId = "meia_charter_2026_p1";
+        let currentArm = "ARM_A_FULL_PAGE";
+
+        async function switchLoCArm(arm) {
+            currentArm = arm;
+            document.querySelectorAll('.loc-tab-btn').forEach(b => b.classList.remove('active'));
+            if (arm === 'ARM_A_FULL_PAGE') document.getElementById('tabArmA').classList.add('active');
+            if (arm === 'ARM_B_FOCAL_CROP') document.getElementById('tabArmB').classList.add('active');
+            if (arm === 'ARM_C_MULTIMODAL_CALLOUT') document.getElementById('tabArmC').classList.add('active');
+
+            try {
+                const res = await fetch(`/api/loc/inspect?asset_id=${encodeURIComponent(currentAssetId)}&arm=${arm}`);
+                const data = await res.json();
+                const diagImg = document.getElementById('diagramImage');
+                if (arm === 'ARM_B_FOCAL_CROP' && data.focal_crop_path) {
+                    diagImg.src = '/' + data.focal_crop_path;
+                } else {
+                    diagImg.src = data.full_page_path ? ('/' + data.full_page_path) : `/api/figures/${currentAssetId}.png`;
+                }
+
+                const chipContainer = document.getElementById('bboxChips');
+                chipContainer.innerHTML = '';
+                if (arm === 'ARM_C_MULTIMODAL_CALLOUT' && data.ocr_callouts && data.ocr_callouts.length > 0) {
+                    data.ocr_callouts.forEach(c => {
+                        const span = document.createElement('span');
+                        span.className = 'bbox-chip';
+                        span.innerText = `[OCR] ${c.text} (${Math.round(c.confidence*100)}%)`;
+                        chipContainer.appendChild(span);
+                    });
+                }
+            } catch (e) {
+                console.error("Failed to switch LoC arm:", e);
+            }
+        }
+
         function setQuery(q, clearance) {
             document.getElementById('queryInput').value = q;
             if (clearance) {
@@ -414,6 +513,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 if (data.visual_figures && data.visual_figures.length > 0) {
                     const fig = data.visual_figures[0];
                     const fname = fig.figure_image.split('/').pop().split('\\').pop();
+                    currentAssetId = fname.replace('.png', '');
                     diagImg.src = '/api/figures/' + fname;
                     diagImg.style.display = 'block';
                     document.getElementById('figureCount').innerText = data.visual_figures.length + ' Figures';
@@ -430,6 +530,38 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     diagImg.style.display = 'none';
                     document.getElementById('figureCount').innerText = '0 Figures';
                 }
+
+                // Update Context Packets
+                const pContainer = document.getElementById('packetContainer');
+                pContainer.innerHTML = '';
+                const packets = data.context_packets || [];
+                document.getElementById('packetCount').innerText = packets.length + ' Packets';
+                if (packets.length > 0) {
+                    packets.forEach(p => {
+                        const div = document.createElement('div');
+                        div.className = 'packet-card';
+                        let qualHtml = '';
+                        if (p.qualifiers_and_notes && p.qualifiers_and_notes.length > 0) {
+                            qualHtml = p.qualifiers_and_notes.map(q => 
+                                `<div class="packet-qualifier"><strong>${q.field_label}:</strong> ${q.content} <em>[${q.source_locator}]</em></div>`
+                            ).join('');
+                        }
+                        div.innerHTML = `
+                            <div class="packet-header">
+                                <span>${p.anchor_label}</span>
+                                <span class="badge badge-cell">${p.target_graph}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 6px;">
+                                <code>${p.packet_id}</code> | Provenance: <strong>${Math.round(p.composite_provenance_score * 100)}%</strong>
+                            </div>
+                            ${qualHtml}
+                        `;
+                        pContainer.appendChild(div);
+                    });
+                } else {
+                    pContainer.innerHTML = '<p style="color: #64748b; font-size: 12px;">Zero ungrounded assertions detected.</p>';
+                }
+
 
                 // Update Citations
                 const cList = document.getElementById('citationList');
@@ -505,6 +637,24 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(resp).encode("utf-8"))
             return
 
+        if path.startswith("/api/figures/crops/"):
+            filename = path.replace("/api/figures/crops/", "")
+            crop_path = CROPS_DIR / filename
+            if crop_path.exists() and crop_path.is_file():
+                mime, _ = mimetypes.guess_type(str(crop_path))
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", mime or "image/png")
+                self.send_header("Content-Length", str(crop_path.stat().st_size))
+                self.end_headers()
+                with open(crop_path, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+            else:
+                self.send_response(HTTPStatus.NOT_FOUND)
+                self.end_headers()
+                self.wfile.write(b"Crop not found")
+                return
+
         if path.startswith("/api/figures/"):
             filename = path.replace("/api/figures/", "")
             fig_path = FIGURES_DIR / filename
@@ -522,6 +672,39 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"Figure not found")
                 return
+
+        if path.startswith("/api/loc/inspect"):
+            from urllib.parse import parse_qs
+            qs = parse_qs(url.query)
+            asset_id = qs.get("asset_id", [""])[0]
+            arm = qs.get("arm", ["ARM_A_FULL_PAGE"])[0]
+            loc_data = inspect_figure_loc(asset_id, arm)
+            resp_bytes = json.dumps(loc_data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path.startswith("/api/context-packets"):
+            builder = ContextPacketBuilder()
+            seed_entities = [
+                "tech:offering:ghostfin_uuv",
+                "tech:offering:eclipse_x9",
+                "tech:offering:counter_sensing",
+                "org:fluor_federal_services",
+                "org:prometheus_intelligence"
+            ]
+            packets = [builder.build_packet_for_entity(eid).to_dict() for eid in seed_entities]
+            resp_bytes = json.dumps(packets).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
 
         self.send_response(HTTPStatus.NOT_FOUND)
         self.end_headers()

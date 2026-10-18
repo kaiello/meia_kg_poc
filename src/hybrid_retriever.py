@@ -172,14 +172,29 @@ class ScopedHybridRetriever:
         dense_matches.sort(key=lambda x: x["raw_score"], reverse=True)
         return dense_matches[:top_k]
 
+    def _detect_item_modality(self, item: Dict[str, Any]) -> str:
+        """Determines if candidate is visual, tabular, or text narrative."""
+        cid = item.get("id", "").lower()
+        ctype = item.get("type", "").lower()
+        if ctype == "visual_asset" or "asset:" in cid or "fig" in cid or "figure" in cid or "_p" in cid:
+            return "visual"
+        if "vulcan" in cid or "cell" in cid or "table" in ctype or "sheet" in cid:
+            return "table"
+        return "text"
+
     def reciprocal_rank_fusion(
         self,
         sparse_results: List[Dict[str, Any]],
         dense_results: List[Dict[str, Any]],
         k: int = 60,
-        top_k: int = 15
+        top_k: int = 15,
+        modality_weights: Optional[Dict[str, float]] = None
     ) -> List[RetrievedCandidate]:
-        """Merges sparse and dense candidate lists using Reciprocal Rank Fusion."""
+        """
+        Merges sparse and dense candidate lists using Modality-Calibrated Reciprocal Rank Fusion (R01).
+        Weights allow balancing text, table, and visual candidates.
+        """
+        weights = modality_weights or {"text": 1.0, "table": 1.0, "visual": 1.0}
         rrf_scores: Dict[str, float] = {}
         candidate_meta: Dict[str, Dict[str, Any]] = {}
         sparse_ranks: Dict[str, int] = {}
@@ -189,7 +204,9 @@ class ScopedHybridRetriever:
         for rank_idx, item in enumerate(sparse_results):
             cid = item["id"]
             sparse_ranks[cid] = rank_idx + 1
-            rrf_scores[cid] = rrf_scores.get(cid, 0.0) + (1.0 / (k + rank_idx + 1))
+            mod = self._detect_item_modality(item)
+            w = weights.get(mod, 1.0)
+            rrf_scores[cid] = rrf_scores.get(cid, 0.0) + (w / (k + rank_idx + 1))
             if cid not in candidate_meta:
                 candidate_meta[cid] = item
 
@@ -197,7 +214,9 @@ class ScopedHybridRetriever:
         for rank_idx, item in enumerate(dense_results):
             cid = item["id"]
             dense_ranks[cid] = rank_idx + 1
-            rrf_scores[cid] = rrf_scores.get(cid, 0.0) + (1.0 / (k + rank_idx + 1))
+            mod = self._detect_item_modality(item)
+            w = weights.get(mod, 1.0)
+            rrf_scores[cid] = rrf_scores.get(cid, 0.0) + (w / (k + rank_idx + 1))
             if cid not in candidate_meta:
                 candidate_meta[cid] = item
 
@@ -224,38 +243,123 @@ class ScopedHybridRetriever:
     def retrieve(
         self,
         decision: RoutingDecision,
-        top_k: int = 15
+        top_k: int = 15,
+        modality_weights: Optional[Dict[str, float]] = None,
+        apply_structural_scoping: bool = True
     ) -> List[RetrievedCandidate]:
-        """Executes scoped hybrid retrieval based on a Pre-Retrieval RoutingDecision."""
+        """
+        Executes scoped hybrid retrieval with:
+        - R01 Modality Calibration (visual weighting)
+        - R02 NativeScope Structural Scoping (document/anchor boundary enforcement)
+        """
         if decision.status != "SUPPORTED":
             return []
 
         # If entity was pre-resolved, inject into query focus
         query = decision.clean_query
+        anchor_entity = None
         if decision.resolved_entities:
             entity_names = " ".join(e["name"] for e in decision.resolved_entities)
             query = f"{query} {entity_names}"
+            anchor_entity = decision.resolved_entities[0]["id"]
 
-        sparse_candidates = self.search_sparse(query, decision.selected_modules, top_k=top_k)
-        dense_candidates = self.search_dense(query, decision.selected_modules, top_k=top_k)
+        # Detect visual intent keywords to calibrate RRF
+        visual_intent = any(w in decision.clean_query.lower() for w in [
+            "diagram", "schematic", "figure", "slide", "visual", "layout", "drawing", "architecture", "propulsion", "payload"
+        ])
+        if modality_weights is None and visual_intent:
+            modality_weights = {"text": 1.0, "table": 1.2, "visual": 1.5}
 
-        return self.reciprocal_rank_fusion(sparse_candidates, dense_candidates, k=60, top_k=top_k)
+        search_k = top_k * 2 if (apply_structural_scoping and anchor_entity) else top_k
+        sparse_candidates = self.search_sparse(query, decision.selected_modules, top_k=search_k)
+        dense_candidates = self.search_dense(query, decision.selected_modules, top_k=search_k)
+
+        # R02: NativeScope Structural Scoping - prevent cross-vendor attribute leakage for single-anchor queries
+        if apply_structural_scoping and anchor_entity and not decision.route_profile.value.startswith("ROUTE_ALL"):
+            anchor_key = anchor_entity.split(":")[-1].lower()
+            excluded_keys = []
+            if "albacore" in anchor_key or "ghostfin" in anchor_key:
+                excluded_keys = ["voltage", "eclipse", "t2s", "counter_sensing"]
+            elif "voltage" in anchor_key or "eclipse" in anchor_key:
+                excluded_keys = ["albacore", "ghostfin", "t2s", "counter_sensing"]
+            elif "t2s" in anchor_key or "counter_sensing" in anchor_key:
+                excluded_keys = ["albacore", "ghostfin", "voltage", "eclipse"]
+
+            if excluded_keys:
+                sparse_candidates = [
+                    c for c in sparse_candidates
+                    if not any(ek in c["id"].lower() or ek in c["text"].lower() for ek in excluded_keys)
+                ]
+                dense_candidates = [
+                    c for c in dense_candidates
+                    if not any(ek in c["id"].lower() or ek in c["text"].lower() for ek in excluded_keys)
+                ]
+
+        return self.reciprocal_rank_fusion(
+            sparse_candidates,
+            dense_candidates,
+            k=60,
+            top_k=top_k,
+            modality_weights=modality_weights
+        )
 
 
 _HYBRID_RETRIEVER = ScopedHybridRetriever()
 
 
+def audit_modality_bias(candidates: List[RetrievedCandidate]) -> Dict[str, Any]:
+    """
+    R01 Modality-Bias Audit: Analyzes candidate distribution across text, table, and visual modalities.
+    """
+    text_count = 0
+    table_count = 0
+    visual_count = 0
+    text_ranks = []
+    table_ranks = []
+    visual_ranks = []
+
+    for rank_idx, c in enumerate(candidates, 1):
+        cid = c.candidate_id.lower()
+        ctype = c.candidate_type.lower()
+        if ctype == "visual_asset" or "asset:" in cid or "fig" in cid or "figure" in cid or "_p" in cid:
+            visual_count += 1
+            visual_ranks.append(rank_idx)
+        elif "vulcan" in cid or "cell" in cid or "table" in ctype:
+            table_count += 1
+            table_ranks.append(rank_idx)
+        else:
+            text_count += 1
+            text_ranks.append(rank_idx)
+
+    total = len(candidates)
+    avg_visual_rank = sum(visual_ranks) / max(len(visual_ranks), 1) if visual_ranks else None
+    avg_text_rank = sum(text_ranks) / max(len(text_ranks), 1) if text_ranks else None
+
+    is_balanced = (visual_count > 0 or table_count > 0)
+    return {
+        "total_candidates": total,
+        "text_candidates": text_count,
+        "table_candidates": table_count,
+        "visual_candidates": visual_count,
+        "avg_visual_rank": round(avg_visual_rank, 2) if avg_visual_rank else None,
+        "avg_text_rank": round(avg_text_rank, 2) if avg_text_rank else None,
+        "modality_balance_status": "BALANCED_MULTIMODAL" if is_balanced else "TEXT_DOMINATED"
+    }
+
+
 def retrieve_hybrid_candidates(
     query: str,
     context: Optional[CallerContext] = None,
-    top_k: int = 15
+    top_k: int = 15,
+    modality_weights: Optional[Dict[str, float]] = None
 ) -> Tuple[RoutingDecision, List[RetrievedCandidate]]:
     """Convenience top-level entrypoint performing Routing + Scoped Hybrid Retrieval."""
     decision = route_user_query(query, context)
     if decision.status != "SUPPORTED":
         return decision, []
-    candidates = _HYBRID_RETRIEVER.retrieve(decision, top_k=top_k)
+    candidates = _HYBRID_RETRIEVER.retrieve(decision, top_k=top_k, modality_weights=modality_weights)
     return decision, candidates
+
 
 
 if __name__ == "__main__":

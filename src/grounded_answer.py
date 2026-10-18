@@ -63,6 +63,7 @@ class GroundedAnswer:
     visual_figures: List[Dict[str, Any]]
     executive_dossier: Optional[ExecutiveDossier]
     epistemic_audit: Dict[str, Any] = field(default_factory=dict)
+    context_packets: List[Dict[str, Any]] = field(default_factory=list)  # R03 Functional Context Packets
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -74,8 +75,10 @@ class GroundedAnswer:
             "citations": self.citations,
             "visual_figures": self.visual_figures,
             "executive_dossier": self.executive_dossier.to_dict() if self.executive_dossier else None,
-            "epistemic_audit": self.epistemic_audit
+            "epistemic_audit": self.epistemic_audit,
+            "context_packets": self.context_packets
         }
+
 
 
 class GroundedAnswerComposer:
@@ -112,7 +115,8 @@ class GroundedAnswerComposer:
             citations=citations,
             visual_figures=bundle.visual_assets,
             executive_dossier=executive_dossier,
-            epistemic_audit={}
+            epistemic_audit={},
+            context_packets=getattr(bundle, "context_packets", [])
         )
 
         # 5. Execute Epistemic Verification (CQ-73, CQ-74, CQ-75)
@@ -168,8 +172,10 @@ class GroundedAnswerComposer:
             citations=citations,
             visual_figures=[],
             executive_dossier=None,
-            epistemic_audit={}
+            epistemic_audit={},
+            context_packets=[]
         )
+
         audit_res = self.verifier.audit(draft, bundle)
         draft.epistemic_audit = audit_res.to_dict()
         return draft

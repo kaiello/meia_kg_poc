@@ -23,6 +23,7 @@ from src.config import (
 )
 from src.pre_retrieval import RoutingDecision, CallerContext, RoutingProfile
 from src.hybrid_retriever import RetrievedCandidate, retrieve_hybrid_candidates
+from src.context_packet import bundle_context_packets_for_route
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("answer_routes")
@@ -40,6 +41,7 @@ class AnswerRouteBundle:
     visual_assets: List[Dict[str, Any]]          # 180 DPI PNGs + interactive BBox chips
     cell_citations: List[str]                    # Exact Sheet!Row:Col citations
     execution_trace: Dict[str, Any]              # Timing, candidate count, policy logs
+    context_packets: List[Dict[str, Any]] = field(default_factory=list)  # R03 Functional Context Packets
 
 
 class AnswerRouteBundler:
@@ -310,6 +312,16 @@ class AnswerRouteBundler:
 
         conn.close()
 
+        # Assemble R03 Functional Context Packets
+        packets = bundle_context_packets_for_route(
+            bundle_primary_entities=list(entities_dict.values()),
+            bundle_claims=epistemic_claims,
+            bundle_chunks=text_chunks,
+            bundle_visuals=visual_assets,
+            db_path=self.db_path
+        )
+        packet_dicts = [p.to_dict() for p in packets]
+
         return AnswerRouteBundle(
             query=decision.clean_query,
             route_profile=decision.route_profile.value,
@@ -320,8 +332,10 @@ class AnswerRouteBundler:
             text_chunks=text_chunks,
             visual_assets=visual_assets,
             cell_citations=cell_citations,
-            execution_trace=trace
+            execution_trace=trace,
+            context_packets=packet_dicts
         )
+
 
 
 _BUNDLER = AnswerRouteBundler()

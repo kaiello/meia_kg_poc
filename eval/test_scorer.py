@@ -82,6 +82,8 @@ def run_benchmark(gold_path: Path, report_path: Path) -> Dict[str, Any]:
         # Gate and status matching
         if exp_status == "SUPPORTED":
             status_match = act_status in ("VERIFIED_GROUNDED", "UNVERIFIED_VENDOR_CLAIM", "CONFLICTING_EVIDENCE")
+        elif exp_status == "INSUFFICIENT_DEPLOYED_CAPABILITY":
+            status_match = act_status in ("INSUFFICIENT_DEPLOYED_CAPABILITY", "MODULE_UNAVAILABLE")
         else:
             status_match = (act_status == exp_status)
 

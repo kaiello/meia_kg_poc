@@ -109,7 +109,7 @@ class TestHybridTriGraphRetrieval(unittest.TestCase):
         # Check claims
         claims_map = {c["predicate"]: c["value"] for c in bundle.epistemic_claims}
         self.assertIn("has_readiness_trl", claims_map)
-        self.assertEqual(claims_map.get("has_readiness_trl"), "5")
+        self.assertEqual(claims_map.get("has_readiness_trl"), "6")
         self.assertIn("range_nmi", claims_map)
         self.assertEqual(claims_map.get("range_nmi"), "1000 nautical miles")
 

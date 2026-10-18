@@ -17,3 +17,5 @@ env/
 .pytest_cache/
 parsed/figures/*.png
 !parsed/figures/.gitkeep
+parsed/figures/crops/*.png
+!parsed/figures/crops/.gitkeep
