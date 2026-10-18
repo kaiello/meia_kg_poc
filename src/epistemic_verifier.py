@@ -57,8 +57,8 @@ class EpistemicVerifier:
             return True
         if cls.FIGURE_PATTERN.match(loc):
             return True
-        # Also allow colon-delimited evidence node IDs: evid:...
-        if loc.startswith("evid:"):
+        # Also allow colon-delimited evidence node IDs: evid:..., node:..., graph:...
+        if loc.startswith("evid:") or loc.startswith("node:") or loc.startswith("graph:"):
             return True
         return False
 

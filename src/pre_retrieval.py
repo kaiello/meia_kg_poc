@@ -271,7 +271,11 @@ class PreRetrievalRouter:
             )
 
         # 3. Check Profile D5: Exact Evidence Locator / Provenance Trace (CQs 73-75)
-        provenance_triggers = ["exact evidence locator", "provenance trace", "cell locator", "sha-256 hash", "conflicting evidence"]
+        provenance_triggers = [
+            "exact evidence locator", "provenance trace", "cell locator", "sha-256 hash", "conflicting evidence",
+            "claim vs. empirical demonstration", "vendor assertion", "minimum-sufficient routing",
+            "module capability gate", "where that module is disabled", "afsim digital engineering"
+        ]
         if any(pt in q_lower for pt in provenance_triggers):
             return RoutingDecision(
                 route_profile=RoutingProfile.FAIL_CLOSED_GATE,
@@ -290,6 +294,7 @@ class PreRetrievalRouter:
             ("small business" in q_lower or "startup" in q_lower or "foci" in q_lower or "naics" in q_lower or "psc" in q_lower) and
             ("trl" in q_lower or "c5isr" in q_lower or "topic" in q_lower or "counter c5isr-t" in q_lower or "capability" in q_lower or "osra" in q_lower),
             "sbir transitioning to sole source" in q_lower,
+            ("sbir" in q_lower or "sttr" in q_lower) and ("sole source" in q_lower or "transition" in q_lower or "r&d" in q_lower or "phase" in q_lower),
             "subaward-to-prime ratio" in q_lower and "component" in q_lower,
             "contract awards" in q_lower and "capabilities" in q_lower,
             "demonstrated in" in q_lower and "awarded" in q_lower,
@@ -392,7 +397,9 @@ class PreRetrievalRouter:
             "legal business name", "cage code", "cage", "uei", "duns", "corporate parent",
             "headquarters address", "physical address", "incorporation", "foci", "foreign-owned",
             "socioeconomic", "small business certification", "naics", "psc", "federal prime spending",
-            "contract awards", "prime awards", "subawards", "prime-to-subaward", "idv", "idiq", "sole-source percentage"
+            "contract awards", "prime awards", "subawards", "prime-to-subaward", "idv", "idiq", "sole-source percentage",
+            "organization type", "business category", "subcategory", "federal agencies", "sub-agencies",
+            "primary customers", "obligated dollars", "pricing structures", "firm fixed price", "time & materials", "cost-plus", "contract pricing"
         ]
         org_score = sum(1 for kw in org_keywords if kw in q_lower)
 
@@ -415,7 +422,8 @@ class PreRetrievalRouter:
             "government sponsors", "sponsor 1", "technical 1", "user 1", "security preference",
             "q12", "funding to scale", "q5", "unit cost", "q6", "supply-chain constraints",
             "q4", "product rights", "crada", "government purpose rights", "export controlled",
-            "itar", "human review queue"
+            "itar", "human review queue", "intake program", "source system", "outreach event",
+            "twenty portal", "intake record", "enter the portfolio", "transition partner", "risk ratings", "four-dimensional risk"
         ]
         crm_score = sum(1 for kw in crm_keywords if kw in q_lower)
 
