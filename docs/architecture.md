@@ -387,3 +387,21 @@ The evaluation harness scores the system across all **78 Federated Competency Qu
 | **Profile D4: `ROUTE_ALL_TRI_STORE`** | `CQ-68` – `CQ-72` | 5 | 3-Way Join: Complete 360° Executive Business & Capability Dossiers (5 POC Vendors) | **100.0%** |
 | **Profile D5: `FAIL_CLOSED_GATE`** | `CQ-73` – `CQ-78` | 6 | Exact locators, conflict preservation, claim-vs-demo gate, RBAC gate, truthful abstention | **100.0%** |
 | **TOTAL** | **`CQ-01` – `CQ-78`** | **78** | **Full Federated Multimodal NLQ & Epistemic Verification** | **100.0%** |
+
+---
+
+## 9. Integrations and Bakeoffs
+
+Cross-program evaluation, candidate bakeoffs, and integration decision registers are maintained in:
+- [Integrations and Bakeoffs: Navy Weld Master Integration and Bakeoff List (October 18, 2026)](NAVY_WELD_MASTER_INTEGRATION_AND_BAKEOFF_LIST_2026-10-18.md)
+
+This register governs candidate selection for:
+- Semantic extraction candidates (`E01`–`E05`)
+- Retrieval and context assembly (`R01`–`R10`, including Trident modality-bias audit, NativeScope structural scoping, and functional evidence units)
+- Visual reading and model training (`V01`–`V03`, `L01`–`L02`, including Loud-and-Clear reader preparation)
+- Semantic representation, validation, and review (`S01`–`S06`, including Utopia review compatibility)
+- Platform and persistence options (`P01`–`P07`, including WeKnora, CortexDB, GraphRAG)
+- Serving optimization (`O01`–`O03`)
+- Consumer boundary and inspection (`U01`–`U07`)
+- Engineering workflow and history (`D01`–`D06`)
+

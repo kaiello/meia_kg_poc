@@ -261,3 +261,21 @@ flowchart TD
    Following [`agents.md`](https://github.com/kaiello/aws-a30-prototype/blob/main/docs/agents.md) in `aws-a30-prototype`, all manifest, routing, graph-join, composer, and epistemic verifier unit tests run with `python -B` and external network/LLM providers stubbed out to guarantee deterministic offline reproducibility before any live LLM synthesis is benchmarked.
 2. **Zero Re-Ingestion Rule**:
    Once `parsed/` (cells, $\le 400$-token chunks, 180 DPI PNGs, OCR BBoxes) and `storage/vdb_chunks_contextual.json` are generated and verified against `config/meia_poc_manifest.json`, all ontology refinements, SKOS mappings, and routing updates run via deterministic Python projection (`src/build_tri_graph.py`) with zero re-OCR or paid API calls.
+
+---
+
+## 7. Integrations and Bakeoffs
+
+Cross-program evaluation, candidate bakeoffs, and integration decision registers are maintained in:
+- [Integrations and Bakeoffs: Navy Weld Master Integration and Bakeoff List (October 18, 2026)](NAVY_WELD_MASTER_INTEGRATION_AND_BAKEOFF_LIST_2026-10-18.md)
+
+This register governs candidate selection for:
+- Semantic extraction candidates (`E01`–`E05`)
+- Retrieval and context assembly (`R01`–`R10`, including Trident modality-bias audit, NativeScope structural scoping, and functional evidence units)
+- Visual reading and model training (`V01`–`V03`, `L01`–`L02`, including Loud-and-Clear reader preparation)
+- Semantic representation, validation, and review (`S01`–`S06`, including Utopia review compatibility)
+- Platform and persistence options (`P01`–`P07`, including WeKnora, CortexDB, GraphRAG)
+- Serving optimization (`O01`–`O03`)
+- Consumer boundary and inspection (`U01`–`U07`)
+- Engineering workflow and history (`D01`–`D06`)
+
