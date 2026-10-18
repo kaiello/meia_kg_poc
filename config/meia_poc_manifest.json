@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_revision": 1,
+  "system_target": "MEIA Federated Tri-Graph POC",
+  "workbooks": [
+    {
+      "id": "doc:vulcan_export_2026",
+      "standard_id": "MEIA_TEM_Vulcan_Export",
+      "relpath": "data/MEIA_TEM_Vulcan_Export.xlsx",
+      "sha256": "226026917125c65dc8cda63266d8766e887b989387ef0e417263ce71bcaf28b0",
+      "byte_length": 21651,
+      "sheets": [
+        {
+          "sheet_name": "Vulcan Submissions",
+          "max_row": 301,
+          "max_column": 62,
+          "populated_rows": [2, 3, 4],
+          "submissions": [
+            {
+              "row_index": 2,
+              "vulcan_id": "26705",
+              "vendor_name": "Albacore Inc.",
+              "cage": "0QSF0",
+              "offering_title": "Ghostfin: Long-Range, Hybrid Electric Medium UUV",
+              "target_graphs": ["TECH", "ORG", "CRM"]
+            },
+            {
+              "row_index": 3,
+              "vulcan_id": "25615",
+              "vendor_name": "Voltage Vessels",
+              "cage": "9W2W3",
+              "offering_title": "Eclipse X9",
+              "target_graphs": ["TECH", "ORG", "CRM"]
+            },
+            {
+              "row_index": 4,
+              "vulcan_id": "27268",
+              "vendor_name": "T2S Solutions, LLC",
+              "cage": null,
+              "offering_title": "Counter Sensing",
+              "target_graphs": ["TECH", "ORG", "CRM"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doc:crm_object_field_mapping",
+      "standard_id": "CRM_Object_Field_Mapping",
+      "relpath": "data/CRM_Object_Field_Mapping.xlsx",
+      "sha256": "2e028dd255bdfde6ca75df8e6c3336f4e1f72af908692e2a61be9aa333631301",
+      "byte_length": 24785,
+      "target_graphs": ["CRM", "ORG"]
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc:meia_charter_2026",
+      "standard_id": "MEIA_Charter_2026",
+      "relpath": "data/MEIA_Charter_2026.pdf",
+      "sha256": "ffe0cbb8e594eb1fdd17bce2e4ca382d8a71763f25a2cd04f7972deb6c7c8329",
+      "byte_length": 5287614,
+      "page_count": 53,
+      "modality": "native_pdf",
+      "raster_only": false,
+      "target_graphs": ["TECH", "CRM"]
+    },
+    {
+      "id": "doc:fluor_corp_profile",
+      "standard_id": "Fluor_Corp_Profile",
+      "relpath": "data/company_data/fluor-corp-profile-english.pdf",
+      "sha256": "bac3820d3b28e12b526addb714515f55902c2a023ae582dcbb77fdfcf7f89b4d",
+      "byte_length": 786827,
+      "page_count": 1,
+      "modality": "native_pdf",
+      "raster_only": false,
+      "target_graphs": ["ORG", "TECH"]
+    },
+    {
+      "id": "doc:fluor_gov_overview",
+      "standard_id": "Fluor_Gov_Overview",
+      "relpath": "data/company_data/Fluor_Government_Overview.pdf",
+      "sha256": "971713d9cc3088375660dcf1643c90f8199377eed42f6af8d81cf04b9719057a",
+      "byte_length": 851703,
+      "page_count": 2,
+      "modality": "raster_pdf",
+      "raster_only": true,
+      "render_dpi": 180,
+      "target_graphs": ["ORG", "TECH"]
+    },
+    {
+      "id": "doc:fluor_nuclear_security",
+      "standard_id": "Fluor_Nuclear_Security",
+      "relpath": "data/company_data/Fluor_Nuclear_Security.pdf",
+      "sha256": "adabe9e02d3e0163fc2f733eed896fb2aa52c075bc8406cb71aea23b8e4360ec",
+      "byte_length": 2561101,
+      "page_count": 2,
+      "modality": "raster_pdf",
+      "raster_only": true,
+      "render_dpi": 180,
+      "target_graphs": ["ORG", "TECH"]
+    },
+    {
+      "id": "doc:klas_voyager_2",
+      "standard_id": "Klas_Voyager_2",
+      "relpath": "data/company_data/Klas-Voyager_2-Brochure.pdf",
+      "sha256": "22b9b84bb0586f90a3a1be3f5893d6c553a0957ae2842b431618cf2cbb65752a",
+      "byte_length": 549676,
+      "page_count": 2,
+      "modality": "native_pdf",
+      "raster_only": false,
+      "target_graphs": ["TECH", "ORG"]
+    },
+    {
+      "id": "doc:klas_c5isr_truetactical",
+      "standard_id": "KLAS_C5ISR_TrueTactical",
+      "relpath": "data/company_data/KLAS_Modernizing_C5ISR_with_TrueTactical_Technology.pdf",
+      "sha256": "4044535c879da39da22c1908ad46d86d20790750fd992ba0c2884e4d51f5d989",
+      "byte_length": 4253323,
+      "page_count": 4,
+      "modality": "native_pdf",
+      "raster_only": false,
+      "target_graphs": ["TECH", "ORG"]
+    },
+    {
+      "id": "doc:klas_voyager_mseries",
+      "standard_id": "KLAS_Voyager_MSeries",
+      "relpath": "data/company_data/KLAS_Voyager_mseries_brochure.pdf",
+      "sha256": "2fe1dea97878b50de4a241ac0c6f16dec4d42a08361b0b4618bd5fed02ba1620",
+      "byte_length": 631693,
+      "page_count": 3,
+      "modality": "native_pdf",
+      "raster_only": false,
+      "target_graphs": ["TECH", "ORG"]
+    },
+    {
+      "id": "doc:prometheus_energy_ai",
+      "standard_id": "Prometheus_Energy_AI",
+      "relpath": "data/company_data/Prometheus_Energy_AI.pdf",
+      "sha256": "35c5a260d814479b2cf0aaf60003de9789b3700474099ba1974bca246eddbdaa",
+      "byte_length": 436059,
+      "page_count": 2,
+      "modality": "raster_pdf",
+      "raster_only": true,
+      "render_dpi": 180,
+      "target_graphs": ["ORG", "TECH"]
+    }
+  ],
+  "api_receipts": [
+    {
+      "id": "api:usaspending_vendor_history_2026",
+      "standard_id": "USASpending_Vendor_History",
+      "relpath": "data/federal_feeds/usaspending_vendor_history.json",
+      "sha256": "da68025dc54d76bcf8cd448ca52fc4b6e9d0bdcd6ebee92b3aac56d587b30cbb",
+      "byte_length": 273514,
+      "entities_covered": [
+        {"vendor": "Fluor Federal Services, Inc.", "uei": "NZ9CUMF36PK1", "cage": "1V924"},
+        {"vendor": "Klas Government, Inc.", "uei": "L3T9VHGP44D1", "cage": "55WZ2"},
+        {"vendor": "Klas Telecom Government Inc.", "uei": "KQ28QJU21GY3", "cage": "55WZ2"},
+        {"vendor": "Prometheus Intelligence Technology LLC", "uei": "J767K9B843S5", "award_id": "697DCK-24-C-00237"},
+        {"vendor": "Albacore Inc.", "cage": "0QSF0"},
+        {"vendor": "Voltage Vessels", "cage": "9W2W3"},
+        {"vendor": "T2S Solutions, LLC", "cage": null}
+      ],
+      "target_graphs": ["ORG", "TECH"]
+    }
+  ]
+}

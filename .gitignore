@@ -1,0 +1,19 @@
+# Data binaries & local sources
+data/company_data/*.pdf
+data/*.xlsx
+data/*.pdf
+storage/*.json.bak
+storage/*.db-journal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+.env
+
+# Test & scratch outputs
+.pytest_cache/
+parsed/figures/*.png
+!parsed/figures/.gitkeep
