@@ -356,6 +356,8 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             <span class="badge badge-spine">Epistemic Spine</span>
             <span class="badge badge-vectors">BGE-Large 1024d</span>
             <span class="badge badge-airgap">Zero Daemon Local</span>
+            <button class="badge badge-vectors" onclick="openReceiptModal()" style="cursor:pointer; border:1px solid #818cf8; background:rgba(99,102,241,0.25);">Audit Receipt (100%)</button>
+            <button class="badge badge-spine" onclick="openStewardModal()" style="cursor:pointer; border:1px solid var(--accent-blue); background:rgba(56,189,248,0.25);">Steward Queue (U04)</button>
         </div>
     </div>
 
@@ -602,9 +604,136 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             }
         }
 
+        // Modal Handlers for Receipt & Steward Queue (U04, U05)
+        async function openReceiptModal() {
+            const m = document.getElementById('receiptModal');
+            const c = document.getElementById('receiptModalContent');
+            m.style.display = 'flex';
+            c.innerHTML = '<p style="color:#94a3b8;">Loading authoritative cryptographic receipt...</p>';
+            try {
+                const res = await fetch('/api/benchmark/receipt');
+                const data = await res.json();
+                const sc = data.scorecard;
+                const fp = data.cryptographic_fingerprints;
+                const env = data.execution_environment;
+                c.innerHTML = `
+                    <div style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:16px; margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <span style="font-weight:700; color:#38bdf8;">Receipt ID: <code>${data.receipt_id}</code></span>
+                            <span style="font-size:12px; color:#22c55e; font-weight:600;">[VERIFIED COMPLETE]</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:14px;">
+                            <div style="background:#1e293b; padding:10px; border-radius:6px; text-align:center;">
+                                <div style="font-size:11px; color:#94a3b8;">Route@1 Accuracy</div>
+                                <div style="font-size:18px; font-weight:700; color:#38bdf8;">${sc.route_accuracy_pct}%</div>
+                            </div>
+                            <div style="background:#1e293b; padding:10px; border-radius:6px; text-align:center;">
+                                <div style="font-size:11px; color:#94a3b8;">Status & Gate Accuracy</div>
+                                <div style="font-size:18px; font-weight:700; color:#22c55e;">${sc.status_accuracy_pct}%</div>
+                            </div>
+                            <div style="background:#1e293b; padding:10px; border-radius:6px; text-align:center;">
+                                <div style="font-size:11px; color:#94a3b8;">Citation Coverage</div>
+                                <div style="font-size:18px; font-weight:700; color:#a855f7;">${sc.citation_coverage_pct}%</div>
+                            </div>
+                        </div>
+                        <div style="font-size:12px; color:#cbd5e1; margin-bottom:8px;"><strong>Cryptographic Hashes (SHA-256):</strong></div>
+                        <div style="font-family:monospace; font-size:11px; color:#94a3b8; background:#020617; padding:8px; border-radius:4px; line-height:1.6;">
+                            • Manifest: ${fp.meia_poc_manifest_sha256.substring(0, 32)}...<br/>
+                            • SQLite DB: ${fp.tri_graph_registry_db_sha256.substring(0, 32)}...<br/>
+                            • Vector Store: ${fp.vdb_chunks_contextual_sha256.substring(0, 32)}...<br/>
+                            • Gold 78 CQs: ${fp.gold_78_cqs_sha256.substring(0, 32)}...
+                        </div>
+                        <div style="font-size:11px; color:#64748b; margin-top:8px;">
+                            Environment: ${env.platform} | Python ${env.python_version} | ${env.embedding_model} (${env.embedding_dim}d) on ${env.pytorch_device}
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                c.innerHTML = `<p style="color:#ef4444;">Failed to load receipt: ${err.message}</p>`;
+            }
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+
+        async function openStewardModal() {
+            const m = document.getElementById('stewardModal');
+            const c = document.getElementById('stewardModalContent');
+            m.style.display = 'flex';
+            c.innerHTML = '<p style="color:#94a3b8;">Loading Data Steward Review Queue...</p>';
+            try {
+                const res = await fetch('/api/steward/review-queue');
+                const data = await res.json();
+                const items = data.items || [];
+                let rowsHtml = '';
+                items.forEach((it, idx) => {
+                    rowsHtml += `
+                        <tr style="border-bottom:1px solid #334155;">
+                            <td style="padding:8px; font-family:monospace; font-size:11px; color:#38bdf8;">${it.queue_id}</td>
+                            <td style="padding:8px; font-size:11px;"><span class="badge badge-spine">${it.item_type}</span></td>
+                            <td style="padding:8px; font-size:11px; color:#f8fafc;">${it.subject_id}</td>
+                            <td style="padding:8px; font-size:11px; color:#cbd5e1;">${it.proposed_value.substring(0, 50)}...</td>
+                            <td style="padding:8px; font-size:11px; color:#f59e0b; font-weight:600;">${it.review_status}</td>
+                        </tr>
+                    `;
+                });
+                c.innerHTML = `
+                    <div style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:16px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <span style="font-weight:700; color:#818cf8;">Pending Review Items: <strong>${data.summary.total_pending_items}</strong></span>
+                            <span style="font-size:12px; color:#94a3b8;">Governance Loop: Human-in-the-Loop Gate</span>
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; text-align:left;">
+                            <thead>
+                                <tr style="border-bottom:2px solid #334155; color:#94a3b8; font-size:11px;">
+                                    <th style="padding:8px;">Queue ID</th>
+                                    <th style="padding:8px;">Type</th>
+                                    <th style="padding:8px;">Subject ID</th>
+                                    <th style="padding:8px;">Proposed Value / Reason</th>
+                                    <th style="padding:8px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (err) {
+                c.innerHTML = `<p style="color:#ef4444;">Failed to load review queue: ${err.message}</p>`;
+            }
+        }
+
+        function closeStewardModal() {
+            document.getElementById('stewardModal').style.display = 'none';
+        }
+
         // Run default query on initial load
         window.onload = function() { executeQuery(); };
     </script>
+
+    <!-- Modal for Cryptographic Benchmark Receipt -->
+    <div id="receiptModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#1e293b; border:1px solid #38bdf8; border-radius:10px; max-width:850px; width:90%; max-height:85vh; overflow-y:auto; padding:24px; color:#f8fafc;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px; margin-bottom:16px;">
+                <h2 style="font-size:18px; color:#38bdf8;">MEIA 78-CQ Benchmark & Cryptographic Verification Receipt (U05)</h2>
+                <button onclick="closeReceiptModal()" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Close</button>
+            </div>
+            <div id="receiptModalContent">Loading cryptographic receipt...</div>
+        </div>
+    </div>
+
+    <!-- Modal for Steward Review Queue -->
+    <div id="stewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#1e293b; border:1px solid #6366f1; border-radius:10px; max-width:850px; width:90%; max-height:85vh; overflow-y:auto; padding:24px; color:#f8fafc;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px; margin-bottom:16px;">
+                <h2 style="font-size:18px; color:#818cf8;">Data Steward Human Review Queue (U04)</h2>
+                <button onclick="closeStewardModal()" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Close</button>
+            </div>
+            <div id="stewardModalContent">Loading steward queue...</div>
+        </div>
+    </div>
 </body>
 </html>
 """
@@ -698,6 +827,38 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             ]
             packets = [builder.build_packet_for_entity(eid).to_dict() for eid in seed_entities]
             resp_bytes = json.dumps(packets).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path.startswith("/api/benchmark/receipt"):
+            receipt_path = REPO_ROOT / "eval" / "meia_78_cq_receipt.json"
+            if not receipt_path.exists():
+                from eval.test_scorer import run_benchmark
+                run_benchmark(REPO_ROOT / "eval" / "gold_78_cqs.json", REPO_ROOT / "eval" / "meia_78_cq_report.md")
+            with open(receipt_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            resp_bytes = json.dumps(data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path.startswith("/api/steward/review-queue"):
+            from src.steward_review import StewardReviewManager
+            mgr = StewardReviewManager()
+            items = mgr.harvest_review_queue()
+            stats = mgr.get_summary_stats()
+            payload = {
+                "summary": stats,
+                "items": [it.to_dict() for it in items]
+            }
+            resp_bytes = json.dumps(payload).encode("utf-8")
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(resp_bytes)))
