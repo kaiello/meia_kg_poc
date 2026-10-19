@@ -46,11 +46,13 @@ VDB_ENTITIES_PATH = STORAGE_DIR / "vdb_entities.json"
 RENDER_DPI = 180
 MAX_CHUNK_TOKENS = 400
 CHUNK_OVERLAP_TOKENS = 50
-EMBEDDING_MODEL_NAME = "BAAI/bge-large-en-v1.5"
+EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "BAAI/bge-large-en-v1.5")
 EMBEDDING_DIM = 1024
 
-# Cross-Encoder Reranker
+# Cross-Encoder Reranker & Visual Models (Cached in ~/.cache/huggingface/hub)
 RERANKER_MODEL = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")
+VISUAL_RETRIEVER_MODEL = os.getenv("VISUAL_RETRIEVER_MODEL", "vidore/colqwen2.5-v0.2")
+DOCLING_MODEL = os.getenv("DOCLING_MODEL", "ibm/granite-docling:258m")
 
 # Load environment (.env in repo root, home, or fallback to sibling prototypes)
 load_dotenv(REPO_ROOT / ".env")
@@ -60,23 +62,62 @@ if not os.getenv("DEEPSEEK_API_KEY"):
     if fallback_a30.is_file():
         load_dotenv(fallback_a30)
 
-# Inference Configuration: DeepSeek
+# Local Ollama Open-Weight Inference Configuration (Non-DeepSeek Default)
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+OLLAMA_NATIVE_URL = os.getenv("OLLAMA_NATIVE_URL", "http://localhost:11434")
+OLLAMA_DEFAULT_MODEL = os.getenv("OLLAMA_DEFAULT_MODEL", "qwen3-vl:8b-instruct")
+
+OLLAMA_RECOMMENDED_MODELS = {
+    "qwen3-vl:8b-instruct": {
+        "label": "Qwen3-VL 8B Instruct (Multimodal + RAG)",
+        "role": "Primary Multimodal & Grounded Synthesis",
+        "vram_gb": 6.1,
+        "multimodal": True,
+    },
+    "gemma4:e4b": {
+        "label": "Google Gemma 4 E4B (Analytical Reasoning)",
+        "role": "Cross-Graph Analytical Synthesis",
+        "vram_gb": 9.6,
+        "multimodal": True,
+    },
+    "hermes3:8b": {
+        "label": "Nous Hermes 3 8B (Skill & Citation Follower)",
+        "role": "Strict Skill Execution & Citation Formatting",
+        "vram_gb": 4.7,
+        "multimodal": False,
+    },
+    "qwen2.5vl:7b": {
+        "label": "Qwen2.5-VL 7B (Visual Schematic Inspector)",
+        "role": "LoC Arm-C Diagram & BBox Inspection",
+        "vram_gb": 6.0,
+        "multimodal": True,
+    },
+    "glm-ocr:latest": {
+        "label": "GLM-OCR (Schematic & Document OCR)",
+        "role": "Region Callout & Table OCR",
+        "vram_gb": 2.2,
+        "multimodal": True,
+    },
+}
+
+# Inference Configuration: DeepSeek (Optional Cloud Fallback)
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
 
-# Dual-Engine: Google Gemini
+# Dual-Engine: Google Gemini (Optional Cloud Fallback)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY", "")
 GEMINI_BASE_URL = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
-# Custom / OpenAI / Ollama alternative
+# Custom / OpenAI / Alternative Loopback
 CUSTOM_API_KEY = os.getenv("CUSTOM_API_KEY", "") or os.getenv("OPENAI_API_KEY", "")
 CUSTOM_BASE_URL = os.getenv("CUSTOM_BASE_URL", "https://api.openai.com/v1")
 CUSTOM_MODEL = os.getenv("CUSTOM_MODEL", "gpt-4o-mini")
 
-# Default Engine: if DEEPSEEK_API_KEY is present, default to deepseek; otherwise deterministic
-DEFAULT_ENGINE = os.getenv("DEFAULT_ENGINE", "deepseek" if DEEPSEEK_API_KEY else "deterministic")
+# Default Engine: Local Ollama Open-Weight Model
+DEFAULT_ENGINE = os.getenv("DEFAULT_ENGINE", "ollama:qwen3-vl:8b-instruct")
 
 # ColPali / Late-Interaction Adapter reference (from LANL card09 demo assets)
 LANL_ADAPTER_DIR = Path("C:/Users/kenai/lanl-demo-assets-card09/models/adapter")
+

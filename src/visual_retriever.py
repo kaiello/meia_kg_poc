@@ -208,3 +208,19 @@ def get_visual_retriever() -> ColPaliVisualRetriever:
     if _GLOBAL_VISUAL_RETRIEVER is None:
         _GLOBAL_VISUAL_RETRIEVER = ColPaliVisualRetriever()
     return _GLOBAL_VISUAL_RETRIEVER
+
+
+def get_visual_stack_info() -> Dict[str, Any]:
+    """Returns local visual retriever capabilities and model cache metadata."""
+    from src.config import VISUAL_RETRIEVER_MODEL, DOCLING_MODEL, LANL_ADAPTER_DIR
+    vr = get_visual_retriever()
+    return {
+        "visual_model": VISUAL_RETRIEVER_MODEL,
+        "docling_ocr_model": DOCLING_MODEL,
+        "figures_indexed": len(vr.figures),
+        "chips_indexed": sum(len(c) for c in vr.chips_by_figure.values()),
+        "adapter_dir": str(LANL_ADAPTER_DIR),
+        "multivector_maxsim": True,
+        "device_backend": "NVIDIA GeForce RTX 3080 Ti Laptop GPU (CUDA 8.6)",
+    }
+

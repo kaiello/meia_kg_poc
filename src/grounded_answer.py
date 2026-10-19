@@ -146,12 +146,13 @@ class GroundedAnswerComposer:
             "active_skills": ["tri-graph-routing", "epistemic-claim-audit", "executive-dossier-composer"],
         }
 
-        # 5. Live LLM Generation Branch (DeepSeek / Gemini / Custom)
-        if target_engine in {"deepseek", "gemini", "custom", "openai", "ollama"}:
+        # 5. Live LLM Generation Branch (Ollama / DeepSeek / Gemini / Custom)
+        if target_engine.startswith("ollama") or target_engine in {"deepseek", "gemini", "custom", "openai", "ollama"}:
             try:
                 from src.llm_client import get_llm_client
                 from src.context_packet import format_packets_as_evidence_text
                 from src.figure_inspectors import inspect_figure_loc
+                from src.config import FIGURES_DIR
 
                 llm_client = get_llm_client()
 
@@ -172,8 +173,9 @@ class GroundedAnswerComposer:
                         context_lines.append(f"Source Chunk [{tc.get('chunk_id')}]: {tc.get('text', '')[:200]}")
                     context_evidence_text = "\n".join(context_lines)
 
-                # Format LoC Visual Reader Arm text
+                # Format LoC Visual Reader Arm text and resolve top image crop
                 loc_text_parts = []
+                loc_image_path = None
                 for vis in bundle.visual_assets[:2]:
                     asset_id = vis.get("asset_id") or vis.get("image_relpath", "")
                     if asset_id:
@@ -181,6 +183,11 @@ class GroundedAnswerComposer:
                         callouts = payload.get("ocr_callouts", [])
                         loc_summary = ", ".join(f"{c.get('label')}: '{c.get('text')}'" for c in callouts[:4])
                         loc_text_parts.append(f"Figure [{payload.get('asset_id')}] Arm [{payload.get('arm')}]: Callouts: {loc_summary}")
+                    img_name = vis.get("figure_image") or vis.get("image_relpath", "")
+                    if not loc_image_path and img_name:
+                        cand_path = FIGURES_DIR / Path(img_name).name
+                        if cand_path.is_file():
+                            loc_image_path = str(cand_path)
                 loc_payload_text = "\n".join(loc_text_parts) if loc_text_parts else None
 
                 llm_resp = llm_client.generate(
@@ -192,7 +199,9 @@ class GroundedAnswerComposer:
                     model_name=model_name,
                     base_url=base_url,
                     loc_payload_text=loc_payload_text,
+                    loc_image_path=loc_image_path,
                 )
+
 
                 llm_meta = llm_resp.to_dict()
 

@@ -12,6 +12,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.config import (
@@ -24,11 +25,63 @@ from src.config import (
     GEMINI_API_KEY,
     GEMINI_BASE_URL,
     GEMINI_MODEL,
+    OLLAMA_BASE_URL,
+    OLLAMA_NATIVE_URL,
+    OLLAMA_DEFAULT_MODEL,
+    OLLAMA_RECOMMENDED_MODELS,
 )
 from src.security_boundaries import validate_model_endpoint
 from src.skill_loader import get_skill_registry
 
 logger = logging.getLogger("meia_llm_client")
+
+
+def discover_ollama_models(native_url: Optional[str] = None) -> Dict[str, Any]:
+    """Queries live Ollama daemon to discover installed models with VRAM and role recommendations."""
+    url = (native_url or OLLAMA_NATIVE_URL).rstrip("/") + "/api/tags"
+    try:
+        approved_url = validate_model_endpoint(url, url)
+        req = urllib.request.Request(approved_url, headers={"User-Agent": "MEIA-TriGraph/1.0"}, method="GET")
+        with urllib.request.urlopen(req, timeout=3.0) as resp:
+            if resp.status == 200:
+                body = resp.read().decode("utf-8")
+                data = json.loads(body)
+                raw_models = data.get("models", [])
+                installed = []
+                for m in raw_models:
+                    tag = m.get("name", "")
+                    size_bytes = m.get("size", 0)
+                    size_gb = round(size_bytes / (1024 ** 3), 2)
+                    is_deepseek = "deepseek" in tag.lower()
+                    rec = OLLAMA_RECOMMENDED_MODELS.get(tag, {})
+                    installed.append({
+                        "name": tag,
+                        "model": m.get("model", tag),
+                        "size_gb": size_gb,
+                        "modified_at": m.get("modified_at", ""),
+                        "is_deepseek": is_deepseek,
+                        "role": rec.get("role", "General Open-Weight LLM"),
+                        "recommended": bool(rec),
+                        "multimodal": rec.get("multimodal", "vl" in tag.lower() or "vision" in tag.lower()),
+                        "vram_gb": rec.get("vram_gb", size_gb),
+                    })
+                return {
+                    "online": True,
+                    "endpoint": url,
+                    "total_models": len(installed),
+                    "non_deepseek_models": [m for m in installed if not m["is_deepseek"]],
+                    "models": installed,
+                }
+    except Exception as exc:
+        logger.debug("Ollama daemon check error at %s: %s", url, exc)
+    return {
+        "online": False,
+        "endpoint": url,
+        "total_models": 0,
+        "non_deepseek_models": [],
+        "models": [],
+        "error": "Ollama daemon unreachable at localhost:11434",
+    }
 
 
 @dataclass
@@ -59,7 +112,7 @@ class LLMResponse:
 
 
 class LiveLLMClient:
-    """Executes live queries against DeepSeek, Gemini, or Custom endpoints."""
+    """Executes live queries against Ollama, DeepSeek, Gemini, or Custom endpoints."""
 
     def __init__(self):
         self.skill_registry = get_skill_registry()
@@ -69,20 +122,30 @@ class LiveLLMClient:
         query: str,
         context_packet_text: str,
         route_profile: str = "D4_CROSS_GRAPH_SYNTHESIS",
-        engine: str = "deepseek",
+        engine: str = "ollama:qwen3-vl:8b-instruct",
         api_key: Optional[str] = None,
         model_name: Optional[str] = None,
         base_url: Optional[str] = None,
         loc_payload_text: Optional[str] = None,
+        loc_image_path: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: int = 2048,
     ) -> LLMResponse:
         """Generates a grounded answer using the specified engine and skill rules."""
-        engine_lower = (engine or "deepseek").lower()
+        raw_engine = engine or OLLAMA_DEFAULT_MODEL
+        engine_lower = raw_engine.lower()
         started = time.perf_counter()
 
         # Resolve credentials & endpoints
-        if engine_lower == "deepseek":
+        if engine_lower.startswith("ollama"):
+            # Supports "ollama" or "ollama:model_name"
+            target_key = api_key or "ollama"
+            target_url = base_url or OLLAMA_BASE_URL
+            if ":" in raw_engine and not model_name:
+                target_model = raw_engine.split(":", 1)[1]
+            else:
+                target_model = model_name or OLLAMA_DEFAULT_MODEL
+        elif engine_lower == "deepseek":
             target_key = api_key or DEEPSEEK_API_KEY
             target_url = base_url or DEEPSEEK_BASE_URL
             target_model = model_name or DEEPSEEK_MODEL
@@ -90,8 +153,8 @@ class LiveLLMClient:
             target_key = api_key or GEMINI_API_KEY
             target_url = base_url or GEMINI_BASE_URL
             target_model = model_name or GEMINI_MODEL
-        elif engine_lower in {"custom", "openai", "ollama"}:
-            target_key = api_key or CUSTOM_API_KEY
+        elif engine_lower in {"custom", "openai"}:
+            target_key = api_key or CUSTOM_API_KEY or "custom-key"
             target_url = base_url or CUSTOM_BASE_URL
             target_model = model_name or CUSTOM_MODEL
         else:
@@ -101,10 +164,10 @@ class LiveLLMClient:
                 model_name=model_name or "unknown",
                 latency_ms=0.0,
                 status="ERROR",
-                error_message=f"Unsupported engine '{engine_lower}'. Use 'deepseek', 'gemini', or 'custom'.",
+                error_message=f"Unsupported engine '{engine_lower}'. Use 'ollama', 'deepseek', 'gemini', or 'custom'.",
             )
 
-        if not target_key and engine_lower != "custom":
+        if not target_key and not engine_lower.startswith("ollama") and engine_lower != "custom":
             return LLMResponse(
                 answer="",
                 engine=engine_lower,
@@ -126,6 +189,7 @@ class LiveLLMClient:
                 status="ERROR",
                 error_message=f"Security boundary check failed for endpoint: {sec_exc}",
             )
+
 
         # Build prompt incorporating active SKILL.md rules
         active_skills = [s.name for s in self.skill_registry.get_skills_for_route(route_profile)]
@@ -157,6 +221,26 @@ class LiveLLMClient:
 
         full_user_content = "\n".join(user_content_parts)
 
+        # Check for multimodal vision models and optional figure image
+        is_vision_model = any(v in target_model.lower() for v in ["vl", "vision", "gemma4"])
+        user_message_content: Any = full_user_content
+        if is_vision_model and loc_image_path:
+            p = Path(loc_image_path)
+            if p.is_file():
+                try:
+                    import base64
+                    with open(p, "rb") as img_f:
+                        img_b64 = base64.b64encode(img_f.read()).decode("utf-8")
+                    user_message_content = [
+                        {"type": "text", "text": full_user_content},
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:image/png;base64,{img_b64}"}
+                        }
+                    ]
+                except Exception as img_exc:
+                    logger.debug("Failed to encode image %s for vision model: %s", loc_image_path, img_exc)
+
         # Build OpenAI-compatible request payload
         api_endpoint = approved_url.rstrip("/") + "/chat/completions"
         headers = {
@@ -164,21 +248,24 @@ class LiveLLMClient:
             "Authorization": f"Bearer {target_key}",
         }
 
-        payload = {
+        payload: Dict[str, Any] = {
             "model": target_model,
             "messages": [
                 {"role": "system", "content": system_instruction},
-                {"role": "user", "content": full_user_content},
+                {"role": "user", "content": user_message_content},
             ],
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
 
+        if engine_lower.startswith("ollama"):
+            payload["options"] = {"num_ctx": 8192}
+
         try:
             req_data = json.dumps(payload).encode("utf-8")
             req = urllib.request.Request(api_endpoint, data=req_data, headers=headers, method="POST")
             
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 status_code = resp.status
                 body = resp.read().decode("utf-8")
                 data = json.loads(body)

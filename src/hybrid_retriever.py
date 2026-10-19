@@ -41,6 +41,50 @@ class RetrievedCandidate:
     metadata: Dict[str, Any] = None
 
 
+_RERANKER_MODEL_INSTANCE = None
+
+
+def get_reranker_model():
+    """Lazily loads local CrossEncoder (BAAI/bge-reranker-base) from cache if available."""
+    global _RERANKER_MODEL_INSTANCE
+    if _RERANKER_MODEL_INSTANCE is False:
+        return None
+    if _RERANKER_MODEL_INSTANCE is not None:
+        return _RERANKER_MODEL_INSTANCE
+    try:
+        from sentence_transformers import CrossEncoder
+        from src.config import RERANKER_MODEL
+        try:
+            _RERANKER_MODEL_INSTANCE = CrossEncoder(RERANKER_MODEL, local_files_only=True)
+        except Exception:
+            _RERANKER_MODEL_INSTANCE = CrossEncoder(RERANKER_MODEL)
+        return _RERANKER_MODEL_INSTANCE
+    except Exception as e:
+        logger.debug("CrossEncoder not loaded (%s); using deterministic precision reranker", e)
+        _RERANKER_MODEL_INSTANCE = False
+        return None
+
+
+def expand_query_terms(query: str) -> List[str]:
+    """Expands domain acronyms and SKOS concept synonyms for enhanced lexical/dense matching."""
+    acronym_map = {
+        "uuv": ["unmanned undersea vehicle", "submersible", "ghostfin"],
+        "c5isr": ["command control communications computers cyber", "tactical edge", "voyager"],
+        "trl": ["technology readiness level"],
+        "mrl": ["manufacturing readiness level"],
+        "crada": ["cooperative research and development agreement"],
+        "gpr": ["government purpose rights"],
+        "albacore": ["ghostfin", "medium uuv"],
+        "voyager": ["klas", "tactical chassis"],
+    }
+    tokens = re.findall(r"\b[A-Za-z0-9_-]+\b", query.lower())
+    expansions = []
+    for t in tokens:
+        if t in acronym_map:
+            expansions.extend(acronym_map[t])
+    return expansions
+
+
 class ScopedHybridRetriever:
     """Performs scoped dense-sparse hybrid retrieval with Reciprocal Rank Fusion."""
 
@@ -48,6 +92,7 @@ class ScopedHybridRetriever:
         self.db_path = TRI_GRAPH_DB_PATH
         self.chunks_cache = None
         self.entities_cache = None
+
 
     def _load_caches(self):
         if self.chunks_cache is None and VDB_CHUNKS_PATH.exists():
@@ -394,9 +439,28 @@ class ScopedHybridRetriever:
     ) -> List[RetrievedCandidate]:
         """
         R06: Second-Stage Precision Reranker.
-        Scores fused RRF candidates using lexical anchor matches, key technical phrase
-        overlap, and epistemic weighting, storing 'rerank_score' in candidate metadata.
+        Scores fused RRF candidates using local BAAI/bge-reranker-base CrossEncoder if available,
+        falling back to lexical anchor matches and technical phrase overlap.
         """
+        if not candidates:
+            return []
+
+        ce_model = get_reranker_model()
+        if ce_model is not None:
+            try:
+                pairs = [(query, (cand.label + " " + cand.content)[:500]) for cand in candidates]
+                scores = ce_model.predict(pairs)
+                for cand, score in zip(candidates, scores):
+                    if cand.metadata is None:
+                        cand.metadata = {}
+                    cand.metadata["cross_encoder_score"] = float(score)
+                    cand.score = round(cand.score * 0.5 + float(score) * 0.5, 5)
+                    cand.metadata["rerank_score"] = cand.score
+                candidates.sort(key=lambda c: c.score, reverse=True)
+                return candidates[:top_k]
+            except Exception as ce_exc:
+                logger.debug("CrossEncoder prediction error (%s); falling back to precision rules", ce_exc)
+
         q_tokens = set(re.findall(r"\w+", query.lower()))
         for cand in candidates:
             c_text = (cand.label + " " + cand.content).lower()
@@ -418,6 +482,7 @@ class ScopedHybridRetriever:
 
         candidates.sort(key=lambda c: c.score, reverse=True)
         return candidates[:top_k]
+
 
 
 _HYBRID_RETRIEVER = ScopedHybridRetriever()

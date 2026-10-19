@@ -524,12 +524,17 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
     <div class="search-container">
         <div class="search-bar">
             <input type="text" id="queryInput" class="search-input" placeholder="Type a natural language competency question..." value="What is Ghostfin's TRL and operational range?">
-            <select id="engineSelect" class="clearance-select" style="min-width: 175px;">
-                <option value="deepseek" selected>⚡ DeepSeek (deepseek-chat)</option>
-                <option value="deterministic">🛡️ Deterministic (Tri-Graph)</option>
+            <select id="engineSelect" class="clearance-select" style="min-width: 250px;">
+                <option value="ollama:qwen3-vl:8b-instruct" selected>🦙 Ollama: Qwen3-VL 8B (Multimodal · 6.1 GB)</option>
+                <option value="ollama:gemma4:e4b">🦙 Ollama: Gemma 4 E4B (Analytical · 9.6 GB)</option>
+                <option value="ollama:hermes3:8b">🦙 Ollama: Hermes 3 8B (Skill/RAG · 4.7 GB)</option>
+                <option value="ollama:qwen2.5vl:7b">🦙 Ollama: Qwen2.5-VL 7B (Vision · 6.0 GB)</option>
+                <option value="deterministic">🛡️ Deterministic (Tri-Graph Verifier)</option>
+                <option value="deepseek">⚡ DeepSeek (deepseek-chat)</option>
                 <option value="gemini">✨ Gemini (gemini-2.0-flash)</option>
                 <option value="custom">🔌 Custom / OpenAI-Compatible</option>
             </select>
+
             <select id="clearanceSelect" class="clearance-select">
                 <option value="SECRET" selected>SECRET Clearance</option>
                 <option value="TOP_SECRET">TOP SECRET Clearance</option>
@@ -1569,16 +1574,34 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             try {
                 const res = await fetch('/api/config_status');
                 const cfg = await res.json();
-                let dsBadge = cfg.deepseek_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active from server environment</span>' : '<span style="color:#ef4444;">❌ Unconfigured (session override required)</span>';
+                const ollamaOnline = cfg.ollama_status && cfg.ollama_status.online;
+                const ollamaBadge = ollamaOnline ? '<span style="color:#22c55e; font-weight:700;">✅ Online (localhost:11434)</span>' : '<span style="color:#ef4444;">❌ Offline</span>';
+                
+                let modelsListHtml = '';
+                if (ollamaOnline && cfg.ollama_status.non_deepseek_models) {
+                    modelsListHtml = cfg.ollama_status.non_deepseek_models.map(m => 
+                        `<span class="badge badge-spine" style="margin:2px;" title="${m.role}">🦙 ${escapeHtml(m.name)} (${m.size_gb}GB)</span>`
+                    ).join(' ');
+                }
+
+                const ret = cfg.retrieval_stack || {};
+                let dsBadge = cfg.deepseek_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active</span>' : '<span style="color:#94a3b8;">Unconfigured</span>';
                 let gemBadge = cfg.gemini_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active</span>' : '<span style="color:#94a3b8;">Unconfigured</span>';
                 let custBadge = cfg.custom_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active</span>' : '<span style="color:#94a3b8;">Unconfigured</span>';
                 let skillsHtml = (cfg.active_skills || []).map(s => `<code>${escapeHtml(s.name || s)}</code>`).join(', ');
 
                 statusDiv.innerHTML = `
-                    <div>• <strong>DeepSeek API:</strong> ${dsBadge} (Default Model: <code>${cfg.deepseek_model}</code>)</div>
-                    <div>• <strong>Google Gemini API:</strong> ${gemBadge} (Model: <code>${cfg.gemini_model}</code>)</div>
-                    <div>• <strong>Custom / OpenAI API:</strong> ${custBadge} (Model: <code>${cfg.custom_model}</code>)</div>
-                    <div style="margin-top:6px;">• <strong>Loaded Domain Skills:</strong> ${skillsHtml}</div>
+                    <div style="background:#020617; padding:10px; border-radius:6px; margin-bottom:10px; border-left:3px solid #38bdf8;">
+                        <div style="font-weight:700; color:#38bdf8; margin-bottom:4px;">💻 Workstation Hardware:</div>
+                        <div style="font-size:12px; color:#cbd5e1;">${escapeHtml(ret.hardware || 'NVIDIA RTX 3080 Ti (16GB VRAM) + 64GB RAM')}</div>
+                    </div>
+                    <div>• <strong>Local Ollama Open-Weight Daemon:</strong> ${ollamaBadge} (Default: <code>${cfg.ollama_status ? cfg.ollama_status.default_model : 'qwen3-vl:8b-instruct'}</code>)</div>
+                    ${modelsListHtml ? `<div style="margin:6px 0 8px 12px;">${modelsListHtml}</div>` : ''}
+                    <div>• <strong>Local Dense Embeddings:</strong> <span style="color:#818cf8; font-weight:600;">${escapeHtml(ret.embedding_model || 'BAAI/bge-large-en-v1.5')}</span></div>
+                    <div>• <strong>Local Cross-Encoder Reranker:</strong> <span style="color:#818cf8; font-weight:600;">${escapeHtml(ret.reranker_model || 'BAAI/bge-reranker-base')}</span></div>
+                    <div>• <strong>Local Visual MaxSim Retriever:</strong> <span style="color:#818cf8; font-weight:600;">${escapeHtml(ret.visual_model || 'vidore/colqwen2.5-v0.2')}</span></div>
+                    <div style="margin-top:8px; border-top:1px solid #334155; padding-top:6px; color:#64748b; font-size:11px;">Optional Cloud Fallbacks: DeepSeek: ${dsBadge} | Gemini: ${gemBadge} | Custom: ${custBadge}</div>
+                    <div style="margin-top:4px;">• <strong>Loaded Domain Skills:</strong> ${skillsHtml}</div>
                 `;
 
                 // Restore any existing session overrides to input fields
@@ -1592,6 +1615,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 statusDiv.innerHTML = `<span style="color:#ef4444;">Failed to query status: ${err.message}</span>`;
             }
         }
+
 
         function closeModelDrawer() {
             document.getElementById('modelModal').style.display = 'none';
@@ -1789,18 +1813,50 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(resp).encode("utf-8"))
             return
 
+        if path == "/api/ollama/models":
+            from src.llm_client import discover_ollama_models
+            data = discover_ollama_models()
+            resp_bytes = json.dumps(data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
         if path == "/api/config_status":
             from src.config import (
                 DEEPSEEK_API_KEY, GEMINI_API_KEY, CUSTOM_API_KEY,
-                DEFAULT_ENGINE, DEEPSEEK_MODEL, GEMINI_MODEL, CUSTOM_MODEL
+                DEFAULT_ENGINE, DEEPSEEK_MODEL, GEMINI_MODEL, CUSTOM_MODEL,
+                OLLAMA_BASE_URL, OLLAMA_DEFAULT_MODEL, EMBEDDING_MODEL_NAME,
+                RERANKER_MODEL
             )
             from src.skill_loader import get_skill_registry
+            from src.llm_client import discover_ollama_models
+            from src.visual_retriever import get_visual_stack_info
+
             reg = get_skill_registry()
+            ollama_info = discover_ollama_models()
+            vis_info = get_visual_stack_info()
+
             status_data = {
+                "default_engine": DEFAULT_ENGINE,
+                "ollama_status": {
+                    "online": ollama_info.get("online", False),
+                    "base_url": OLLAMA_BASE_URL,
+                    "default_model": OLLAMA_DEFAULT_MODEL,
+                    "non_deepseek_models": ollama_info.get("non_deepseek_models", []),
+                },
+                "retrieval_stack": {
+                    "embedding_model": f"{EMBEDDING_MODEL_NAME} (1024d)",
+                    "reranker_model": RERANKER_MODEL,
+                    "visual_model": vis_info.get("visual_model", "vidore/colqwen2.5-v0.2"),
+                    "ocr_models": ["glm-ocr:latest", "ibm/granite-docling:258m"],
+                    "hardware": "NVIDIA GeForce RTX 3080 Ti Laptop GPU (16 GB VRAM) + 64 GB RAM",
+                },
                 "deepseek_configured": bool(DEEPSEEK_API_KEY),
                 "gemini_configured": bool(GEMINI_API_KEY),
                 "custom_configured": bool(CUSTOM_API_KEY),
-                "default_engine": DEFAULT_ENGINE,
                 "deepseek_model": DEEPSEEK_MODEL,
                 "gemini_model": GEMINI_MODEL,
                 "custom_model": CUSTOM_MODEL,
@@ -1813,6 +1869,7 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(resp_bytes)
             return
+
 
         if path == "/api/skills":
             from src.skill_loader import get_skill_registry
