@@ -2053,8 +2053,10 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
 
 
 def start_server(port: int = 8000):
+    ThreadingHTTPServer.allow_reuse_address = True
     server = ThreadingHTTPServer(("127.0.0.1", port), MeiaWebHandler)
-    logger.info("MEIA Web Visual Explorer serving on http://127.0.0.1:%d", port)
+    server.daemon_threads = True
+    logger.info("MEIA Web Visual Explorer serving on http://127.0.0.1:%d (Threaded)", port)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

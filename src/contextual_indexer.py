@@ -90,16 +90,27 @@ def deterministic_offline_vector(text: str, dim: int = EMBEDDING_DIM) -> List[fl
     return vec
 
 
+_ENCODING_CACHE: Dict[str, List[float]] = {}
+
+
 def encode_text(text: str) -> List[float]:
-    """Encodes a single text string into a 1024-dimensional vector."""
+    """Encodes a single text string into a 1024-dimensional vector with LRU memoization."""
+    if text in _ENCODING_CACHE:
+        return _ENCODING_CACHE[text]
     model = get_embedding_model()
     if model is not None:
         try:
-            arr = model.encode(text, normalize_embeddings=True)
-            return [round(float(x), 6) for x in arr]
+            arr = model.encode(text, normalize_embeddings=True, show_progress_bar=False)
+            vec = [round(float(x), 6) for x in arr]
+            if len(_ENCODING_CACHE) < 1024:
+                _ENCODING_CACHE[text] = vec
+            return vec
         except Exception as e:
             logger.warning("Inference failed (%s), using offline fallback", e)
-    return deterministic_offline_vector(text, EMBEDDING_DIM)
+    vec = deterministic_offline_vector(text, EMBEDDING_DIM)
+    if len(_ENCODING_CACHE) < 1024:
+        _ENCODING_CACHE[text] = vec
+    return vec
 
 
 def compute_cosine_similarity(vec_a: List[float], vec_b: List[float]) -> float:

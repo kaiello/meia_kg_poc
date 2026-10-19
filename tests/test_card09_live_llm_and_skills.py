@@ -67,6 +67,13 @@ class TestCard09LiveLLMAndSkills(unittest.TestCase):
         self.assertGreaterEqual(d2_params.get("visual_quota", 0), 1)
         self.assertEqual(d2_params.get("ocr_token_budget"), 160)
 
+        # Verify ROUTE_* profile mapping (ROUTE_ALL_TRI_STORE and ROUTE_TECH)
+        tri_store_skills = [s.name for s in reg.get_skills_for_route("ROUTE_ALL_TRI_STORE")]
+        self.assertIn("tri-graph-routing", tri_store_skills)
+        self.assertIn("trident-colpali-visual", tri_store_skills)
+        self.assertIn("epistemic-claim-audit", tri_store_skills)
+        self.assertIn("executive-dossier-composer", tri_store_skills)
+
     def test_03_colpali_visual_retriever(self):
         """Verify ColPali late-interaction MaxSim scoring over figure regions."""
         vr = get_visual_retriever()
@@ -143,6 +150,7 @@ class TestCard09LiveLLMAndSkills(unittest.TestCase):
         self.assertEqual(ans.llm_metadata.get("engine"), "deepseek")
         self.assertGreater(ans.llm_metadata.get("latency_ms", 0), 0)
         self.assertGreater(ans.llm_metadata.get("prompt_tokens", 0), 100)
+        self.assertGreaterEqual(len(ans.llm_metadata.get("active_skills", [])), 3)
 
         # Verify epistemic audit was run on the live LLM synthesis
         self.assertIn("status", ans.epistemic_audit)

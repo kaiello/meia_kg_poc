@@ -6,6 +6,13 @@ route_profiles:
   - D2_TECHNICAL_READINESS
   - D3_PROCUREMENT_TELEMETRY
   - D4_CROSS_GRAPH_SYNTHESIS
+  - ROUTE_ORG
+  - ROUTE_TECH
+  - ROUTE_CRM
+  - ROUTE_ORG_TECH
+  - ROUTE_CRM_ORG
+  - ROUTE_CRM_TECH
+  - ROUTE_ALL_TRI_STORE
 native_scope_enabled: true
 composed_graph_ops: true
 ---

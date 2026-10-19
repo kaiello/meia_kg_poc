@@ -137,11 +137,23 @@ class SkillRegistry:
     def list_skills(self) -> List[SkillDefinition]:
         return list(self._skills.values())
 
+    _ROUTE_PROFILE_ALIASES: Dict[str, List[str]] = {
+        "ROUTE_ORG": ["D1_ORGANIZATIONAL_IDENTITY", "D3_PROCUREMENT_TELEMETRY"],
+        "ROUTE_TECH": ["D2_TECHNICAL_READINESS"],
+        "ROUTE_CRM": ["D3_PROCUREMENT_TELEMETRY", "D1_ORGANIZATIONAL_IDENTITY"],
+        "ROUTE_ORG_TECH": ["D1_ORGANIZATIONAL_IDENTITY", "D2_TECHNICAL_READINESS", "D4_CROSS_GRAPH_SYNTHESIS"],
+        "ROUTE_CRM_ORG": ["D1_ORGANIZATIONAL_IDENTITY", "D3_PROCUREMENT_TELEMETRY", "D4_CROSS_GRAPH_SYNTHESIS"],
+        "ROUTE_CRM_TECH": ["D2_TECHNICAL_READINESS", "D3_PROCUREMENT_TELEMETRY", "D4_CROSS_GRAPH_SYNTHESIS"],
+        "ROUTE_ALL_TRI_STORE": ["D4_CROSS_GRAPH_SYNTHESIS", "D1_ORGANIZATIONAL_IDENTITY", "D2_TECHNICAL_READINESS", "D3_PROCUREMENT_TELEMETRY"],
+    }
+
     def get_skills_for_route(self, route_profile: str) -> List[SkillDefinition]:
-        """Return all skills applicable to a given route profile."""
+        """Return all skills applicable to a given route profile (supporting ROUTE_* and D1-D4 aliases)."""
+        candidate_profiles = {route_profile}
+        candidate_profiles.update(self._ROUTE_PROFILE_ALIASES.get(route_profile, []))
         matching = []
         for skill in self._skills.values():
-            if not skill.route_profiles or route_profile in skill.route_profiles:
+            if not skill.route_profiles or any(p in skill.route_profiles for p in candidate_profiles):
                 matching.append(skill)
         return matching
 

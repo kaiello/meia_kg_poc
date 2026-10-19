@@ -4,6 +4,10 @@ description: Governs ColPali late-interaction visual MaxSim scoring, Trident mod
 route_profiles:
   - D2_TECHNICAL_READINESS
   - D4_CROSS_GRAPH_SYNTHESIS
+  - ROUTE_TECH
+  - ROUTE_ORG_TECH
+  - ROUTE_CRM_TECH
+  - ROUTE_ALL_TRI_STORE
 visual_quota: 2
 ocr_token_budget: 160
 loc_reader_arm: ARM_C_HYBRID_OCR

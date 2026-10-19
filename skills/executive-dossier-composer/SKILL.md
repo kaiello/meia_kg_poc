@@ -6,6 +6,13 @@ route_profiles:
   - D1_ORGANIZATIONAL_IDENTITY
   - D2_TECHNICAL_READINESS
   - D3_PROCUREMENT_TELEMETRY
+  - ROUTE_ALL_TRI_STORE
+  - ROUTE_ORG
+  - ROUTE_TECH
+  - ROUTE_CRM
+  - ROUTE_ORG_TECH
+  - ROUTE_CRM_ORG
+  - ROUTE_CRM_TECH
 citation_style: INLINE_LOCATOR
 functional_units_enabled: true
 max_tokens: 1500

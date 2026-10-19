@@ -48,12 +48,32 @@ def _tokenize(text: str) -> List[str]:
     return [t.strip() for t in clean.split() if len(t.strip()) > 1]
 
 
+_SEMANTIC_VISUAL_CLUSTERS = [
+    {"uuv", "undersea", "submersible", "ghostfin", "albacore", "propulsion", "hybrid", "jp8"},
+    {"c5isr", "voyager", "tactical", "klas", "router", "edge", "chassis", "mseries", "truetactical"},
+    {"nuclear", "fluor", "shipyard", "seaport", "logistics", "propulsion", "pad"},
+    {"prometheus", "torch", "ai", "orchestration", "faa", "energy", "compute"},
+    {"diagram", "schematic", "architecture", "figure", "layout", "flowchart", "system"},
+]
+
+
 def _term_vector_similarity(q_term: str, doc_term: str) -> float:
-    """Sub-word / exact lexical similarity for token-level late-interaction."""
+    """Sub-word, semantic cluster, and character trigram similarity for token-level late-interaction."""
     if q_term == doc_term:
         return 1.0
     if q_term in doc_term or doc_term in q_term:
         return min(len(q_term), len(doc_term)) / max(len(q_term), len(doc_term))
+    for cluster in _SEMANTIC_VISUAL_CLUSTERS:
+        if q_term in cluster and doc_term in cluster:
+            return 0.78
+    if len(q_term) >= 4 and len(doc_term) >= 4:
+        q_grams = {q_term[i:i+3] for i in range(len(q_term) - 2)}
+        d_grams = {doc_term[i:i+3] for i in range(len(doc_term) - 2)}
+        overlap = len(q_grams & d_grams)
+        if overlap > 0:
+            dice = (2.0 * overlap) / (len(q_grams) + len(d_grams))
+            if dice >= 0.45:
+                return round(dice * 0.85, 4)
     return 0.0
 
 
