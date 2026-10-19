@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0.0",
-  "receipt_id": "receipt:meia:78cq:1792368405",
-  "generated_at": "2026-10-19T00:06:45.662874+00:00",
+  "receipt_id": "receipt:meia:78cq:1792370864",
+  "generated_at": "2026-10-19T00:47:44.539364+00:00",
   "cryptographic_fingerprints": {
     "meia_poc_manifest_sha256": "f30ffdd3ca88200c19f5ea31b3afe54e0872b7d57e722cfa2f48a0289d77f028",
     "tri_graph_registry_db_sha256": "3135afad2e82f2f49bb7264828d4d66ad87f239690e36129ac34c22f969241ba",
     "vdb_chunks_contextual_sha256": "874ffeff7119a595e1f3dbe00fcaa34a9b126a6db931795f434ff2402fa883c6",
-    "gold_78_cqs_sha256": "19ce676ad39fd606cde0a339b37a588ab5bf4dcfb83d1ee61d76a1a82479b7a6"
+    "gold_78_cqs_sha256": "88544941e2cdd1068655fd39201151562d73f0d444d2fbd090a133f5191b840d"
   },
   "execution_environment": {
     "platform": "Windows-11-10.0.26200-SP0",
@@ -17,8 +17,8 @@
   },
   "scorecard": {
     "total_cqs": 78,
-    "elapsed_seconds": 12.44,
-    "avg_seconds_per_cq": 0.159,
+    "elapsed_seconds": 12.81,
+    "avg_seconds_per_cq": 0.164,
     "route_accuracy_pct": 100.0,
     "status_accuracy_pct": 100.0,
     "epistemic_audit_pass_rate_pct": 100.0,

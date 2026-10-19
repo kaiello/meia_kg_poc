@@ -121,6 +121,23 @@ class AnswerRouteBundler:
                 primary_ids.append(rent["id"])
 
         # 2. Fetch Primary Domain Node Records
+        caller_clearance = context.clearance_level if context else "SECRET"
+
+        def _filter_props_for_clearance(raw_props: Dict[str, Any]) -> Dict[str, Any]:
+            if caller_clearance != "UNCLASSIFIED":
+                return raw_props
+            cleaned = {}
+            for k, v in raw_props.items():
+                kl = k.lower()
+                if any(p in kl for p in ["email", "phone", "pii", "encrypted"]):
+                    continue
+                if "security_preference" in kl and any(c in str(v).upper() for c in ["SECRET", "SCI", "FVEY"]):
+                    continue
+                if kl == "observation_field" and "q12_security_preference" in str(v).lower():
+                    return {"observation_field": v, "value": "[REDACTED - REQUIRES SECRET CLEARANCE]"}
+                cleaned[k] = v
+            return cleaned
+
         entities_dict = {}
         if primary_ids:
             placeholders = ",".join("?" for _ in primary_ids)
@@ -134,7 +151,7 @@ class AnswerRouteBundler:
                     "bfo_category": bfo,
                     "skos_concepts": json.loads(skos_str or "[]"),
                     "label": label,
-                    "properties": json.loads(props_str or "{}")
+                    "properties": _filter_props_for_clearance(json.loads(props_str or "{}"))
                 }
 
         # 3. Traverse Cross-Graph Links
@@ -179,7 +196,7 @@ class AnswerRouteBundler:
                     "bfo_category": bfo,
                     "skos_concepts": json.loads(skos_str or "[]"),
                     "label": label,
-                    "properties": json.loads(props_str or "{}")
+                    "properties": _filter_props_for_clearance(json.loads(props_str or "{}"))
                 }
 
         # 4. Fetch Epistemic Claims from claim_ledger

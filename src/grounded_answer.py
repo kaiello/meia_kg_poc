@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.config import TRI_GRAPH_DB_PATH
+from src.config import TRI_GRAPH_DB_PATH, MANIFEST_PATH
 from src.pre_retrieval import CallerContext
 from src.answer_routes import AnswerRouteBundle, assemble_answer_route
 from src.epistemic_verifier import EpistemicVerifier, EpistemicAuditResult
@@ -308,7 +308,7 @@ class GroundedAnswerComposer:
                 if MANIFEST_PATH.exists():
                     with open(MANIFEST_PATH, "r", encoding="utf-8") as mf:
                         m_data = json.load(mf)
-                        for doc in m_data.get("documents", []):
+                        for doc in m_data.get("workbooks", []) + m_data.get("documents", []):
                             if "MEIA_TEM_Vulcan_Export" in doc.get("relpath", ""):
                                 vulcan_sha = doc.get("sha256", vulcan_sha)
                                 break
@@ -484,6 +484,12 @@ class GroundedAnswerComposer:
         visual_diag = "parsed/figures/meia_charter_2026_p1.png"
         if bundle.visual_assets:
             visual_diag = bundle.visual_assets[0].get("figure_image", visual_diag)
+            vendor_keywords = [vendor] + (["fluor"] if vendor == "prometheus" else [])
+            for va in bundle.visual_assets:
+                fig_name = va.get("figure_image", "")
+                if any(vk in fig_name.lower() for vk in vendor_keywords):
+                    visual_diag = fig_name
+                    break
 
         if vendor == "albacore":
             target_entity = "org:albacore"

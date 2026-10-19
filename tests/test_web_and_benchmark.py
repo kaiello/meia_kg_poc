@@ -140,6 +140,17 @@ class TestWebAndBenchmark(unittest.TestCase):
             urllib.request.urlopen(req)
         self.assertEqual(ctx.exception.code, 413)
 
+    def test_context_packets_endpoint_resolves_all_seeds(self):
+        """Verifies GET /api/context-packets resolves all 5 seed entities with valid graphs and zero not_found packets."""
+        url = f"http://127.0.0.1:{self.test_port}/api/context-packets"
+        with urllib.request.urlopen(url) as response:
+            self.assertEqual(response.status, 200)
+            packets = json.loads(response.read().decode("utf-8"))
+            self.assertEqual(len(packets), 5)
+            for pkt in packets:
+                self.assertNotIn("not_found", pkt.get("packet_id", ""))
+                self.assertNotEqual(pkt.get("target_graph"), "UNKNOWN")
+
 
 if __name__ == "__main__":
     unittest.main()

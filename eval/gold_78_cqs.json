@@ -512,7 +512,7 @@
     "readiness": "Direct, Joined",
     "target_entities": [],
     "expected_locators": [],
-    "notes": "Preserves role-qualified links rather than collapsing into generic contacts; returns `NOT_RECORDED` for blank role columns. *Ex: Ghostfin `Technical 1`: `Cameron Matthews` (`cameron.a.matthews.civ@us."
+    "notes": "Preserves role-qualified links rather than collapsing into generic contacts; returns `NOT_RECORDED` for blank role columns. *Ex: Ghostfin `Technical 1`: `Cameron Matthews` (`cameron.matthews@navy-redacted.local`)"
   },
   {
     "cq_id": "CQ-41",
@@ -859,7 +859,7 @@
     "expected_locators": [
       "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R4C4"
     ],
-    "notes": "**Org**: T2S Solutions (T2S, LLC), Commercial / U.S. Small Business Disadvantaged, 4685 Millennium Dr, Belcamp, MD (`Zip/CAGE/DUNS/UEI: NOT_RECORDED` in Vulcan). **POC**: Michael Roesch (`mroesch@t2s-"
+    "notes": "**Org**: T2S Solutions (T2S, LLC), Commercial / U.S. Small Business Disadvantaged, 4685 Millennium Dr, Belcamp, MD (`Zip/CAGE/DUNS/UEI: NOT_RECORDED` in Vulcan). **POC**: Michael Roesch (`mroesch@t2s-redacted.local`)"
   },
   {
     "cq_id": "CQ-71",
