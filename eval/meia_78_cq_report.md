@@ -1,6 +1,6 @@
 # MEIA Federated Tri-Graph POC — Cryptographic Benchmark Verification Receipt
-**Execution Timestamp:** 2026-10-19T02:45:30.737836+00:00
-**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 601.18s (7.707s/CQ)
+**Execution Timestamp:** 2026-10-19T13:44:03.247391+00:00
+**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 651.66s (8.355s/CQ)
 
 ## 1. Executive Benchmark Scorecard
 
@@ -17,7 +17,7 @@
 | Artifact | File Path | SHA-256 Digest | Status |
 | :--- | :--- | :--- | :---: |
 | **Authoritative Corpus Manifest** | `config/meia_poc_manifest.json` | `f30ffdd3ca88200c19f5ea31b3afe54e0872b7d57e722cfa2f48a0289d77f028` | VERIFIED |
-| **Federated Tri-Graph SQLite DB** | `storage/meia_tri_graph_registry.db` | `3135afad2e82f2f49bb7264828d4d66ad87f239690e36129ac34c22f969241ba` | VERIFIED |
+| **Federated Tri-Graph SQLite DB** | `storage/meia_tri_graph_registry.db` | `7839f67501d2a9490cc22f67f31b21d6a55fe32a9122a7f391c6731a48650792` | VERIFIED |
 | **Contextual Vector Store (1024-d)** | `storage/vdb_chunks_contextual.json` | `874ffeff7119a595e1f3dbe00fcaa34a9b126a6db931795f434ff2402fa883c6` | VERIFIED |
 | **78 Competency Questions Gold Benchmark** | `eval/gold_78_cqs.json` | `88544941e2cdd1068655fd39201151562d73f0d444d2fbd090a133f5191b840d` | VERIFIED |
 

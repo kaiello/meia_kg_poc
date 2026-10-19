@@ -1,0 +1,292 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/bfo.owl#> .
+@prefix iao: <http://purl.obolibrary.org/obo/iao.owl#> .
+@prefix meia: <https://meia.mil/ontology#> .
+@prefix osra: <https://eda.europa.eu/osra#> .
+@prefix twenty_crm: <https://twenty.com/crm#> .
+
+<https://meia.mil/ontology>
+    a owl:Ontology ;
+    owl:versionIRI <https://meia.mil/ontology/1.0.0> ;
+    owl:versionInfo "1.0.0" ;
+    rdfs:label "MEIA Federated Tri-Graph Domain Ontology"@en ;
+    rdfs:comment "Formal OWL 2 DL Domain Ontology for the MEIA Tri-Graph Architecture, aligned with Basic Formal Ontology (BFO 2020, ISO/IEC 21838-2) and W3C SKOS."@en .
+
+#################################################################
+#    BFO Top-Level Classes (ISO/IEC 21838-2 Reference)
+#################################################################
+
+bfo:Entity a owl:Class ;
+    rdfs:label "Entity"@en .
+
+bfo:Continuant a owl:Class ;
+    rdfs:subClassOf bfo:Entity ;
+    rdfs:label "Continuant"@en .
+
+bfo:Occurrent a owl:Class ;
+    rdfs:subClassOf bfo:Entity ;
+    rdfs:label "Occurrent"@en .
+
+bfo:IndependentContinuant a owl:Class ;
+    rdfs:subClassOf bfo:Continuant ;
+    rdfs:label "Independent Continuant"@en .
+
+bfo:SpecificallyDependentContinuant a owl:Class ;
+    rdfs:subClassOf bfo:Continuant ;
+    rdfs:label "Specifically Dependent Continuant"@en .
+
+bfo:GenericallyDependentContinuant a owl:Class ;
+    rdfs:subClassOf bfo:Continuant ;
+    rdfs:label "Generically Dependent Continuant"@en .
+
+bfo:MaterialEntity a owl:Class ;
+    rdfs:subClassOf bfo:IndependentContinuant ;
+    rdfs:label "Material Entity"@en .
+
+bfo:Process a owl:Class ;
+    rdfs:subClassOf bfo:Occurrent ;
+    rdfs:label "Process"@en .
+
+bfo:Role a owl:Class ;
+    rdfs:subClassOf bfo:SpecificallyDependentContinuant ;
+    rdfs:label "Role"@en .
+
+iao:InformationContentEntity a owl:Class ;
+    rdfs:subClassOf bfo:GenericallyDependentContinuant ;
+    rdfs:label "Information Content Entity"@en .
+
+#################################################################
+#    MEIA Domain Classes
+#################################################################
+
+meia:Organization a owl:Class ;
+    rdfs:subClassOf bfo:MaterialEntity ;
+    rdfs:label "Organization"@en ;
+    rdfs:comment "A legal commercial, defense, or governmental corporate entity recognized in federal procurement."@en .
+
+meia:CapabilityOffering a owl:Class ;
+    rdfs:subClassOf bfo:MaterialEntity ;
+    rdfs:label "Capability Offering"@en ;
+    rdfs:comment "A discrete defense system, hardware platform, or software architecture developed by an organization."@en .
+
+meia:DemonstrationEvent a owl:Class ;
+    rdfs:subClassOf bfo:Process ;
+    rdfs:label "Demonstration Event"@en ;
+    rdfs:comment "A physical field exercise, military trial, or constructive simulation in which a capability participates."@en .
+
+meia:TechnicalPOCRole a owl:Class ;
+    rdfs:subClassOf bfo:Role ;
+    rdfs:label "Technical Point of Contact Role"@en ;
+    rdfs:comment "A designated role borne by a person serving as the primary or secondary technical liaison."@en .
+
+meia:ContractAward a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Contract Award"@en ;
+    rdfs:comment "A federal procurement record from USASpending / FPDS representing obligated public spend."@en .
+
+meia:CapabilitySubmission a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Capability Submission"@en ;
+    rdfs:comment "A formal intake submission entered into the Twenty CRM or Vulcan portal."@en .
+
+meia:ReadinessAssessment a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Readiness Assessment"@en ;
+    rdfs:comment "An epistemic evaluation record asserting TRL, MRL, and IRL readiness levels."@en .
+
+meia:JointOperationalProblem a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Joint Operational Problem"@en ;
+    rdfs:comment "An authoritative warfighter capability gap or operational challenge addressed by an offering."@en .
+
+meia:CommercialObservation a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Commercial Observation"@en ;
+    rdfs:comment "A vendor self-asserted or triage-observed commercial parameter (ROM funding, unit cost, constraints)."@en .
+
+meia:EpistemicClaim a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Epistemic Claim"@en ;
+    rdfs:comment "A reified factual assertion carrying an explicit authority tier (VENDOR_SELF_ASSERTED, LIVE_DEMONSTRATED, FPDS_OBLIGATED)."@en .
+
+meia:EvidenceNode a owl:Class ;
+    rdfs:subClassOf iao:InformationContentEntity ;
+    rdfs:label "Evidence Node"@en ;
+    rdfs:comment "A verifiable source anchor locating supporting facts in spreadsheets, text chunks, images, or API receipts."@en .
+
+#################################################################
+#    MEIA Object Properties & Inverses
+#################################################################
+
+### 1. developsOffering / developedBy
+meia:developsOffering a owl:ObjectProperty ;
+    rdfs:domain meia:Organization ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:developedBy ;
+    rdfs:label "develops offering"@en .
+
+meia:developedBy a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:Organization ;
+    owl:inverseOf meia:developsOffering ;
+    rdfs:label "developed by"@en .
+
+### 2. submittedByOrg / submittedOffering
+meia:submittedByOrg a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilitySubmission ;
+    rdfs:range meia:Organization ;
+    owl:inverseOf meia:submittedOffering ;
+    rdfs:label "submitted by organization"@en .
+
+meia:submittedOffering a owl:ObjectProperty ;
+    rdfs:domain meia:Organization ;
+    rdfs:range meia:CapabilitySubmission ;
+    owl:inverseOf meia:submittedByOrg ;
+    rdfs:label "submitted offering"@en .
+
+### 3. evaluatesOffering / evaluatedBySubmission
+meia:evaluatesOffering a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilitySubmission ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:evaluatedBySubmission ;
+    rdfs:label "evaluates offering"@en .
+
+meia:evaluatedBySubmission a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:CapabilitySubmission ;
+    owl:inverseOf meia:evaluatesOffering ;
+    rdfs:label "evaluated by submission"@en .
+
+### 4. holdsPrimeAward / awardedToOrg
+meia:holdsPrimeAward a owl:ObjectProperty ;
+    rdfs:domain meia:Organization ;
+    rdfs:range meia:ContractAward ;
+    owl:inverseOf meia:awardedToOrg ;
+    rdfs:label "holds prime award"@en .
+
+meia:awardedToOrg a owl:ObjectProperty ;
+    rdfs:domain meia:ContractAward ;
+    rdfs:range meia:Organization ;
+    owl:inverseOf meia:holdsPrimeAward ;
+    rdfs:label "awarded to organization"@en .
+
+### 5. validatedByContract / validatesOffering
+meia:validatedByContract a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:ContractAward ;
+    owl:inverseOf meia:validatesOffering ;
+    rdfs:label "validated by contract"@en .
+
+meia:validatesOffering a owl:ObjectProperty ;
+    rdfs:domain meia:ContractAward ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:validatedByContract ;
+    rdfs:label "validates offering"@en .
+
+### 6. subsidiaryOf / parentOf
+meia:subsidiaryOf a owl:ObjectProperty ;
+    rdfs:domain meia:Organization ;
+    rdfs:range meia:Organization ;
+    owl:inverseOf meia:parentOf ;
+    rdfs:label "subsidiary of"@en .
+
+meia:parentOf a owl:ObjectProperty ;
+    rdfs:domain meia:Organization ;
+    rdfs:range meia:Organization ;
+    owl:inverseOf meia:subsidiaryOf ;
+    rdfs:label "parent of"@en .
+
+### 7. participatedInDemo / featuredCapability
+meia:participatedInDemo a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:DemonstrationEvent ;
+    owl:inverseOf meia:featuredCapability ;
+    rdfs:label "participated in demonstration"@en .
+
+meia:featuredCapability a owl:ObjectProperty ;
+    rdfs:domain meia:DemonstrationEvent ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:participatedInDemo ;
+    rdfs:label "featured capability"@en .
+
+### 8. hasReadinessAssessment / assessesReadinessOf
+meia:hasReadinessAssessment a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:ReadinessAssessment ;
+    owl:inverseOf meia:assessesReadinessOf ;
+    rdfs:label "has readiness assessment"@en .
+
+meia:assessesReadinessOf a owl:ObjectProperty ;
+    rdfs:domain meia:ReadinessAssessment ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:hasReadinessAssessment ;
+    rdfs:label "assesses readiness of"@en .
+
+### 9. addressesJOP / addressedByOffering
+meia:addressesJOP a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilityOffering ;
+    rdfs:range meia:JointOperationalProblem ;
+    owl:inverseOf meia:addressedByOffering ;
+    rdfs:label "addresses joint operational problem"@en .
+
+meia:addressedByOffering a owl:ObjectProperty ;
+    rdfs:domain meia:JointOperationalProblem ;
+    rdfs:range meia:CapabilityOffering ;
+    owl:inverseOf meia:addressesJOP ;
+    rdfs:label "addressed by offering"@en .
+
+### 10. designatesContact / contactFor
+meia:designatesContact a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilitySubmission ;
+    rdfs:range meia:TechnicalPOCRole ;
+    owl:inverseOf meia:contactFor ;
+    rdfs:label "designates contact"@en .
+
+meia:contactFor a owl:ObjectProperty ;
+    rdfs:domain meia:TechnicalPOCRole ;
+    rdfs:range meia:CapabilitySubmission ;
+    owl:inverseOf meia:designatesContact ;
+    rdfs:label "contact for"@en .
+
+### 11. hasCommercialObservation / observationFor
+meia:hasCommercialObservation a owl:ObjectProperty ;
+    rdfs:domain meia:CapabilitySubmission ;
+    rdfs:range meia:CommercialObservation ;
+    owl:inverseOf meia:observationFor ;
+    rdfs:label "has commercial observation"@en .
+
+meia:observationFor a owl:ObjectProperty ;
+    rdfs:domain meia:CommercialObservation ;
+    rdfs:range meia:CapabilitySubmission ;
+    owl:inverseOf meia:hasCommercialObservation ;
+    rdfs:label "observation for"@en .
+
+### 12. hasEpistemicClaim / claimAbout
+meia:hasEpistemicClaim a owl:ObjectProperty ;
+    rdfs:domain owl:Thing ;
+    rdfs:range meia:EpistemicClaim ;
+    owl:inverseOf meia:claimAbout ;
+    rdfs:label "has epistemic claim"@en .
+
+meia:claimAbout a owl:ObjectProperty ;
+    rdfs:domain meia:EpistemicClaim ;
+    rdfs:range owl:Thing ;
+    owl:inverseOf meia:hasEpistemicClaim ;
+    rdfs:label "claim about"@en .
+
+### 13. supportedByEvidence / supportsClaim
+meia:supportedByEvidence a owl:ObjectProperty ;
+    rdfs:domain meia:EpistemicClaim ;
+    rdfs:range meia:EvidenceNode ;
+    owl:inverseOf meia:supportsClaim ;
+    rdfs:label "supported by evidence"@en .
+
+meia:supportsClaim a owl:ObjectProperty ;
+    rdfs:domain meia:EvidenceNode ;
+    rdfs:range meia:EpistemicClaim ;
+    owl:inverseOf meia:supportedByEvidence ;
+    rdfs:label "supports claim"@en .

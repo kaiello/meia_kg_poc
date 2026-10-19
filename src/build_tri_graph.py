@@ -39,7 +39,7 @@ logger = logging.getLogger("build_tri_graph")
 
 
 def init_database(db_path: Path) -> sqlite3.Connection:
-    """Initializes the SQLite schema with domain tables, link registry, and FTS5 search."""
+    """Initializes the SQLite schema with domain tables, link registry, SKOS taxonomy, and FTS5 search."""
     STORAGE_DIR.mkdir(parents=True, exist_ok=True)
     if db_path.exists():
         try:
@@ -50,6 +50,11 @@ def init_database(db_path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(str(db_path))
     conn.execute("PRAGMA foreign_keys = ON;")
     c = conn.cursor()
+
+    # 0. Initialize SKOS Taxonomy Table
+    from src.ontology_service import get_ontology_service
+    ont_svc = get_ontology_service()
+    ont_svc.initialize_skos_schema(conn)
 
     # 1. Domain Nodes
     c.execute("""
@@ -189,17 +194,27 @@ def build_tri_graph() -> None:
                 "properties_json": json.dumps(props or {})
             }
 
+    from src.ontology_service import INVERSE_PREDICATE_MAP
+
     def add_edge(eid: str, src: str, tgt: str, etype: str, domain: str, props: Dict[str, Any] = None):
+        p = dict(props or {})
+        inv_type = INVERSE_PREDICATE_MAP.get(etype)
+        if inv_type and "inverse_edge_type" not in p:
+            p["inverse_edge_type"] = inv_type
         edges.append({
             "edge_id": eid,
             "source_id": src,
             "target_id": tgt,
             "edge_type": etype,
             "graph_domain": domain,
-            "properties_json": json.dumps(props or {})
+            "properties_json": json.dumps(p)
         })
 
     def add_link(lid: str, src: str, sgraph: str, tgt: str, tgraph: str, pred: str, method: str, status: str = "CONFIRMED", props: Dict[str, Any] = None):
+        p = dict(props or {})
+        inv_pred = INVERSE_PREDICATE_MAP.get(pred)
+        if inv_pred and "inverse_predicate" not in p:
+            p["inverse_predicate"] = inv_pred
         links.append({
             "link_id": lid,
             "source_id": src,
@@ -209,7 +224,7 @@ def build_tri_graph() -> None:
             "link_predicate": pred,
             "match_method": method,
             "review_status": status,
-            "properties_json": json.dumps(props or {})
+            "properties_json": json.dumps(p)
         })
 
     def add_claim(cid: str, sub: str, pred: str, val: str, status: str, conf: float, handling: str, evid: str = None, notes: str = None):
@@ -718,13 +733,19 @@ def build_tri_graph() -> None:
     conn.commit()
 
     # =========================================================================
-    # 7. Export Standalone GraphML Substrates
+    # 7. Export Standalone GraphML Substrates & W3C RDF Turtle Graph
     # =========================================================================
     logger.info("Exporting NetworkX GraphML substrates")
     export_graphml_substrates(nodes, edges, links, evidences)
 
+    logger.info("Exporting W3C-compliant RDF Turtle knowledge graph")
+    from src.ontology_service import get_ontology_service
+    ont_svc = get_ontology_service()
+    triples_count, ttl_path = ont_svc.export_federated_turtle_graph()
+    logger.info("Exported %d RDF triples to %s", triples_count, ttl_path)
+
     conn.close()
-    logger.info("Tri-Graph SQLite and GraphML construction completed successfully!")
+    logger.info("Tri-Graph SQLite, GraphML, and Turtle construction completed successfully!")
 
 
 def export_graphml_substrates(nodes: Dict[str, Dict[str, Any]], edges: List[Dict[str, Any]], links: List[Dict[str, Any]], evidences: Dict[str, Dict[str, Any]]) -> None:

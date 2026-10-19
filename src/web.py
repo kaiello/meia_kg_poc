@@ -29,6 +29,7 @@ from src.pre_retrieval import CallerContext
 from src.grounded_answer import answer_query
 from src.figure_inspectors import CROPS_DIR, inspect_figure_loc, LoCInspectionArm
 from src.context_packet import ContextPacketBuilder
+from src.ontology_service import ONTOLOGY_FILE, TURTLE_EXPORT_PATH, get_ontology_service
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -1987,6 +1988,31 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
+        if url.path == "/api/ontology/overview":
+            from src.ontology_service import get_ontology_service
+            ont_svc = get_ontology_service()
+            val = ont_svc.validate_owl_ontology()
+            val["rdf_turtle_path"] = str(TURTLE_EXPORT_PATH)
+            val["ontology_file"] = str(ONTOLOGY_FILE)
+            resp_bytes = json.dumps(val).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if url.path == "/api/ontology/skos":
+            from src.ontology_service import get_ontology_service
+            ont_svc = get_ontology_service()
+            concepts = ont_svc.list_all_concepts()
+            resp_bytes = json.dumps({"total_concepts": len(concepts), "concepts": concepts}).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
 
         self.send_response(HTTPStatus.NOT_FOUND)
         self.end_headers()
@@ -1997,6 +2023,10 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
         if url.path == "/api/query":
             content_length = int(self.headers.get("Content-Length", 0))
             if content_length > 65536:
+                try:
+                    self.rfile.read(content_length)
+                except Exception:
+                    pass
                 self.send_response(HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
                 self.end_headers()
                 self.wfile.write(b"Payload Too Large (Max 64KB)")
