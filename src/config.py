@@ -1,5 +1,11 @@
 """Configuration constants and path definitions for MEIA Knowledge Graph POC."""
+from __future__ import annotations
+
+import os
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 from pathlib import Path
+from dotenv import load_dotenv
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = REPO_ROOT / "config"
@@ -8,6 +14,7 @@ PARSED_DIR = REPO_ROOT / "parsed"
 STORAGE_DIR = REPO_ROOT / "storage"
 FIGURES_DIR = PARSED_DIR / "figures"
 TABLES_DIR = PARSED_DIR / "tables"
+SKILLS_DIR = REPO_ROOT / "skills"
 
 # Manifest
 MANIFEST_PATH = CONFIG_DIR / "meia_poc_manifest.json"
@@ -42,3 +49,34 @@ CHUNK_OVERLAP_TOKENS = 50
 EMBEDDING_MODEL_NAME = "BAAI/bge-large-en-v1.5"
 EMBEDDING_DIM = 1024
 
+# Cross-Encoder Reranker
+RERANKER_MODEL = os.getenv("RERANKER_MODEL", "BAAI/bge-reranker-base")
+
+# Load environment (.env in repo root, home, or fallback to sibling prototypes)
+load_dotenv(REPO_ROOT / ".env")
+load_dotenv(Path.home() / ".env")
+if not os.getenv("DEEPSEEK_API_KEY"):
+    fallback_a30 = Path("C:/Users/kenai/aws-a30-prototype/.env")
+    if fallback_a30.is_file():
+        load_dotenv(fallback_a30)
+
+# Inference Configuration: DeepSeek
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
+DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+
+# Dual-Engine: Google Gemini
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY", "")
+GEMINI_BASE_URL = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
+# Custom / OpenAI / Ollama alternative
+CUSTOM_API_KEY = os.getenv("CUSTOM_API_KEY", "") or os.getenv("OPENAI_API_KEY", "")
+CUSTOM_BASE_URL = os.getenv("CUSTOM_BASE_URL", "https://api.openai.com/v1")
+CUSTOM_MODEL = os.getenv("CUSTOM_MODEL", "gpt-4o-mini")
+
+# Default Engine: if DEEPSEEK_API_KEY is present, default to deepseek; otherwise deterministic
+DEFAULT_ENGINE = os.getenv("DEFAULT_ENGINE", "deepseek" if DEEPSEEK_API_KEY else "deterministic")
+
+# ColPali / Late-Interaction Adapter reference (from LANL card09 demo assets)
+LANL_ADAPTER_DIR = Path("C:/Users/kenai/lanl-demo-assets-card09/models/adapter")

@@ -65,6 +65,7 @@ class GroundedAnswer:
     epistemic_audit: Dict[str, Any] = field(default_factory=dict)
     context_packets: List[Dict[str, Any]] = field(default_factory=list)  # R03 Functional Context Packets
     graph_lineage: Dict[str, Any] = field(default_factory=dict)          # Multi-graph lineage and topology
+    llm_metadata: Dict[str, Any] = field(default_factory=dict)           # Live LLM inference & skill telemetry
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -78,7 +79,8 @@ class GroundedAnswer:
             "executive_dossier": self.executive_dossier.to_dict() if self.executive_dossier else None,
             "epistemic_audit": self.epistemic_audit,
             "context_packets": self.context_packets,
-            "graph_lineage": self.graph_lineage
+            "graph_lineage": self.graph_lineage,
+            "llm_metadata": self.llm_metadata,
         }
 
 
@@ -90,7 +92,15 @@ class GroundedAnswerComposer:
         self.verifier = EpistemicVerifier()
         self.db_path = TRI_GRAPH_DB_PATH
 
-    def compose(self, bundle: AnswerRouteBundle) -> GroundedAnswer:
+    def compose(
+        self,
+        bundle: AnswerRouteBundle,
+        engine: Optional[str] = None,
+        api_key: Optional[str] = None,
+        model_name: Optional[str] = None,
+        base_url: Optional[str] = None,
+        loc_arm: str = "ARM_C_MULTIMODAL_CALLOUT",
+    ) -> GroundedAnswer:
         """Composes a GroundedAnswer and audits it using EpistemicVerifier."""
         # 1. Handle Fail-Closed and Policy Gates immediately
         if bundle.status != "SUPPORTED":
@@ -119,7 +129,7 @@ class GroundedAnswerComposer:
         # 2. Extract structured facts from bundle entities and claims
         structured_facts, citations = self._extract_facts_and_citations(bundle)
 
-        # 3. Check for 360° Dossier vs standard profile composition
+        # 3. Check for 360° Dossier vs standard profile composition (deterministic baseline)
         executive_dossier = None
         if bundle.route_profile == "ROUTE_ALL_TRI_STORE":
             executive_dossier = self._build_executive_dossier(bundle, structured_facts, citations)
@@ -127,7 +137,82 @@ class GroundedAnswerComposer:
         else:
             answer_text = self._render_profile_markdown(bundle, structured_facts, citations)
 
-        # 4. Construct draft answer object
+        # 4. Resolve Target Synthesis Engine
+        from src.config import DEFAULT_ENGINE
+        target_engine = (engine or DEFAULT_ENGINE).lower()
+        llm_meta = {
+            "engine": target_engine,
+            "status": "DETERMINISTIC",
+            "active_skills": ["tri-graph-routing", "epistemic-claim-audit", "executive-dossier-composer"],
+        }
+
+        # 5. Live LLM Generation Branch (DeepSeek / Gemini / Custom)
+        if target_engine in {"deepseek", "gemini", "custom", "openai", "ollama"}:
+            try:
+                from src.llm_client import get_llm_client
+                from src.context_packet import format_packets_as_evidence_text
+                from src.figure_inspectors import inspect_figure_loc
+
+                llm_client = get_llm_client()
+
+                # Format Functional Context Packets text
+                c_packets = getattr(bundle, "context_packets", [])
+                if c_packets:
+                    if hasattr(c_packets[0], "anchor_label"):
+                        context_evidence_text = format_packets_as_evidence_text(c_packets)
+                    else:
+                        context_evidence_text = json.dumps(c_packets, indent=2)
+                else:
+                    context_lines = []
+                    for e in bundle.primary_entities[:6]:
+                        context_lines.append(f"Entity: {e.get('name')} (ID: {e.get('id')}, Domain: {e.get('domain')})")
+                    for cl in bundle.epistemic_claims[:8]:
+                        context_lines.append(f"Claim: {cl.get('claim_id')} - {cl.get('predicate')}: {cl.get('value')} [{cl.get('epistemic_status')}] [Source: {cl.get('source_locator')}]")
+                    for tc in bundle.text_chunks[:4]:
+                        context_lines.append(f"Source Chunk [{tc.get('chunk_id')}]: {tc.get('text', '')[:200]}")
+                    context_evidence_text = "\n".join(context_lines)
+
+                # Format LoC Visual Reader Arm text
+                loc_text_parts = []
+                for vis in bundle.visual_assets[:2]:
+                    asset_id = vis.get("asset_id") or vis.get("image_relpath", "")
+                    if asset_id:
+                        payload = inspect_figure_loc(asset_id, arm_name=loc_arm)
+                        callouts = payload.get("ocr_callouts", [])
+                        loc_summary = ", ".join(f"{c.get('label')}: '{c.get('text')}'" for c in callouts[:4])
+                        loc_text_parts.append(f"Figure [{payload.get('asset_id')}] Arm [{payload.get('arm')}]: Callouts: {loc_summary}")
+                loc_payload_text = "\n".join(loc_text_parts) if loc_text_parts else None
+
+                llm_resp = llm_client.generate(
+                    query=bundle.query,
+                    context_packet_text=context_evidence_text,
+                    route_profile=bundle.route_profile,
+                    engine=target_engine,
+                    api_key=api_key,
+                    model_name=model_name,
+                    base_url=base_url,
+                    loc_payload_text=loc_payload_text,
+                )
+
+                llm_meta = llm_resp.to_dict()
+
+                if llm_resp.status == "SUCCESS" and llm_resp.answer.strip():
+                    answer_text = llm_resp.answer.strip()
+                else:
+                    notice = f"> ℹ️ **Live LLM Telemetry Notice:** Engine `{target_engine}` returned status `{llm_resp.status}` ({llm_resp.error_message or 'offline'}). Switched to verified deterministic Tri-Graph synthesis.\n\n"
+                    answer_text = notice + answer_text
+
+            except Exception as llm_exc:
+                logger.warning("Live LLM generation failed: %s; using deterministic fallback", llm_exc)
+                llm_meta = {
+                    "engine": target_engine,
+                    "status": "ERROR",
+                    "error_message": str(llm_exc),
+                    "active_skills": ["epistemic-claim-audit", "executive-dossier-composer"],
+                }
+                answer_text = f"> ⚠️ **Live LLM Telemetry Warning:** {llm_exc}. Switched to deterministic Tri-Graph synthesis.\n\n" + answer_text
+
+        # 6. Construct draft answer object
         draft = GroundedAnswer(
             query=bundle.query,
             route_profile=bundle.route_profile,
@@ -139,10 +224,11 @@ class GroundedAnswerComposer:
             executive_dossier=executive_dossier,
             epistemic_audit={},
             context_packets=getattr(bundle, "context_packets", []),
-            graph_lineage=getattr(bundle, "graph_lineage", {})
+            graph_lineage=getattr(bundle, "graph_lineage", {}),
+            llm_metadata=llm_meta,
         )
 
-        # 5. Execute Epistemic Verification (CQ-73, CQ-74, CQ-75)
+        # 7. Execute Epistemic Verification (CQ-73, CQ-74, CQ-75)
         audit_res = self.verifier.audit(draft, bundle)
         draft.epistemic_audit = audit_res.to_dict()
         draft.status = audit_res.status
@@ -809,12 +895,25 @@ class GroundedAnswerComposer:
         return "\n".join(lines)
 
 
-# -----------------------------------------------------------------------------
-# Top-Level Convenience Pipeline
-# -----------------------------------------------------------------------------
-def answer_query(query: str, caller_context: Optional[CallerContext] = None) -> GroundedAnswer:
+def answer_query(
+    query: str,
+    caller_context: Optional[CallerContext] = None,
+    engine: Optional[str] = None,
+    api_key: Optional[str] = None,
+    model_name: Optional[str] = None,
+    base_url: Optional[str] = None,
+    loc_arm: str = "ARM_C_MULTIMODAL_CALLOUT",
+) -> GroundedAnswer:
     """End-to-end natural language query interface for the MEIA Tri-Graph POC."""
     ctx = caller_context or CallerContext(caller_role="meia-authorized-evaluator", clearance_level="SECRET")
     bundle = assemble_answer_route(query, ctx)
     composer = GroundedAnswerComposer()
-    return composer.compose(bundle)
+    return composer.compose(
+        bundle,
+        engine=engine,
+        api_key=api_key,
+        model_name=model_name,
+        base_url=base_url,
+        loc_arm=loc_arm,
+    )
+

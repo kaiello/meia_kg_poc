@@ -307,7 +307,84 @@ class ScopedHybridRetriever:
             modality_weights=modality_weights
         )
 
-        return self._rerank_candidates(query, fused_candidates, top_k=top_k)
+        # NativeScope Structural Scoping: check for explicit anchors
+        scoped_candidates = self._apply_native_scope(query, fused_candidates)
+
+        # ColPali Visual Retrieval & Trident Modality Calibration
+        visual_quota = (modality_weights or {}).get("visual_quota", 1 if ("diagram" in query.lower() or "architecture" in query.lower() or "figure" in query.lower() or "schematic" in query.lower()) else 0)
+        if visual_quota > 0:
+            scoped_candidates = self._inject_colpali_visuals(query, scoped_candidates, visual_quota=int(visual_quota))
+
+        return self._rerank_candidates(query, scoped_candidates, top_k=top_k)
+
+    def _apply_native_scope(self, query: str, candidates: List[RetrievedCandidate]) -> List[RetrievedCandidate]:
+        """NativeScope (arXiv:2610.12243): Scope candidates by structural anchors with global fallback."""
+        anchors = []
+        # Check Vulcan submission ID
+        v_match = re.search(r"\b(vulcan[-_]?\d+|tem[-_]?\d+)\b", query, re.IGNORECASE)
+        if v_match:
+            anchors.append(v_match.group(1).lower())
+        # Check CAGE code
+        cage_match = re.search(r"\bcage[:\s]*([a-zA-Z0-9]{5})\b", query, re.IGNORECASE)
+        if cage_match:
+            anchors.append(cage_match.group(1).lower())
+        # Check document id / sheet
+        sheet_match = re.search(r"\b(sheet\d*|page\s*\d+|charter)\b", query, re.IGNORECASE)
+        if sheet_match:
+            anchors.append(sheet_match.group(1).lower())
+
+        if not anchors:
+            return candidates
+
+        scoped = []
+        for c in candidates:
+            c_text = (c.candidate_id + " " + c.label + " " + c.content).lower()
+            if any(a in c_text for a in anchors):
+                scoped.append(c)
+
+        # NativeScope Guardrail: fallback to global pool if scoped pool is underpopulated
+        if len(scoped) >= 3:
+            for s in scoped:
+                s.score = round(s.score * 1.35, 5) # structural boost
+            return scoped
+        return candidates
+
+    def _inject_colpali_visuals(self, query: str, candidates: List[RetrievedCandidate], visual_quota: int = 1) -> List[RetrievedCandidate]:
+        """Trident-inspired visual injection (arXiv:2610.11816): ensures visual diagrams are not displaced."""
+        try:
+            from src.visual_retriever import get_visual_retriever
+            vr = get_visual_retriever()
+            vis_results = vr.search_figures(query, top_k=visual_quota)
+            if not vis_results:
+                return candidates
+
+            # Convert visual results to RetrievedCandidate
+            vis_cands = []
+            for vr_item in vis_results:
+                summary_chips = ", ".join(c.get("label", "") for c in vr_item.matched_chips[:3])
+                content = f"[Visual Figure: {vr_item.figure_image} (Page {vr_item.page_ordinal})] Bounding Chips: {summary_chips}"
+                vis_cands.append(RetrievedCandidate(
+                    candidate_id=f"asset:{vr_item.figure_id}",
+                    graph_domain="TECH",
+                    candidate_type="visual_asset",
+                    label=f"Architecture Schematic {vr_item.figure_image}",
+                    content=content,
+                    score=round(vr_item.maxsim_score * 0.05, 5), # Scale into RRF range
+                    metadata={
+                        "figure_image": vr_item.figure_image,
+                        "page_ordinal": vr_item.page_ordinal,
+                        "loc_payload": vr_item.loc_payload,
+                        "matched_chips": vr_item.matched_chips,
+                        "maxsim_score": vr_item.maxsim_score,
+                    }
+                ))
+
+            # Reserve top slots for visual quota to avoid complete text displacement
+            combined = vis_cands + candidates
+            return combined
+        except Exception as exc:
+            logger.warning("ColPali visual injection bypassed: %s", exc)
+            return candidates
 
     def _rerank_candidates(
         self,
@@ -334,6 +411,8 @@ class ScopedHybridRetriever:
                     break
 
             rerank_score = round(cand.score * (1.0 + overlap * 0.5 + exact_boost), 5)
+            if cand.metadata is None:
+                cand.metadata = {}
             cand.metadata["rerank_score"] = rerank_score
             cand.score = rerank_score
 
@@ -396,6 +475,7 @@ def retrieve_hybrid_candidates(
         return decision, []
     candidates = _HYBRID_RETRIEVER.retrieve(decision, top_k=top_k, modality_weights=modality_weights)
     return decision, candidates
+
 
 
 

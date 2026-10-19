@@ -48,7 +48,10 @@ def get_embedding_model():
         from sentence_transformers import SentenceTransformer
         # Check if local cache or offline run
         logger.info("Loading embedding model %s (dim=%d)", EMBEDDING_MODEL_NAME, EMBEDDING_DIM)
-        _ST_MODEL = SentenceTransformer(EMBEDDING_MODEL_NAME)
+        try:
+            _ST_MODEL = SentenceTransformer(EMBEDDING_MODEL_NAME, local_files_only=True)
+        except Exception:
+            _ST_MODEL = SentenceTransformer(EMBEDDING_MODEL_NAME)
         return _ST_MODEL
     except Exception as e:
         logger.warning("SentenceTransformer load error (%s). Using deterministic offline fallback projector.", e)

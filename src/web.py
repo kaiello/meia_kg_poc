@@ -512,6 +512,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             <span class="badge badge-spine">Epistemic Spine</span>
             <span class="badge badge-vectors">BGE-Large 1024d</span>
             <span class="badge badge-airgap">Zero Daemon Local</span>
+            <button class="badge badge-vectors" onclick="openModelDrawer()" style="cursor:pointer; border:1px solid #38bdf8; background:rgba(56,189,248,0.25);">⚙️ Model & API Keys</button>
             <button class="badge badge-vectors" onclick="openReceiptModal()" style="cursor:pointer; border:1px solid #818cf8; background:rgba(99,102,241,0.25);">Audit Receipt (100%)</button>
             <button class="badge badge-spine" onclick="openStewardModal()" style="cursor:pointer; border:1px solid var(--accent-blue); background:rgba(56,189,248,0.25);">Steward Queue (U04)</button>
         </div>
@@ -520,6 +521,12 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
     <div class="search-container">
         <div class="search-bar">
             <input type="text" id="queryInput" class="search-input" placeholder="Type a natural language competency question..." value="What is Ghostfin's TRL and operational range?">
+            <select id="engineSelect" class="clearance-select" style="min-width: 175px;">
+                <option value="deepseek" selected>⚡ DeepSeek (deepseek-chat)</option>
+                <option value="deterministic">🛡️ Deterministic (Tri-Graph)</option>
+                <option value="gemini">✨ Gemini (gemini-2.0-flash)</option>
+                <option value="custom">🔌 Custom / OpenAI-Compatible</option>
+            </select>
             <select id="clearanceSelect" class="clearance-select">
                 <option value="SECRET" selected>SECRET Clearance</option>
                 <option value="TOP_SECRET">TOP SECRET Clearance</option>
@@ -553,6 +560,12 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     <span id="routeBadge" class="route-pill">ROUTE_TECH</span>
                     <span id="statusBadge" class="status-pill status-VERIFIED_GROUNDED">VERIFIED_GROUNDED</span>
                 </div>
+            </div>
+            <div id="llmTelemetryBar" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#0f172a; padding:8px 12px; border-radius:6px; border:1px solid #334155; margin-bottom:12px; font-size:12px;">
+                <span id="telemetryEngineBadge" style="font-weight:700; color:#38bdf8;">⚡ Engine: DeepSeek (deepseek-chat)</span>
+                <span id="telemetryLatencyBadge" style="color:#94a3b8;">· Ready</span>
+                <span id="telemetryTokensBadge" style="color:#94a3b8;"></span>
+                <span id="telemetrySkillsBadge" style="color:#a78bfa; margin-left:auto;">🧠 Skills: [tri-graph-routing] [trident-colpali-visual] [epistemic-claim-audit] [executive-dossier-composer]</span>
             </div>
             <div id="loading" class="loading-spinner">Traversing Federated Tri-Graph & Synthesizing Grounded Facts...</div>
             <div id="answerText" class="answer-content">Click 'Execute Query' or any quick profile chip above to inspect the federated response.</div>
@@ -1267,16 +1280,31 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
         async function executeQuery() {
             const query = document.getElementById('queryInput').value.trim();
             const clearance = document.getElementById('clearanceSelect').value;
+            const engine = document.getElementById('engineSelect') ? document.getElementById('engineSelect').value : 'deepseek';
             if (!query) return;
 
             document.getElementById('loading').style.display = 'block';
             document.getElementById('answerText').style.display = 'none';
 
+            // Gather any session overrides
+            const apiKeyOverride = sessionStorage.getItem('meia_override_api_key') || '';
+            const endpointOverride = sessionStorage.getItem('meia_override_endpoint') || '';
+            const modelOverride = sessionStorage.getItem('meia_override_model') || '';
+            const locArm = sessionStorage.getItem('meia_loc_arm') || 'ARM_C_MULTIMODAL_CALLOUT';
+
             try {
                 const res = await fetch('/api/query', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: query, clearance_level: clearance })
+                    body: JSON.stringify({
+                        query: query,
+                        clearance_level: clearance,
+                        engine: engine,
+                        api_key: apiKeyOverride || undefined,
+                        base_url: endpointOverride || undefined,
+                        model_name: modelOverride || undefined,
+                        loc_arm: locArm
+                    })
                 });
                 const data = await res.json();
 
@@ -1287,6 +1315,31 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 const sBadge = document.getElementById('statusBadge');
                 sBadge.innerText = data.status;
                 sBadge.className = 'status-pill status-' + data.status;
+
+                // Update LLM Telemetry Bar
+                const meta = data.llm_metadata || {};
+                const tEngine = document.getElementById('telemetryEngineBadge');
+                const tLatency = document.getElementById('telemetryLatencyBadge');
+                const tTokens = document.getElementById('telemetryTokensBadge');
+                const tSkills = document.getElementById('telemetrySkillsBadge');
+
+                if (tEngine) {
+                    const engName = meta.engine ? meta.engine.toUpperCase() : engine.toUpperCase();
+                    const mdlName = meta.model_name ? ` (${meta.model_name})` : '';
+                    tEngine.innerText = `⚡ Engine: ${engName}${mdlName}`;
+                }
+                if (tLatency) {
+                    tLatency.innerText = meta.latency_ms ? `· ${(meta.latency_ms / 1000).toFixed(2)}s` : '· Offline/Direct';
+                }
+                if (tTokens) {
+                    tTokens.innerText = (meta.prompt_tokens || meta.completion_tokens) ?
+                        `· ${meta.prompt_tokens || 0} prompt / ${meta.completion_tokens || 0} completion tokens` : '';
+                }
+                if (tSkills) {
+                    const skillsList = meta.active_skills && meta.active_skills.length > 0 ?
+                        meta.active_skills.map(s => `[${s}]`).join(' ') : '[tri-graph-routing] [epistemic-claim-audit]';
+                    tSkills.innerText = `🧠 Active Skills: ${skillsList}`;
+                }
 
                 // Update Answer Text
                 document.getElementById('answerText').innerText = data.answer_text;
@@ -1504,6 +1557,64 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             document.getElementById('stewardModal').style.display = 'none';
         }
 
+        // Model & API Key Configuration Drawer Handlers
+        async function openModelDrawer() {
+            const m = document.getElementById('modelModal');
+            m.style.display = 'flex';
+            const statusDiv = document.getElementById('serverConfigStatus');
+            statusDiv.innerHTML = 'Querying server configuration status...';
+            try {
+                const res = await fetch('/api/config_status');
+                const cfg = await res.json();
+                let dsBadge = cfg.deepseek_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active from server environment</span>' : '<span style="color:#ef4444;">❌ Unconfigured (session override required)</span>';
+                let gemBadge = cfg.gemini_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active</span>' : '<span style="color:#94a3b8;">Unconfigured</span>';
+                let custBadge = cfg.custom_configured ? '<span style="color:#22c55e; font-weight:700;">✅ Active</span>' : '<span style="color:#94a3b8;">Unconfigured</span>';
+                let skillsHtml = (cfg.active_skills || []).map(s => `<code>${escapeHtml(s.name || s)}</code>`).join(', ');
+
+                statusDiv.innerHTML = `
+                    <div>• <strong>DeepSeek API:</strong> ${dsBadge} (Default Model: <code>${cfg.deepseek_model}</code>)</div>
+                    <div>• <strong>Google Gemini API:</strong> ${gemBadge} (Model: <code>${cfg.gemini_model}</code>)</div>
+                    <div>• <strong>Custom / OpenAI API:</strong> ${custBadge} (Model: <code>${cfg.custom_model}</code>)</div>
+                    <div style="margin-top:6px;">• <strong>Loaded Domain Skills:</strong> ${skillsHtml}</div>
+                `;
+
+                // Restore any existing session overrides to input fields
+                document.getElementById('overrideApiKey').value = sessionStorage.getItem('meia_override_api_key') || '';
+                document.getElementById('overrideEndpoint').value = sessionStorage.getItem('meia_override_endpoint') || '';
+                document.getElementById('overrideModel').value = sessionStorage.getItem('meia_override_model') || '';
+                if (sessionStorage.getItem('meia_loc_arm')) {
+                    document.getElementById('locArmSelect').value = sessionStorage.getItem('meia_loc_arm');
+                }
+            } catch (err) {
+                statusDiv.innerHTML = `<span style="color:#ef4444;">Failed to query status: ${err.message}</span>`;
+            }
+        }
+
+        function closeModelDrawer() {
+            document.getElementById('modelModal').style.display = 'none';
+        }
+
+        function saveModelConfig() {
+            const apiKey = document.getElementById('overrideApiKey').value.trim();
+            const endpoint = document.getElementById('overrideEndpoint').value.trim();
+            const model = document.getElementById('overrideModel').value.trim();
+            const locArm = document.getElementById('locArmSelect').value;
+
+            if (apiKey) sessionStorage.setItem('meia_override_api_key', apiKey);
+            else sessionStorage.removeItem('meia_override_api_key');
+
+            if (endpoint) sessionStorage.setItem('meia_override_endpoint', endpoint);
+            else sessionStorage.removeItem('meia_override_endpoint');
+
+            if (model) sessionStorage.setItem('meia_override_model', model);
+            else sessionStorage.removeItem('meia_override_model');
+
+            sessionStorage.setItem('meia_loc_arm', locArm);
+
+            closeModelDrawer();
+            executeQuery();
+        }
+
         // Run default query on initial load
         window.onload = function() { executeQuery(); };
     </script>
@@ -1527,6 +1638,47 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 <button onclick="closeStewardModal()" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Close</button>
             </div>
             <div id="stewardModalContent">Loading steward queue...</div>
+        </div>
+    </div>
+
+    <!-- Modal for Model & API Keys Configuration -->
+    <div id="modelModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#1e293b; border:1px solid #38bdf8; border-radius:10px; max-width:650px; width:90%; max-height:85vh; overflow-y:auto; padding:24px; color:#f8fafc;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px; margin-bottom:16px;">
+                <h2 style="font-size:18px; color:#38bdf8;">⚙️ Inference Engine & Model Configuration</h2>
+                <button onclick="closeModelDrawer()" style="background:#334155; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Close</button>
+            </div>
+            <div id="modelConfigContent">
+                <div style="background:#0f172a; padding:14px; border-radius:6px; border:1px solid #334155; margin-bottom:16px;">
+                    <div style="font-weight:700; color:#cbd5e1; margin-bottom:8px;">Server-Configured Providers:</div>
+                    <div id="serverConfigStatus" style="font-size:13px; line-height:1.7; color:#94a3b8;">Checking server status...</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+                    <div>
+                        <label style="font-size:12px; color:#cbd5e1; font-weight:600; display:block; margin-bottom:4px;">Session API Key Override (In-Memory / Session Only):</label>
+                        <input type="password" id="overrideApiKey" placeholder="sk-... (Overrides server key for this browser session)" style="width:100%; padding:8px 12px; background:#0f172a; border:1px solid #334155; color:#f8fafc; border-radius:6px; font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px; color:#cbd5e1; font-weight:600; display:block; margin-bottom:4px;">Custom / Local Endpoint URL (Ollama, vLLM, OpenRouter):</label>
+                        <input type="text" id="overrideEndpoint" placeholder="https://api.openai.com/v1 or http://localhost:11434/v1" style="width:100%; padding:8px 12px; background:#0f172a; border:1px solid #334155; color:#f8fafc; border-radius:6px; font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px; color:#cbd5e1; font-weight:600; display:block; margin-bottom:4px;">Custom Model Name:</label>
+                        <input type="text" id="overrideModel" placeholder="deepseek-chat / gpt-4o-mini / qwen2.5:7b" style="width:100%; padding:8px 12px; background:#0f172a; border:1px solid #334155; color:#f8fafc; border-radius:6px; font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px; color:#cbd5e1; font-weight:600; display:block; margin-bottom:4px;">Loud and Clear (LoC) Visual Reader Arm:</label>
+                        <select id="locArmSelect" style="width:100%; padding:8px 12px; background:#0f172a; border:1px solid #334155; color:#f8fafc; border-radius:6px; font-size:13px;">
+                            <option value="ARM_C_MULTIMODAL_CALLOUT" selected>Arm C: Hybrid BBox Focal Crop + 160-Token OCR Callouts (Recommended)</option>
+                            <option value="ARM_B_FOCAL_CROP">Arm B: High-Zoom Focal Crop Only (300 DPI)</option>
+                            <option value="ARM_A_FULL_PAGE">Arm A: Full-Page 180 DPI Baseline Context</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                    <button onclick="saveModelConfig()" style="background:#2563eb; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Apply Settings</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -1560,6 +1712,68 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             }
             self.wfile.write(json.dumps(resp).encode("utf-8"))
             return
+
+        if path == "/api/config_status":
+            from src.config import (
+                DEEPSEEK_API_KEY, GEMINI_API_KEY, CUSTOM_API_KEY,
+                DEFAULT_ENGINE, DEEPSEEK_MODEL, GEMINI_MODEL, CUSTOM_MODEL
+            )
+            from src.skill_loader import get_skill_registry
+            reg = get_skill_registry()
+            status_data = {
+                "deepseek_configured": bool(DEEPSEEK_API_KEY),
+                "gemini_configured": bool(GEMINI_API_KEY),
+                "custom_configured": bool(CUSTOM_API_KEY),
+                "default_engine": DEFAULT_ENGINE,
+                "deepseek_model": DEEPSEEK_MODEL,
+                "gemini_model": GEMINI_MODEL,
+                "custom_model": CUSTOM_MODEL,
+                "active_skills": [s.to_dict() for s in reg.list_skills()],
+            }
+            resp_bytes = json.dumps(status_data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path == "/api/skills":
+            from src.skill_loader import get_skill_registry
+            reg = get_skill_registry()
+            skills_data = {
+                "count": len(reg.list_skills()),
+                "skills": [s.to_dict() for s in reg.list_skills()],
+            }
+            resp_bytes = json.dumps(skills_data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path == "/api/query":
+            from urllib.parse import parse_qs
+            qs = parse_qs(url.query)
+            q_str = qs.get("query", [""])[0]
+            clearance = qs.get("clearance_level", ["SECRET"])[0]
+            eng = qs.get("engine", [None])[0]
+            loc_arm = qs.get("loc_arm", ["ARM_C_MULTIMODAL_CALLOUT"])[0]
+            ctx = CallerContext(
+                caller_role="meia-authorized-evaluator" if clearance != "UNCLASSIFIED" else "guest-evaluator",
+                clearance_level=clearance,
+                enabled_modules=["organization_graph", "technology_graph", "crm_graph", "evidence_graph"]
+            )
+            ans = answer_query(q_str, ctx, engine=eng, loc_arm=loc_arm)
+            resp_bytes = json.dumps(ans.to_dict()).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
 
         if path.startswith("/api/figures/crops/") or path.startswith("/parsed/figures/crops/"):
             prefix = "/api/figures/crops/" if path.startswith("/api/figures/crops/") else "/parsed/figures/crops/"
@@ -1792,6 +2006,11 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                 data = json.loads(raw_body)
                 query = data.get("query", "").strip()
                 clearance = data.get("clearance_level", "SECRET")
+                engine = data.get("engine")
+                api_key = data.get("api_key")
+                model_name = data.get("model_name")
+                base_url = data.get("base_url")
+                loc_arm = data.get("loc_arm", "ARM_C_MULTIMODAL_CALLOUT")
 
                 ctx = CallerContext(
                     caller_role="meia-authorized-evaluator" if clearance != "UNCLASSIFIED" else "guest-evaluator",
@@ -1799,7 +2018,15 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                     enabled_modules=["organization_graph", "technology_graph", "crm_graph", "evidence_graph"]
                 )
 
-                ans = answer_query(query, ctx)
+                ans = answer_query(
+                    query,
+                    ctx,
+                    engine=engine,
+                    api_key=api_key,
+                    model_name=model_name,
+                    base_url=base_url,
+                    loc_arm=loc_arm,
+                )
                 resp_bytes = json.dumps(ans.to_dict()).encode("utf-8")
 
                 self.send_response(HTTPStatus.OK)

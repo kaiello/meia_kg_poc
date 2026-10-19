@@ -1,6 +1,6 @@
 # MEIA Federated Tri-Graph POC — Cryptographic Benchmark Verification Receipt
-**Execution Timestamp:** 2026-10-19T01:21:17.455875+00:00
-**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 12.11s (0.155s/CQ)
+**Execution Timestamp:** 2026-10-19T02:45:30.737836+00:00
+**Total Questions Evaluated:** 78 CQs | **Elapsed Time:** 601.18s (7.707s/CQ)
 
 ## 1. Executive Benchmark Scorecard
 
@@ -77,14 +77,14 @@
 | **CQ-25** | Which European Defence Agency (EDA) OSRA Defence T... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 47 cits | YES | OK |
 | **CQ-26** | Which active MEIA Topic Area(s) (meia.mil & Vulcan... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 27 cits | YES | OK |
 | **CQ-27** | How do source taxonomy labels map across MEIA Topi... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 34 cits | YES | OK |
-| **CQ-28** | What warfighter operational problem and Joint Oper... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 19 cits | YES | OK |
+| **CQ-28** | What warfighter operational problem and Joint Oper... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 15 cits | - | OK |
 | **CQ-29** | What specific, quantifiable operational capability... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 33 cits | YES | OK |
 | **CQ-30** | What physical Size, Weight, Power, and Cooling (SW... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 46 cits | YES | OK |
 | **CQ-31** | What are the recorded Technology Readiness Level (... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 33 cits | YES | OK |
 | **CQ-32** | What is the chronological readiness trajectory rec... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 31 cits | YES | OK |
 | **CQ-33** | What is the vendor's qualitative self-assessment o... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 30 cits | YES | OK |
 | **CQ-34** | What performance measures and evaluation metrics a... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 26 cits | YES | OK |
-| **CQ-35** | What software/hardware integration architecture, o... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 36 cits | YES | OK |
+| **CQ-35** | What software/hardware integration architecture, o... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 25 cits | YES | OK |
 | **CQ-36** | How does the capability trace through the ICF & ME... | `ROUTE_TECH` | `ROUTE_TECH` | OK | OK | 35 cits | YES | OK |
 | **CQ-37** | What submission identifiers, Scoutcard URLs, first... | `ROUTE_CRM` | `ROUTE_CRM` | OK | OK | 25 cits | YES | OK |
 | **CQ-38** | What are the current Twenty CRM pipeline stage, as... | `ROUTE_CRM` | `ROUTE_CRM` | OK | OK | 25 cits | YES | OK |

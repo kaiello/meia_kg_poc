@@ -470,3 +470,40 @@ def bundle_context_packets_for_route(
         packets.append(pkt)
 
     return packets
+
+
+def format_packets_as_evidence_text(packets: List[FunctionalContextPacket], max_tokens: int = 1500) -> str:
+    """Formats Functional Evidence Units into an explicit, locator-referenced text block for LLM reader."""
+    if not packets:
+        return "No Functional Evidence Packets available."
+
+    lines = []
+    for pkt in packets:
+        lines.append(f"=== FUNCTIONAL EVIDENCE UNIT: {pkt.anchor_label} ({pkt.anchor_entity_id}) ===")
+        lines.append(f"Graph Domain: {pkt.target_graph} | Epistemic Firewall: {pkt.epistemic_firewall_status}")
+        
+        # Primary Assertions with exact locators & epistemic tags
+        lines.append("Primary Tri-Graph Assertions:")
+        for a in pkt.primary_assertions[:8]:
+            k = a.get("key", "")
+            v = a.get("value", "")
+            loc = a.get("source_locator", "unknown")
+            epi = a.get("epistemic_status", "UNSPECIFIED")
+            lines.append(f"  * {k}: {v} [EPISTEMIC: {epi}] [Source: {loc}]")
+
+        # Qualifiers (Q4, Q5, Q6, Q12)
+        if pkt.qualifiers_and_notes:
+            lines.append("Structural Qualifiers & Constraints:")
+            for q in pkt.qualifiers_and_notes:
+                lines.append(f"  * [{q.qualifier_type}] {q.field_label}: {q.content} [Source: {q.source_locator}]")
+
+        # Visual chips
+        if pkt.visual_evidence_chips:
+            lines.append("Visual Diagram Chips:")
+            for v in pkt.visual_evidence_chips[:2]:
+                lines.append(f"  * [Figure: {v.asset_id}] Caption: {v.caption} BBox: {v.bbox}")
+
+        lines.append("")
+
+    return "\n".join(lines)
+

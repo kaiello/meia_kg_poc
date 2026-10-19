@@ -103,7 +103,7 @@ class LoCFigureInspector:
             logger.warning("Source image for %s not found", asset_id)
             return None
 
-        clean_id = asset_id.replace("asset:", "").replace(".png", "")
+        clean_id = Path(asset_id.replace("asset:", "")).stem
         cid = crop_id or f"{clean_id}_crop_{int(bbox[0]*100)}_{int(bbox[1]*100)}"
         crop_path = self.crops_dir / f"{cid}.png"
 

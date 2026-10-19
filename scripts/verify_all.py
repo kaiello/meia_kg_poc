@@ -8,6 +8,9 @@ and exports the updated cryptographic verification receipt.
 
 from datetime import datetime, timezone
 import json
+import os
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
 from pathlib import Path
 import subprocess
 import sys
@@ -19,7 +22,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def run_command(cmd: list, desc: str) -> bool:
     print(f"\n[RUNNING] {desc}...")
     start = time.time()
-    res = subprocess.run([sys.executable, "-B"] + cmd, cwd=REPO_ROOT, capture_output=True, text=True)
+    env = {**os.environ, "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1"}
+    res = subprocess.run([sys.executable, "-B"] + cmd, cwd=REPO_ROOT, env=env, capture_output=True, text=True)
     elapsed = time.time() - start
     if res.returncode == 0:
         print(f"[PASS] {desc} ({elapsed:.2f}s)")
