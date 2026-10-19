@@ -485,8 +485,8 @@ def format_packets_as_evidence_text(packets: List[FunctionalContextPacket], max_
         # Primary Assertions with exact locators & epistemic tags
         lines.append("Primary Tri-Graph Assertions:")
         for a in pkt.primary_assertions[:8]:
-            k = a.get("key", "")
-            v = a.get("value", "")
+            k = a.get("predicate") or a.get("key", "")
+            v = a.get("statement") or a.get("value", "")
             loc = a.get("source_locator", "unknown")
             epi = a.get("epistemic_status", "UNSPECIFIED")
             lines.append(f"  * {k}: {v} [EPISTEMIC: {epi}] [Source: {loc}]")

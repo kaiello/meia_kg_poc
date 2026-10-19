@@ -1888,10 +1888,11 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
 
         if path == "/api/query":
             from urllib.parse import parse_qs
+            from src.config import DEFAULT_ENGINE
             qs = parse_qs(url.query)
             q_str = qs.get("query", [""])[0]
             clearance = qs.get("clearance_level", ["SECRET"])[0]
-            eng = qs.get("engine", [None])[0]
+            eng = qs.get("engine", [None])[0] or DEFAULT_ENGINE
             loc_arm = qs.get("loc_arm", ["ARM_C_MULTIMODAL_CALLOUT"])[0]
             ctx = CallerContext(
                 caller_role="meia-authorized-evaluator" if clearance != "UNCLASSIFIED" else "guest-evaluator",
@@ -2165,10 +2166,11 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
                 return
             raw_body = self.rfile.read(content_length).decode("utf-8")
             try:
+                from src.config import DEFAULT_ENGINE
                 data = json.loads(raw_body)
                 query = data.get("query", "").strip()
                 clearance = data.get("clearance_level", "SECRET")
-                engine = data.get("engine")
+                engine = data.get("engine") or DEFAULT_ENGINE
                 api_key = data.get("api_key")
                 model_name = data.get("model_name")
                 base_url = data.get("base_url")

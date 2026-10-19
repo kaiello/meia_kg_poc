@@ -70,15 +70,11 @@ class TestLocalOpenWeightModels(unittest.TestCase):
         self.assertTrue(ce is not None or ce is None)
 
     def test_04_live_ollama_generation_or_fallback(self):
-        """Verify LiveLLMClient correctly dispatches to local Ollama with fallback safety."""
+        """Verify LiveLLMClient dispatches to local Ollama native /api/chat and succeeds."""
         client = get_llm_client()
         discovery = discover_ollama_models()
 
-        # Target one of the installed non-DeepSeek models (e.g. hermes3:8b, qwen2.5:3b, or qwen3-vl:8b-instruct)
         target_model = OLLAMA_DEFAULT_MODEL
-        if discovery["online"] and discovery["non_deepseek_models"]:
-            target_model = discovery["non_deepseek_models"][0]["name"]
-
         resp = client.generate(
             query="What is Ghostfin's TRL and operational range?",
             context_packet_text="Entity: Ghostfin (ID: tech:offering:ghostfin_uuv)\nClaim: TRL is 7 [LIVE_DEMONSTRATED] [Source: Sheet1!R2C5]\nClaim: Operational range is 1000 nmi [LIVE_DEMONSTRATED] [Source: Sheet1!R2C8]",
@@ -86,17 +82,18 @@ class TestLocalOpenWeightModels(unittest.TestCase):
             max_tokens=150,
         )
 
-        self.assertIn(resp.status, {"SUCCESS", "ERROR", "FALLBACK"})
         self.assertTrue(resp.engine.startswith("ollama"))
         self.assertEqual(resp.model_name, target_model)
 
-        if resp.status == "SUCCESS":
+        if discovery["online"]:
+            self.assertEqual(resp.status, "SUCCESS", f"Expected SUCCESS when Ollama is online, got {resp.status}: {resp.error_message}")
             self.assertTrue(len(resp.answer) > 0)
             self.assertGreater(resp.latency_ms, 0)
             self.assertTrue(len(resp.active_skills) > 0)
 
     def test_05_grounded_answer_with_ollama_engine(self):
         """Verify full end-to-end grounded answer composition using local Ollama engine."""
+        discovery = discover_ollama_models()
         ctx = CallerContext(
             caller_role="meia-authorized-evaluator",
             clearance_level="SECRET",
@@ -115,9 +112,11 @@ class TestLocalOpenWeightModels(unittest.TestCase):
         self.assertTrue(len(ans.structured_facts) > 0)
         self.assertTrue(len(ans.citations) > 0)
 
-        # Verify telemetry records local engine
+        # Verify telemetry records local engine and live SUCCESS when Ollama is online
         llm_meta = ans.llm_metadata
         self.assertTrue(llm_meta.get("engine", "").startswith("ollama"))
+        if discovery["online"]:
+            self.assertEqual(llm_meta.get("status"), "SUCCESS", f"Expected live Ollama SUCCESS, got {llm_meta}")
 
 
 if __name__ == "__main__":

@@ -223,70 +223,102 @@ class LiveLLMClient:
 
         # Check for multimodal vision models and optional figure image
         is_vision_model = any(v in target_model.lower() for v in ["vl", "vision", "gemma4"])
-        user_message_content: Any = full_user_content
+        img_b64_str: Optional[str] = None
         if is_vision_model and loc_image_path:
             p = Path(loc_image_path)
             if p.is_file():
                 try:
                     import base64
-                    with open(p, "rb") as img_f:
-                        img_b64 = base64.b64encode(img_f.read()).decode("utf-8")
-                    user_message_content = [
-                        {"type": "text", "text": full_user_content},
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{img_b64}"}
-                        }
-                    ]
+                    import io
+                    from PIL import Image
+                    img = Image.open(p).convert("RGB")
+                    img.thumbnail((512, 512))
+                    buf = io.BytesIO()
+                    img.save(buf, format="JPEG", quality=80)
+                    img_b64_str = base64.b64encode(buf.getvalue()).decode("utf-8")
                 except Exception as img_exc:
                     logger.debug("Failed to encode image %s for vision model: %s", loc_image_path, img_exc)
 
-        # Build OpenAI-compatible request payload
-        api_endpoint = approved_url.rstrip("/") + "/chat/completions"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {target_key}",
-        }
-
-        payload: Dict[str, Any] = {
-            "model": target_model,
-            "messages": [
-                {"role": "system", "content": system_instruction},
-                {"role": "user", "content": user_message_content},
-            ],
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-        }
-
         if engine_lower.startswith("ollama"):
-            payload["options"] = {"num_ctx": 8192}
+            # Use Ollama's native /api/chat endpoint so num_ctx=4096 and think=False are strictly respected
+            # (Ollama's /v1/chat/completions ignores options.num_ctx and allocates 256K context on qwen3-vl)
+            native_base = approved_url.rstrip("/")
+            if native_base.endswith("/v1"):
+                native_base = native_base[:-3]
+            api_endpoint = native_base + "/api/chat"
+            headers = {"Content-Type": "application/json"}
+            user_msg: Dict[str, Any] = {"role": "user", "content": full_user_content}
+            if img_b64_str:
+                user_msg["images"] = [img_b64_str]
+            payload = {
+                "model": target_model,
+                "messages": [
+                    {"role": "system", "content": system_instruction},
+                    user_msg,
+                ],
+                "stream": False,
+                "think": False,
+                "options": {
+                    "num_ctx": 4096,
+                    "temperature": temperature,
+                    "num_predict": max_tokens,
+                },
+            }
+        else:
+            # Build OpenAI-compatible request payload
+            api_endpoint = approved_url.rstrip("/") + "/chat/completions"
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {target_key}",
+            }
+            user_message_content: Any = full_user_content
+            if img_b64_str:
+                user_message_content = [
+                    {"type": "text", "text": full_user_content},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{img_b64_str}"}
+                    }
+                ]
+            payload = {
+                "model": target_model,
+                "messages": [
+                    {"role": "system", "content": system_instruction},
+                    {"role": "user", "content": user_message_content},
+                ],
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            }
 
         try:
             req_data = json.dumps(payload).encode("utf-8")
             req = urllib.request.Request(api_endpoint, data=req_data, headers=headers, method="POST")
             
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                status_code = resp.status
+            with urllib.request.urlopen(req, timeout=90) as resp:
                 body = resp.read().decode("utf-8")
                 data = json.loads(body)
 
             latency = (time.perf_counter() - started) * 1000.0
-            choices = data.get("choices", [])
-            if not choices:
-                return LLMResponse(
-                    answer="",
-                    engine=engine_lower,
-                    model_name=target_model,
-                    latency_ms=latency,
-                    status="ERROR",
-                    error_message="Model returned empty choices array.",
-                    active_skills=active_skills,
-                )
-
-            answer_text = choices[0].get("message", {}).get("content", "").strip()
-            usage = data.get("usage", {})
-            prompt_toks = usage.get("prompt_tokens", 0)
-            comp_toks = usage.get("completion_tokens", 0)
+            if engine_lower.startswith("ollama") and "message" in data:
+                answer_text = data.get("message", {}).get("content", "").strip()
+                prompt_toks = int(data.get("prompt_eval_count", 0))
+                comp_toks = int(data.get("eval_count", 0))
+            else:
+                choices = data.get("choices", [])
+                if not choices:
+                    return LLMResponse(
+                        answer="",
+                        engine=engine_lower,
+                        model_name=target_model,
+                        latency_ms=latency,
+                        status="ERROR",
+                        error_message="Model returned empty choices array.",
+                        active_skills=active_skills,
+                    )
+                answer_text = choices[0].get("message", {}).get("content", "").strip()
+                usage = data.get("usage", {})
+                prompt_toks = usage.get("prompt_tokens", 0)
+                comp_toks = usage.get("completion_tokens", 0)
 
             return LLMResponse(
                 answer=answer_text,

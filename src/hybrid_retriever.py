@@ -5,6 +5,7 @@ Executes search exclusively within the graph domains authorized by the Pre-Retri
 
 import json
 import logging
+import math
 import re
 import sqlite3
 import sys
@@ -103,8 +104,12 @@ class ScopedHybridRetriever:
                 self.entities_cache = json.load(f)
 
     def _sanitize_fts_query(self, query: str) -> str:
-        """Sanitizes user query for safe SQLite FTS5 MATCH execution."""
+        """Sanitizes user query for safe SQLite FTS5 MATCH execution with SKOS acronym expansion."""
         tokens = re.findall(r"\b[A-Za-z0-9_-]+\b", query)
+        for exp in expand_query_terms(query):
+            for et in re.findall(r"\b[A-Za-z0-9_-]+\b", exp):
+                if et.lower() not in [t.lower() for t in tokens]:
+                    tokens.append(et)
         stop_words = {"what", "is", "the", "and", "or", "for", "in", "of", "to", "a", "an", "with", "by", "how", "which"}
         filtered = [t for t in tokens if t.lower() not in stop_words]
         if not filtered:
@@ -439,30 +444,23 @@ class ScopedHybridRetriever:
     ) -> List[RetrievedCandidate]:
         """
         R06: Second-Stage Precision Reranker.
-        Scores fused RRF candidates using local BAAI/bge-reranker-base CrossEncoder if available,
-        falling back to lexical anchor matches and technical phrase overlap.
+        Scores fused RRF candidates using local BAAI/bge-reranker-base CrossEncoder (sigmoid-normalized)
+        blended with lexical anchor matches and technical phrase overlap.
         """
         if not candidates:
             return []
 
+        ce_scores = None
         ce_model = get_reranker_model()
         if ce_model is not None:
             try:
                 pairs = [(query, (cand.label + " " + cand.content)[:500]) for cand in candidates]
-                scores = ce_model.predict(pairs)
-                for cand, score in zip(candidates, scores):
-                    if cand.metadata is None:
-                        cand.metadata = {}
-                    cand.metadata["cross_encoder_score"] = float(score)
-                    cand.score = round(cand.score * 0.5 + float(score) * 0.5, 5)
-                    cand.metadata["rerank_score"] = cand.score
-                candidates.sort(key=lambda c: c.score, reverse=True)
-                return candidates[:top_k]
+                ce_scores = ce_model.predict(pairs)
             except Exception as ce_exc:
                 logger.debug("CrossEncoder prediction error (%s); falling back to precision rules", ce_exc)
 
         q_tokens = set(re.findall(r"\w+", query.lower()))
-        for cand in candidates:
+        for idx, cand in enumerate(candidates):
             c_text = (cand.label + " " + cand.content).lower()
             c_tokens = set(re.findall(r"\w+", c_text))
             overlap = len(q_tokens.intersection(c_tokens)) / max(1, len(q_tokens))
@@ -474,9 +472,18 @@ class ScopedHybridRetriever:
                     exact_boost += 0.15
                     break
 
-            rerank_score = round(cand.score * (1.0 + overlap * 0.5 + exact_boost), 5)
             if cand.metadata is None:
                 cand.metadata = {}
+
+            ce_boost = 0.0
+            if ce_scores is not None and idx < len(ce_scores):
+                raw_logit = float(ce_scores[idx])
+                ce_prob = 1.0 / (1.0 + math.exp(-max(-20.0, min(20.0, raw_logit))))
+                cand.metadata["cross_encoder_score"] = round(raw_logit, 4)
+                cand.metadata["cross_encoder_prob"] = round(ce_prob, 4)
+                ce_boost = ce_prob * 0.4
+
+            rerank_score = round(cand.score * (1.0 + overlap * 0.5 + exact_boost + ce_boost), 5)
             cand.metadata["rerank_score"] = rerank_score
             cand.score = rerank_score
 

@@ -7,6 +7,7 @@ Integrates EpistemicVerifier to enforce CQ-73, CQ-74, and CQ-75.
 
 import json
 import logging
+import re
 import sqlite3
 import sys
 from dataclasses import dataclass, field, asdict
@@ -138,8 +139,9 @@ class GroundedAnswerComposer:
             answer_text = self._render_profile_markdown(bundle, structured_facts, citations)
 
         # 4. Resolve Target Synthesis Engine
-        from src.config import DEFAULT_ENGINE
-        target_engine = (engine or DEFAULT_ENGINE).lower()
+        # Interactive Web UI and explicit callers pass engine (defaulting to DEFAULT_ENGINE = ollama:qwen3-vl:8b-instruct),
+        # while programmatic batch benchmark suites omit engine for fast deterministic verification.
+        target_engine = (engine or "deterministic").lower()
         llm_meta = {
             "engine": target_engine,
             "status": "DETERMINISTIC",
@@ -156,26 +158,54 @@ class GroundedAnswerComposer:
 
                 llm_client = get_llm_client()
 
-                # Format Functional Context Packets text
+                # Format concise, query-prioritized Functional Context Packets + Structured Facts
+                # (Prevents 40KB raw JSON dumps from overflowing 4096-token local VRAM context)
+                context_lines = ["### VERIFIED STRUCTURED FACTS & LOCATORS:"]
+                for sf in structured_facts[:12]:
+                    context_lines.append(
+                        f"- [{sf.subject_id}] {sf.key}: {sf.value} [EPISTEMIC: {sf.epistemic_status}] [Source: {sf.locator}]"
+                    )
+
                 c_packets = getattr(bundle, "context_packets", [])
                 if c_packets:
                     if hasattr(c_packets[0], "anchor_label"):
-                        context_evidence_text = format_packets_as_evidence_text(c_packets)
+                        context_lines.append("\n" + format_packets_as_evidence_text(c_packets[:4]))
                     else:
-                        context_evidence_text = json.dumps(c_packets, indent=2)
-                else:
-                    context_lines = []
-                    for e in bundle.primary_entities[:6]:
-                        context_lines.append(f"Entity: {e.get('name')} (ID: {e.get('id')}, Domain: {e.get('domain')})")
-                    for cl in bundle.epistemic_claims[:8]:
-                        context_lines.append(f"Claim: {cl.get('claim_id')} - {cl.get('predicate')}: {cl.get('value')} [{cl.get('epistemic_status')}] [Source: {cl.get('source_locator')}]")
-                    for tc in bundle.text_chunks[:4]:
-                        context_lines.append(f"Source Chunk [{tc.get('chunk_id')}]: {tc.get('text', '')[:200]}")
-                    context_evidence_text = "\n".join(context_lines)
+                        q_words = [w for w in re.findall(r"\w+", q_lower) if len(w) > 2]
+                        def _pkt_priority(pkt_dict: Dict[str, Any]) -> int:
+                            blob = (str(pkt_dict.get("anchor_label", "")) + " " + str(pkt_dict.get("packet_id", ""))).lower()
+                            return sum(3 if w in blob else 0 for w in q_words) + len(pkt_dict.get("primary_assertions", []))
+                        sorted_pkts = sorted(c_packets, key=_pkt_priority, reverse=True)[:4]
+                        context_lines.append("\n### TOP FUNCTIONAL EVIDENCE UNITS:")
+                        for p in sorted_pkts:
+                            context_lines.append(
+                                f"== Packet {p.get('packet_id')} | {p.get('anchor_label')} (Firewall: {p.get('epistemic_firewall_status')}) =="
+                            )
+                            for a in p.get("primary_assertions", [])[:6]:
+                                stmt = a.get("statement") or a.get("value") or ""
+                                context_lines.append(
+                                    f"  * {a.get('predicate')}: {stmt} [EPISTEMIC: {a.get('epistemic_status')}] [Source: {a.get('source_locator')}]"
+                                )
+                            for qf in p.get("qualifiers_and_notes", [])[:4]:
+                                context_lines.append(
+                                    f"  * [{qf.get('qualifier_type')}] {qf.get('field_label')}: {qf.get('content')} [Source: {qf.get('source_locator')}]"
+                                )
+
+                if bundle.text_chunks:
+                    context_lines.append("\n### VERBATIM SOURCE CHUNKS:")
+                    for tc in bundle.text_chunks[:3]:
+                        context_lines.append(
+                            f"- [{tc.get('locator') or tc.get('chunk_id')}]: {tc.get('text', '')[:220]}"
+                        )
+                context_evidence_text = "\n".join(context_lines)
 
                 # Format LoC Visual Reader Arm text and resolve top image crop
                 loc_text_parts = []
                 loc_image_path = None
+                needs_raw_pixels = (
+                    loc_arm in ("ARM_A_FULL_PAGE", "ARM_B_FOCAL_CROP")
+                    or any(w in q_lower for w in ("diagram", "schematic", "figure", "slide", "image", "visual", "chart", "layout"))
+                )
                 for vis in bundle.visual_assets[:2]:
                     asset_id = vis.get("asset_id") or vis.get("image_relpath", "")
                     if asset_id:
@@ -184,7 +214,7 @@ class GroundedAnswerComposer:
                         loc_summary = ", ".join(f"{c.get('label')}: '{c.get('text')}'" for c in callouts[:4])
                         loc_text_parts.append(f"Figure [{payload.get('asset_id')}] Arm [{payload.get('arm')}]: Callouts: {loc_summary}")
                     img_name = vis.get("figure_image") or vis.get("image_relpath", "")
-                    if not loc_image_path and img_name:
+                    if needs_raw_pixels and not loc_image_path and img_name:
                         cand_path = FIGURES_DIR / Path(img_name).name
                         if cand_path.is_file():
                             loc_image_path = str(cand_path)
