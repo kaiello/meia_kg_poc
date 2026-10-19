@@ -502,7 +502,7 @@
     "expected_locators": [
       "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C4"
     ],
-    "notes": "Enforces PII encryption/redaction labels (`Encrypted=Y`). *Ex: Ghostfin POC 1: `Dante Vaisbort` (`dante@albacore.inc`, `13104887606`), POC 2: `Andrew Wong` (`andrew@albacore.inc`, `19088216493`); Ecli"
+    "notes": "Enforces PII encryption/redaction labels (`Encrypted=Y`). *Ex: Ghostfin POC 1: `Dante Vaisbort` (`dante@albacore-redacted.local`, `1310-REDACTED`), POC 2: `Andrew Wong` (`andrew@albacore-redacted.local`, `1908-REDACTED`); Ecli"
   },
   {
     "cq_id": "CQ-40",
@@ -744,7 +744,7 @@
     "readiness": "Joined, Governed",
     "target_entities": [],
     "expected_locators": [],
-    "notes": "Links `dante@albacore.inc` and `andrew@albacore.inc` to canonical entity `Albacore` (`CAGE 0QSF0`, domain `albacore.inc`) with explicit provenance."
+    "notes": "Links `dante@albacore-redacted.local` and `andrew@albacore-redacted.local` to canonical entity `Albacore` (`CAGE 0QSF0`, domain `albacore.inc`) with explicit provenance."
   },
   {
     "cq_id": "CQ-61",
@@ -764,7 +764,7 @@
     "readiness": "Joined",
     "target_entities": [],
     "expected_locators": [],
-    "notes": "Links Ghostfin's `Technical 1` POC (`Cameron Matthews`, `cameron.a.matthews.civ@us.navy.mil`) to the US Navy `NSWC PC` (Naval Surface Warfare Center Panama City) vehicle purchase recorded in Q10."
+    "notes": "Links Ghostfin's `Technical 1` POC (`Cameron Matthews`, `cameron.matthews@navy-redacted.local`) to the US Navy `NSWC PC` (Naval Surface Warfare Center Panama City) vehicle purchase recorded in Q10."
   },
   {
     "cq_id": "CQ-63",
@@ -844,7 +844,7 @@
     "expected_locators": [
       "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R3C4"
     ],
-    "notes": "**Org**: Voltage Vessels, LLC, Commercial / U.S. Small Business / Startup, 2580a Ala Olu Pl, Haiku-Pauwela, HI 96708, CAGE `9W2W3`, DUNS `054450388`. **POC**: Sam Young (`sam@voltagevessels.com`). **T"
+    "notes": "**Org**: Voltage Vessels, LLC, Commercial / U.S. Small Business / Startup, 2580a Ala Olu Pl, Haiku-Pauwela, HI 96708, CAGE `9W2W3`, DUNS `054450388`. **POC**: Sam Young (`sam@voltage-redacted.local`). **T"
   },
   {
     "cq_id": "CQ-70",

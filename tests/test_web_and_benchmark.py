@@ -107,6 +107,39 @@ class TestWebAndBenchmark(unittest.TestCase):
         self.assertIn("ROUTE_ALL_TRI_STORE", profiles)
         self.assertIn("FAIL_CLOSED_GATE", profiles)
 
+    def test_path_traversal_returns_403(self):
+        """Verifies GET /api/figures with path traversal returns HTTP 403 Forbidden."""
+        url = f"http://127.0.0.1:{self.test_port}/api/figures/..%2F..%2Fstorage%2Fmeia_tri_graph_registry.db"
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            urllib.request.urlopen(url)
+        self.assertEqual(ctx.exception.code, 403)
+
+    def test_arm_b_crop_url_resolves_image(self):
+        """Verifies GET /api/figures/crops/<filename> serves generated focal crops."""
+        from src.figure_inspectors import inspect_figure_loc
+        arm_b = inspect_figure_loc("Prometheus_Energy_AI_p1", "ARM_B_FOCAL_CROP", bbox=[0.2, 0.2, 0.7, 0.7])
+        crop_path = arm_b.get("focal_crop_path")
+        self.assertIsNotNone(crop_path)
+        crop_filename = Path(crop_path).name
+        url = f"http://127.0.0.1:{self.test_port}/api/figures/crops/{crop_filename}"
+        with urllib.request.urlopen(url) as response:
+            self.assertEqual(response.status, 200)
+            self.assertEqual(response.headers.get("Content-Type"), "image/png")
+            content = response.read()
+            self.assertGreater(len(content), 100)
+
+    def test_post_body_oversized_returns_413(self):
+        """Verifies POST /api/query with oversized payload (>64KB) returns HTTP 413."""
+        url = f"http://127.0.0.1:{self.test_port}/api/query"
+        oversized_payload = json.dumps({
+            "query": "A" * 70000,
+            "clearance_level": "SECRET"
+        }).encode("utf-8")
+        req = urllib.request.Request(url, data=oversized_payload, headers={"Content-Type": "application/json"})
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            urllib.request.urlopen(req)
+        self.assertEqual(ctx.exception.code, 413)
+
 
 if __name__ == "__main__":
     unittest.main()

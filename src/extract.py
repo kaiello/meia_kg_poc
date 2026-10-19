@@ -10,6 +10,7 @@ import io
 import json
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
@@ -102,13 +103,13 @@ def sanitize_pii_value(val: Any, header: str) -> str:
         return ""
     
     h_lower = header.lower()
-    if "email" in h_lower:
+    if "email" in h_lower or "@" in s_val:
         digest = hashlib.sha256(s_val.encode("utf-8")).hexdigest()[:8]
         return f"redacted_contact_{digest}@cui-redacted.local"
-    if "phone" in h_lower:
+    if "phone" in h_lower or re.match(r"^\+?1?\d{10,11}$", s_val.replace("-", "").replace(" ", "").replace("(", "").replace(")", "")):
         digest = hashlib.sha256(s_val.encode("utf-8")).hexdigest()[:8]
         return f"REDACTED_PHONE_{digest}"
-    if "scoutcard" in s_val or "vulcan-sof.com" in s_val:
+    if "scoutcard" in s_val or "vulcan-sof.com" in s_val or "login/ng2" in s_val:
         parts = s_val.split("/")
         uid = parts[-1] if parts else "id"
         return f"https://vulcan-sof.local/scoutcard/{uid}"
@@ -209,7 +210,7 @@ def extract_vulcan_submissions(manifest: StandardManifest) -> List[Dict[str, Any
             val = ws.cell(r, c).value
             target_graph, sensitivity = classify_vulcan_column(headers[c-1], c, crm_overrides)
             str_val = str(val) if val is not None else ""
-            if sensitivity == "PII_ENCRYPTED":
+            if sensitivity == "PII_ENCRYPTED" or "scoutcard" in str_val or "vulcan-sof.com" in str_val or "login/ng2" in str_val:
                 str_val = sanitize_pii_value(str_val, headers[c-1])
             cell_entry = {
                 "col_index": c,

@@ -218,6 +218,32 @@ class TestCard07DriftAndContextPackets(unittest.TestCase):
                 self.assertEqual(ep_status, "VENDOR_SELF_ASSERTED")
         conn.close()
 
+    def test_context_packet_non_vulcan_prime_no_synthetic_fallbacks(self):
+        """Verifies non-Vulcan prime context packets do not fabricate synthetic Vulcan Q4-Q6 fallbacks."""
+        pkt = self.builder.build_packet_for_entity("org:fluor_federal")
+        self.assertIsInstance(pkt, FunctionalContextPacket)
+        self.assertEqual(pkt.anchor_entity_id, "org:fluor_federal")
+        # Ensure no Vulcan spreadsheet cells are cited
+        for cite in pkt.cell_citations:
+            self.assertNotIn("Vulcan", cite)
+        # Ensure no Vulcan Q4-Q6 qualifiers were injected
+        qual_types = [q.qualifier_type for q in pkt.qualifiers_and_notes]
+        self.assertNotIn("SUPPLY_CONSTRAINT_Q4", qual_types)
+        self.assertNotIn("ROM_FUNDING_Q5", qual_types)
+        self.assertNotIn("UNIT_COST_Q6", qual_types)
+
+    def test_loc_inspector_arm_c_non_placeholder_ocr(self):
+        """Verifies Arm C returns real extracted OCR callouts and bounding boxes without placeholder fallbacks."""
+        arm_c = inspect_figure_loc("Prometheus_Energy_AI_p2", "ARM_C_MULTIMODAL_CALLOUT")
+        self.assertEqual(arm_c["arm"], "ARM_C_MULTIMODAL_CALLOUT")
+        callouts = arm_c.get("ocr_callouts", [])
+        self.assertGreater(len(callouts), 0)
+        # Verify text is real OCR extraction, not a generic fallback placeholder
+        for callout in callouts:
+            self.assertNotIn("Extracted visual component", callout.get("text", ""))
+            self.assertIn("bbox", callout)
+            self.assertEqual(len(callout["bbox"]), 4)
+
 
 if __name__ == "__main__":
     unittest.main()
