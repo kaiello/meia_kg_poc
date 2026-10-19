@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "exported_at": "2026-10-19T13:33:08.069840+00:00",
+  "exported_at": "2026-10-19T14:17:18.962049+00:00",
   "total_items": 11,
   "summary_by_type": {
     "CANDIDATE_BRIDGE": 1,
@@ -20,7 +20,7 @@
       "review_status": "PENDING_STEWARD_APPROVAL",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R4C17",
       "steward_guidance": "T2S Solutions Vulcan submission lacked CAGE code; match to SAM candidate requires steward signoff.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:conflict:albacore_ghostfin_trl",
@@ -34,7 +34,7 @@
       "review_status": "FLAGGED_FOR_REVIEW",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C59 vs node:demo:sonic_spear_26",
       "steward_guidance": "Conflicting readiness evidence detected. Navy SME adjudication required to determine certified operational TRL.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_26705_q5_funding_to_scale",
@@ -48,7 +48,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C55",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_26705_q6_unit_cost",
@@ -62,7 +62,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C56",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_26705_q12_security_preference",
@@ -76,7 +76,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R2C62",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_25615_q5_funding_to_scale",
@@ -90,7 +90,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R3C55",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_25615_q6_unit_cost",
@@ -104,7 +104,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R3C56",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_25615_q12_security_preference",
@@ -118,7 +118,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R3C62",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_27268_q5_funding_to_scale",
@@ -132,7 +132,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R4C55",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_27268_q6_unit_cost",
@@ -146,7 +146,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R4C56",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069121+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     },
     {
       "queue_id": "rev:claim:claim:crm:obs_27268_q12_security_preference",
@@ -160,7 +160,7 @@
       "review_status": "PROPOSED",
       "source_locator": "MEIA_TEM_Vulcan_Export.xlsx!Vulcan Submissions!R4C62",
       "steward_guidance": "Commercial scaling parameter is vendor-asserted; requires program office verification before executive budgeting.",
-      "created_at": "2026-10-19T13:33:08.069840+00:00"
+      "created_at": "2026-10-19T14:17:18.962049+00:00"
     }
   ]
 }

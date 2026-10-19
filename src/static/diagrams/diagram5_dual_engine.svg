@@ -1,0 +1,260 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 780" width="100%" height="100%" class="archify-svg" id="svg-dual-engine">
+  <defs>
+    <linearGradient id="bg-grad-5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#070d18"/>
+    </linearGradient>
+    <filter id="shadow-card-5" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arr-c5-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-c5-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arr-c5-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arr-c5-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect width="1300" height="780" fill="url(#bg-grad-5)"/>
+  <pattern id="dot-grid-5" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
+  </pattern>
+  <rect width="1300" height="780" fill="url(#dot-grid-5)"/>
+
+  <!-- HEADER -->
+  <g class="header-group" transform="translate(36, 32)">
+    <rect x="0" y="0" width="8" height="28" rx="4" fill="#c084fc"/>
+    <text x="18" y="22" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc">Dual-Engine Synthesis &amp; Active Skill Orchestration</text>
+    <text x="18" y="42" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#94a3b8">Fast Deterministic Graph Engine (SQL CTE &lt; 35ms) vs Live LLM (DeepSeek / Gemini) with Dynamic Skill Injection</text>
+  </g>
+
+  <!-- ==================== COLUMN 1: CONTEXT PACKET INGRESS ==================== -->
+  <g class="cluster" id="cluster-packet" data-domain="packet" transform="translate(36, 95)">
+    <rect width="250" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="160" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">1. CONTEXT PACKET</text>
+
+    <!-- Node: Bound Context Packet -->
+    <g class="node" id="node-context-input" data-node-id="node-context-input" data-domain="packet" transform="translate(16, 30)">
+      <rect width="218" height="250" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-5)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">ContextPacket Ingress</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Pre-Filtered Multi-Evidence:</text>
+
+      <rect x="14" y="52" width="190" height="155" rx="4" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+      <text x="22" y="70" font-family="monospace" font-size="9" fill="#93c5fd">• query_id: "CQ-14"</text>
+      <text x="22" y="86" font-family="monospace" font-size="9" fill="#93c5fd">• route: "ROUTE_TECH_CRM"</text>
+      <text x="22" y="102" font-family="monospace" font-size="9" fill="#93c5fd">• clearance: "SECRET"</text>
+      <text x="22" y="118" font-family="monospace" font-size="9" fill="#a7f3d0">• graph_nodes: 14</text>
+      <text x="22" y="134" font-family="monospace" font-size="9" fill="#a7f3d0">• text_chunks: 4 (&lt;=400 tok)</text>
+      <text x="22" y="150" font-family="monospace" font-size="9" fill="#c084fc">• visual_crops: 2 (LoC Arm C)</text>
+      <text x="22" y="166" font-family="monospace" font-size="9" fill="#fde68a">• skos_expansions: 3 broader</text>
+      <text x="22" y="182" font-family="monospace" font-size="9" fill="#f87171">• authority_floor: Tier 2</text>
+      <text x="22" y="198" font-family="monospace" font-size="9" fill="#38bdf8">• digest: "e3b0c442..."</text>
+
+      <text x="14" y="225" font-family="Inter, sans-serif" font-size="10" fill="#38bdf8">Immutable Input Contract</text>
+      <text x="14" y="240" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Both engines consume this exact packet</text>
+    </g>
+
+    <!-- Node: Engine Switch Selector -->
+    <g class="node" id="node-engine-switch" data-node-id="node-engine-switch" data-domain="packet" transform="translate(16, 305)">
+      <rect width="218" height="150" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1" filter="url(#shadow-card-5)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f8fafc">Dual-Engine Dispatcher</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Config &amp; Query Complexity:</text>
+
+      <rect x="14" y="55" width="190" height="50" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="22" y="74" font-family="monospace" font-size="9" fill="#34d399">DEFAULT_ENGINE = 'graph'</text>
+      <text x="22" y="90" font-family="monospace" font-size="9" fill="#c084fc">OR: 'deepseek' / 'gemini'</text>
+
+      <text x="14" y="125" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Runtime URL param: ?engine=...</text>
+      <text x="14" y="140" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Permits benchmark bakeoffs</text>
+    </g>
+
+    <rect x="16" y="475" width="218" height="145" rx="8" fill="#091322" stroke="#1e293b" stroke-width="1"/>
+    <text x="30" y="505" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">PARALLEL RUNTIME</text>
+    <text x="30" y="530" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Evaluators can compare the local</text>
+    <text x="30" y="548" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">deterministic graph proof with</text>
+    <text x="30" y="566" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">the generative LLM answer side-</text>
+    <text x="30" y="584" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">by-side in real time.</text>
+  </g>
+
+  <!-- ==================== COLUMN 2: ENGINE A (DETERMINISTIC VERIFIER) ==================== -->
+  <g class="cluster" id="cluster-engine-a" data-domain="engine-a" transform="translate(320, 95)">
+    <rect width="320" height="305" rx="12" fill="#064e3b" fill-opacity="0.2" stroke="#10b981" stroke-width="2"/>
+    <rect x="16" y="-12" width="230" height="24" rx="6" fill="#065f46" stroke="#10b981" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ecfdf5">ENGINE A: DETERMINISTIC VERIFIER</text>
+
+    <!-- Node: CTE & GraphML Proof -->
+    <g class="node" id="node-graph-engine-details" data-node-id="node-graph-engine-details" data-domain="engine-a" transform="translate(16, 25)">
+      <rect width="288" height="200" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-5)"/>
+      <circle cx="22" cy="22" r="8" fill="#10b981"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Pure Graph Proof Engine</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#a7f3d0">Zero LLM Call | 100% Deterministic Traversal</text>
+
+      <rect x="16" y="60" width="256" height="85" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#ecfdf5">1. Traverses typed bridge edges in GraphML</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#ecfdf5">2. Resolves inverse predicates in SQL</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#ecfdf5">3. Extracts direct cell/chunk locators</text>
+      <text x="24" y="126" font-family="monospace" font-size="9" fill="#ecfdf5">4. Compiles structured mathematical proof</text>
+
+      <text x="16" y="165" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#6ee7b7">Execution Latency: &lt; 35 milliseconds</text>
+      <text x="16" y="185" font-family="Inter, sans-serif" font-size="9" fill="#a7f3d0">Token Cost: $0.00 | Air-gap verified | Infinite repeatability</text>
+    </g>
+
+    <!-- Output summary pill -->
+    <g transform="translate(16, 240)">
+      <rect width="288" height="40" rx="6" fill="#065f46" stroke="#10b981" stroke-width="1"/>
+      <text x="144" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffffff">Outputs: Verified Graph Proof &amp; Receipt</text>
+    </g>
+  </g>
+
+  <!-- ==================== COLUMN 2 LOWER: ENGINE B (LIVE LLM + SKILLS) ==================== -->
+  <g class="cluster" id="cluster-engine-b" data-domain="engine-b" transform="translate(320, 430)">
+    <rect width="320" height="305" rx="12" fill="#4a044e" fill-opacity="0.2" stroke="#c084fc" stroke-width="2"/>
+    <rect x="16" y="-12" width="220" height="24" rx="6" fill="#701a75" stroke="#c084fc" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#fdf4ff">ENGINE B: LIVE LLM &amp; SKILLS</text>
+
+    <!-- Node: LLM Client & Provider -->
+    <g class="node" id="node-llm-orchestrator" data-node-id="node-llm-orchestrator" data-domain="engine-b" transform="translate(16, 25)">
+      <rect width="288" height="110" rx="8" fill="#1e293b" stroke="#c084fc" stroke-width="1.5" filter="url(#shadow-card-5)"/>
+      <circle cx="22" cy="22" r="8" fill="#c084fc"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f0abfc">LLM Orchestrator (DeepSeek / Gemini)</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#f5d0fe">Streaming Generative Synthesis:</text>
+
+      <rect x="16" y="60" width="256" height="42" rx="4" fill="#3b0764" stroke="#7e22ce" stroke-width="1"/>
+      <text x="24" y="76" font-family="monospace" font-size="9" fill="#f0abfc">Model: deepseek-chat (V3) / gemini-2.5</text>
+      <text x="24" y="90" font-family="monospace" font-size="9" fill="#e9d5ff">Prompt: Strict Grounding &amp; Citation Rules</text>
+    </g>
+
+    <!-- Node: Active Skills Sub-cluster -->
+    <g class="node" id="node-active-skills" data-node-id="node-active-skills" data-domain="engine-b" transform="translate(16, 145)">
+      <rect width="288" height="135" rx="8" fill="#1e293b" stroke="#e879f9" stroke-width="1" filter="url(#shadow-card-5)"/>
+      <text x="16" y="22" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#f0abfc">Active MEIA Domain Skills Injected:</text>
+
+      <g transform="translate(16, 32)">
+        <rect width="256" height="24" rx="4" fill="#581c87" stroke="#9333ea" stroke-width="1"/>
+        <text x="12" y="16" font-family="monospace" font-size="9" fill="#e9d5ff">• meia-retrieval: Federated hybrid queries</text>
+      </g>
+      <g transform="translate(16, 62)">
+        <rect width="256" height="24" rx="4" fill="#581c87" stroke="#9333ea" stroke-width="1"/>
+        <text x="12" y="16" font-family="monospace" font-size="9" fill="#e9d5ff">• meia-exact-weld: Navy weld specs &amp; PQR</text>
+      </g>
+      <g transform="translate(16, 92)">
+        <rect width="256" height="24" rx="4" fill="#581c87" stroke="#9333ea" stroke-width="1"/>
+        <text x="12" y="16" font-family="monospace" font-size="9" fill="#e9d5ff">• meia-compliance: FAR/DFARS verification</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== COLUMN 3: EPISTEMIC AUDITOR & CITATION GATE ==================== -->
+  <g class="cluster" id="cluster-auditor" data-domain="auditor" transform="translate(680, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="220" height="24" rx="6" fill="#0369a1" stroke="#38bdf8" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffffff">3. EPISTEMIC AUDITOR</text>
+
+    <!-- Node: Citation Gate -->
+    <g class="node" id="node-citation-gate" data-node-id="node-citation-gate" data-domain="auditor" transform="translate(16, 30)">
+      <rect width="288" height="240" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-5)"/>
+      <circle cx="22" cy="22" r="8" fill="#38bdf8"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Citation &amp; Claim Matcher</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Sentence-by-Sentence Validation:</text>
+
+      <rect x="16" y="60" width="256" height="120" rx="4" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#93c5fd">FOR each sentence in llm_response:</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#93c5fd">  claims = extract_claims(sentence)</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#93c5fd">  match = ledger.verify(claims)</text>
+      <text x="24" y="126" font-family="monospace" font-size="9" fill="#fda4af">  IF NOT match:</text>
+      <text x="24" y="142" font-family="monospace" font-size="9" fill="#f43f5e">    REWRITE / SUPPRESS ASSERTION</text>
+      <text x="24" y="158" font-family="monospace" font-size="9" fill="#34d399">  ELSE: ATTACH_SEAL([SRC n])</text>
+
+      <text x="16" y="200" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#34d399">Guarantees 100% Grounded Content</text>
+      <text x="16" y="218" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Hallucinated vendor specs are intercepted before delivery</text>
+    </g>
+
+    <!-- Node: Audit Trail Builder -->
+    <g class="node" id="node-trail-builder" data-node-id="node-trail-builder" data-domain="auditor" transform="translate(16, 290)">
+      <rect width="288" height="180" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-5)"/>
+      <circle cx="22" cy="22" r="8" fill="#10b981"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Cryptographic Audit Builder</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Attaches Immutable Receipts:</text>
+
+      <rect x="16" y="60" width="256" height="75" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#a7f3d0">• Excel: MEIA_TEM_Vulcan!R6:C12</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#a7f3d0">• PDF: Fluor_Overview.pdf#page=4</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#a7f3d0">• Visual: /api/figures/crops/crop_p4_0.png</text>
+      <text x="24" y="126" font-family="monospace" font-size="9" fill="#a7f3d0">• Graph: (:Vendor)-[:DEVELOPS]-&gt;(:Tech)</text>
+
+      <text x="16" y="155" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">Zero Blind Assertions</text>
+      <text x="16" y="170" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Every fact can be verified with one click</text>
+    </g>
+
+    <rect x="16" y="490" width="288" height="125" rx="8" fill="#091322" stroke="#1e293b" stroke-width="1"/>
+    <text x="30" y="515" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">SOVEREIGN SEAL</text>
+    <text x="30" y="538" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Answers carry a cryptographic</text>
+    <text x="30" y="556" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">SHA-256 seal of the context</text>
+    <text x="30" y="574" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">packet and active ontology version.</text>
+    <text x="30" y="592" font-family="monospace" font-size="9" fill="#38bdf8">ISO/IEC 21838-2 (BFO) Compliance</text>
+  </g>
+
+  <!-- ==================== COLUMN 4: GROUNDED ANSWER DELIVERABLE ==================== -->
+  <g class="cluster" id="cluster-output" data-domain="output" transform="translate(1040, 95)">
+    <rect width="224" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="160" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">4. FINAL ANSWER</text>
+
+    <!-- Node: Grounded Answer Model -->
+    <g class="node" id="node-grounded-model" data-node-id="node-grounded-model" data-domain="output" transform="translate(14, 30)">
+      <rect width="196" height="250" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" filter="url(#shadow-card-5)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">GroundedAnswer Object</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Serialized JSON API Output:</text>
+
+      <rect x="14" y="52" width="168" height="145" rx="4" fill="#0c4a6e" stroke="#0284c7" stroke-width="1"/>
+      <text x="20" y="70" font-family="monospace" font-size="9" fill="#bae6fd">"answer_text": "...",</text>
+      <text x="20" y="86" font-family="monospace" font-size="9" fill="#bae6fd">"engine": "graph",</text>
+      <text x="20" y="102" font-family="monospace" font-size="9" fill="#bae6fd">"sources": [</text>
+      <text x="20" y="118" font-family="monospace" font-size="9" fill="#bae6fd">  {"loc": "Vulcan!R6"},</text>
+      <text x="20" y="134" font-family="monospace" font-size="9" fill="#bae6fd">  {"loc": "PDF#p4"}</text>
+      <text x="20" y="150" font-family="monospace" font-size="9" fill="#bae6fd">],</text>
+      <text x="20" y="166" font-family="monospace" font-size="9" fill="#a7f3d0">"epistemic_audit": {...},</text>
+      <text x="20" y="182" font-family="monospace" font-size="9" fill="#fde68a">"visual_figures": [...]</text>
+
+      <text x="14" y="215" font-family="Inter, sans-serif" font-size="10" fill="#34d399">100% Citation Compliance</text>
+      <text x="14" y="232" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Used in UI Explorer &amp; API</text>
+    </g>
+
+    <rect x="14" y="300" width="196" height="315" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+    <text x="98" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">BENCHMARK PROOF</text>
+    <text x="98" y="365" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#ffffff">78 / 78</text>
+    <text x="98" y="390" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">100% CQs PASSING</text>
+
+    <rect x="24" y="415" width="176" height="50" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+    <text x="32" y="435" font-family="monospace" font-size="10" fill="#a7f3d0">Precision: 100%</text>
+    <text x="32" y="453" font-family="monospace" font-size="10" fill="#a7f3d0">Recall:    100%</text>
+
+    <rect x="24" y="475" width="176" height="50" rx="4" fill="#0c4a6e" stroke="#0284c7" stroke-width="1"/>
+    <text x="32" y="495" font-family="monospace" font-size="10" fill="#bae6fd">Hallucination: 0.0%</text>
+    <text x="32" y="513" font-family="monospace" font-size="10" fill="#bae6fd">Grounding:     100%</text>
+
+    <text x="98" y="560" text-anchor="middle" font-family="monospace" font-size="10" fill="#cbd5e1">Air-Gap Sealed</text>
+    <text x="98" y="580" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">BFO / SKOS Compliant</text>
+  </g>
+
+  <!-- ==================== FLOW CONNECTIONS ==================== -->
+  <g class="edges-group">
+    <!-- Packet to Engine A & Engine B -->
+    <path class="edge" id="edge-packet-eng-a" d="M 286 215 C 300 215, 300 180, 320 180" stroke="#34d399" stroke-width="2.5" fill="none" marker-end="url(#arr-c5-green)"/>
+    <path class="edge" id="edge-packet-eng-b" d="M 286 235 C 300 235, 300 550, 320 550" stroke="#c084fc" stroke-width="2.5" fill="none" marker-end="url(#arr-c5-purple)"/>
+
+    <!-- Engines to Auditor -->
+    <path class="edge" id="edge-eng-a-auditor" d="M 640 215 C 660 215, 660 215, 680 215" stroke="#34d399" stroke-width="2.5" fill="none" marker-end="url(#arr-c5-green)"/>
+    <path class="edge" id="edge-eng-b-auditor" d="M 640 550 C 660 550, 660 270, 680 270" stroke="#c084fc" stroke-width="2.5" fill="none" marker-end="url(#arr-c5-purple)"/>
+
+    <!-- Auditor to Final Output -->
+    <path class="edge" id="edge-auditor-output" d="M 1000 215 L 1040 215" stroke="#38bdf8" stroke-width="3" fill="none" marker-end="url(#arr-c5-blue)"/>
+  </g>
+</svg>

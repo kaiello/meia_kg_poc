@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 780" width="100%" height="100%" class="archify-svg" id="svg-trident">
+  <defs>
+    <linearGradient id="bg-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#070d18"/>
+    </linearGradient>
+    <filter id="shadow-card-3" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arr-c3-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arr-c3-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arr-c3-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24"/>
+    </marker>
+    <marker id="arr-c3-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <rect width="1300" height="780" fill="url(#bg-grad-3)"/>
+  <pattern id="dot-grid-3" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
+  </pattern>
+  <rect width="1300" height="780" fill="url(#dot-grid-3)"/>
+
+  <!-- HEADER -->
+  <g class="header-group" transform="translate(36, 32)">
+    <rect x="0" y="0" width="8" height="28" rx="4" fill="#38bdf8"/>
+    <text x="18" y="22" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc">Trident Ingest, LoC 3-Arm Crops &amp; ColPali Late-Interaction</text>
+    <text x="18" y="42" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#94a3b8">Multi-Vector Vision Transformers | 180/300 DPI Spatial Resolution | MaxSim Token-to-Patch Cross-Modal Alignment</text>
+  </g>
+
+  <!-- ==================== STAGE 1: INGEST & EXTRACTION ==================== -->
+  <g class="cluster" id="cluster-trident-ingest" data-domain="ingest" transform="translate(36, 95)">
+    <rect width="250" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="160" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">1. DOCUMENT RASTER</text>
+
+    <!-- Node: Input PDFs -->
+    <g class="node" id="node-doc-input" data-node-id="node-doc-input" data-domain="ingest" transform="translate(16, 30)">
+      <rect width="218" height="120" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Heterogeneous PDFs</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Vendor Spec Sheets &amp; Charters:</text>
+      <rect x="14" y="52" width="190" height="52" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="22" y="70" font-family="monospace" font-size="10" fill="#93c5fd">• Prometheus_Energy_AI.pdf</text>
+      <text x="22" y="88" font-family="monospace" font-size="10" fill="#93c5fd">• Fluor_Government_Overview.pdf</text>
+    </g>
+
+    <!-- Node: Raster Engine -->
+    <g class="node" id="node-raster-engine" data-node-id="node-raster-engine" data-domain="ingest" transform="translate(16, 175)">
+      <rect width="218" height="120" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1" filter="url(#shadow-card-3)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f8fafc">180 DPI High-Res Engine</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">PyMuPDF + Docling Renderer</text>
+      <rect x="14" y="52" width="190" height="52" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="22" y="70" font-family="monospace" font-size="10" fill="#34d399">RGB24 Pixel Matrix</text>
+      <text x="22" y="88" font-family="monospace" font-size="10" fill="#34d399">Lossless PNG Artifacts</text>
+    </g>
+
+    <!-- Node: Layout & Table Parser -->
+    <g class="node" id="node-layout-parser" data-node-id="node-layout-parser" data-domain="ingest" transform="translate(16, 320)">
+      <rect width="218" height="120" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1" filter="url(#shadow-card-3)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f8fafc">Spatial Layout Bounding</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Normalized BBoxes [ymin, xmin, ...]</text>
+      <rect x="14" y="52" width="190" height="52" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="22" y="70" font-family="monospace" font-size="10" fill="#c084fc">Tables, Figures, Block Diagrams</text>
+      <text x="22" y="88" font-family="monospace" font-size="10" fill="#c084fc">Eliminates 40-fig hardcap</text>
+    </g>
+
+    <rect x="16" y="465" width="218" height="150" rx="8" fill="#091322" stroke="#1e293b" stroke-width="1"/>
+    <text x="30" y="495" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">PARSING DISCIPLINE</text>
+    <text x="30" y="520" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Every diagram, schematic, and</text>
+    <text x="30" y="538" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">table is indexed with precise</text>
+    <text x="30" y="556" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">physical coordinates and page</text>
+    <text x="30" y="574" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">references in the Evidence Spine.</text>
+  </g>
+
+  <!-- ==================== STAGE 2: LOUD-AND-CLEAR (LOC) 3-ARM CROPPING ==================== -->
+  <g class="cluster" id="cluster-loc-arms" data-domain="loc" transform="translate(320, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="220" height="24" rx="6" fill="#0369a1" stroke="#38bdf8" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffffff">2. LOUD-AND-CLEAR (LOC) ARMS</text>
+
+    <!-- Arm A -->
+    <g class="node" id="node-arm-a" data-node-id="node-arm-a" data-domain="loc" transform="translate(16, 30)">
+      <rect width="288" height="175" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <circle cx="22" cy="22" r="8" fill="#3b82f6"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#93c5fd">Arm A: Full-Page 180 DPI Baseline</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Macro Context &amp; Document Topography</text>
+      
+      <rect x="16" y="60" width="256" height="55" rx="4" fill="#172554" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="10" fill="#bfdbfe">• Full page visual frame</text>
+      <text x="24" y="96" font-family="monospace" font-size="10" fill="#bfdbfe">• Preserves overall header/footer hierarchy</text>
+
+      <text x="16" y="136" font-family="Inter, sans-serif" font-size="10" fill="#60a5fa">Best for: Document classification &amp; layout</text>
+      <text x="16" y="154" font-family="monospace" font-size="9" fill="#94a3b8">config: ARM_A_FULL_PAGE</text>
+    </g>
+
+    <!-- Arm B -->
+    <g class="node" id="node-arm-b" data-node-id="node-arm-b" data-domain="loc" transform="translate(16, 230)">
+      <rect width="288" height="175" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <circle cx="22" cy="22" r="8" fill="#8b5cf6"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#c4b5fd">Arm B: High-Zoom Focal Crops (300 DPI)</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Micro-Detail Table &amp; Schematic Cropping</text>
+      
+      <rect x="16" y="60" width="256" height="55" rx="4" fill="#2e1065" stroke="#6d28d9" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="10" fill="#ddd6fe">• 300 DPI optical zoom on sub-regions</text>
+      <text x="24" y="96" font-family="monospace" font-size="10" fill="#ddd6fe">• Unlocks micro-print in specification tables</text>
+
+      <text x="16" y="136" font-family="Inter, sans-serif" font-size="10" fill="#a78bfa">Best for: Complex schematics &amp; dense data</text>
+      <text x="16" y="154" font-family="monospace" font-size="9" fill="#94a3b8">config: ARM_B_FOCAL_CROP</text>
+    </g>
+
+    <!-- Arm C -->
+    <g class="node" id="node-arm-c" data-node-id="node-arm-c" data-domain="loc" transform="translate(16, 430)">
+      <rect width="288" height="185" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2" filter="url(#shadow-card-3)"/>
+      <circle cx="22" cy="22" r="8" fill="#10b981"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#6ee7b7">Arm C: Hybrid BBox + OCR Callouts</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Optimal Multimodal Fusion (Recommended)</text>
+      
+      <rect x="16" y="60" width="256" height="65" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="10" fill="#a7f3d0">• Focal BBox crop + 160-token OCR chips</text>
+      <text x="24" y="94" font-family="monospace" font-size="10" fill="#a7f3d0">• Fused visual tokens with textual labels</text>
+      <text x="24" y="110" font-family="monospace" font-size="10" fill="#6ee7b7">• Instant visual verification in UI drawer</text>
+
+      <text x="16" y="146" font-family="Inter, sans-serif" font-size="10" fill="#34d399">Zero Ambiguity in Visual Evidence</text>
+      <text x="16" y="164" font-family="monospace" font-size="9" fill="#a7f3d0">config: ARM_C_MULTIMODAL_CALLOUT</text>
+    </g>
+  </g>
+
+  <!-- ==================== STAGE 3: COLPALI LATE-INTERACTION ==================== -->
+  <g class="cluster" id="cluster-colpali" data-domain="colpali" transform="translate(680, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="210" height="24" rx="6" fill="#4c1d95" stroke="#8b5cf6" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ede9fe">3. COLPALI LATE-INTERACTION</text>
+
+    <!-- Node: Vision Transformer Patches -->
+    <g class="node" id="node-vit-patches" data-node-id="node-vit-patches" data-domain="colpali" transform="translate(16, 30)">
+      <rect width="288" height="150" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#c4b5fd">ViT Patch Tokenizer (1024 Patches)</text>
+      <text x="16" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Image decomposed into 32x32 grid tokens:</text>
+
+      <g transform="translate(16, 55)">
+        <rect width="256" height="50" rx="4" fill="#2e1065" stroke="#6d28d9" stroke-width="1"/>
+        <text x="20" y="24" font-family="monospace" font-size="10" fill="#e9d5ff">D_image = [v_1, v_2, ..., v_1024]</text>
+        <text x="20" y="40" font-family="monospace" font-size="9" fill="#c4b5fd">Each v_j is 128-dim multi-vector</text>
+      </g>
+      <text x="16" y="130" font-family="Inter, sans-serif" font-size="10" fill="#a78bfa">Preserves 2D spatial layout and exact visual shapes</text>
+    </g>
+
+    <!-- Node: Query Tokens -->
+    <g class="node" id="node-query-tokens" data-node-id="node-query-tokens" data-domain="colpali" transform="translate(16, 205)">
+      <rect width="288" height="110" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1" filter="url(#shadow-card-3)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Query Token Multi-Vectors</text>
+      <text x="16" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Text query converted to multi-vectors:</text>
+      <rect x="16" y="55" width="256" height="35" rx="4" fill="#0c4a6e" stroke="#0284c7" stroke-width="1"/>
+      <text x="20" y="76" font-family="monospace" font-size="10" fill="#bae6fd">Q_text = [q_1, q_2, ..., q_m]</text>
+    </g>
+
+    <!-- Node: MaxSim Calculation -->
+    <g class="node" id="node-maxsim" data-node-id="node-maxsim" data-domain="colpali" transform="translate(16, 340)">
+      <rect width="288" height="180" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#fbbf24">MaxSim Scoring Formula</text>
+      <text x="16" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Late-Interaction Token Alignment:</text>
+
+      <rect x="16" y="55" width="256" height="60" rx="4" fill="#451a03" stroke="#b45309" stroke-width="1"/>
+      <text x="20" y="80" font-family="monospace" font-size="11" font-weight="700" fill="#fef3c7">S(Q, D) = Σ max (q_i · v_j)</text>
+      <text x="20" y="100" font-family="monospace" font-size="9" fill="#fde68a">Sum over query tokens of max dot-product</text>
+
+      <text x="16" y="136" font-family="Inter, sans-serif" font-size="10" fill="#f59e0b">No Single-Vector Bottleneck</text>
+      <text x="16" y="152" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Bypasses typical 256/512 token truncation loss</text>
+      <text x="16" y="168" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Pinpoints exact diagram sub-regions matching query</text>
+    </g>
+
+    <rect x="16" y="540" width="288" height="75" rx="8" fill="#2e1065" stroke="#7c3aed" stroke-width="1"/>
+    <text x="160" y="565" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ddd6fe">Zero OCR Dependency</text>
+    <text x="160" y="585" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#c4b5fd">Finds diagrams, charts, and circuits</text>
+    <text x="160" y="601" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#a78bfa">even when text is unindexed or rasterized</text>
+  </g>
+
+  <!-- ==================== STAGE 4: CROSS-MODAL FUSION & CONTEXT BENCH ==================== -->
+  <g class="cluster" id="cluster-fusion" data-domain="fusion" transform="translate(1040, 95)">
+    <rect width="224" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="160" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">4. CROSS-MODAL FUSION</text>
+
+    <!-- Node: Hybrid Ranker -->
+    <g class="node" id="node-ranker" data-node-id="node-ranker" data-domain="fusion" transform="translate(14, 30)">
+      <rect width="196" height="150" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Hybrid Cross-Ranker</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Reciprocal Rank Fusion:</text>
+      <rect x="14" y="55" width="168" height="65" rx="4" fill="#0c4a6e" stroke="#0284c7" stroke-width="1"/>
+      <text x="20" y="74" font-family="monospace" font-size="9" fill="#bae6fd">• BM25 Lexical (FTS5)</text>
+      <text x="20" y="90" font-family="monospace" font-size="9" fill="#bae6fd">• BGE-Large Dense (1024d)</text>
+      <text x="20" y="106" font-family="monospace" font-size="9" fill="#bae6fd">• ColPali MaxSim Score</text>
+      <text x="14" y="136" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Weights: 0.3 / 0.4 / 0.3</text>
+    </g>
+
+    <!-- Node: Context Packet Assembly -->
+    <g class="node" id="node-context-pack" data-node-id="node-context-pack" data-domain="fusion" transform="translate(14, 210)">
+      <rect width="196" height="165" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-3)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Context Packet Assembly</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Top-K Multimodal Evidence:</text>
+      <rect x="14" y="55" width="168" height="70" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+      <text x="20" y="74" font-family="monospace" font-size="9" fill="#a7f3d0">• Top 3 Graph Subgraphs</text>
+      <text x="20" y="90" font-family="monospace" font-size="9" fill="#a7f3d0">• Top 4 Text Chunks</text>
+      <text x="20" y="106" font-family="monospace" font-size="9" fill="#a7f3d0">• Top 2 LoC Visual Crops</text>
+      <text x="14" y="145" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">Bound to Evidence Spine</text>
+    </g>
+
+    <!-- Node: Evaluator Deliverable -->
+    <g class="node" id="node-deliverable" data-node-id="node-deliverable" data-domain="fusion" transform="translate(14, 405)">
+      <rect width="196" height="210" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+      <text x="98" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#f8fafc">Evaluator Deliverable</text>
+      
+      <rect x="16" y="40" width="164" height="60" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="24" y="58" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#38bdf8">Interactive Visual Viewer:</text>
+      <text x="24" y="74" font-family="monospace" font-size="9" fill="#cbd5e1">GET /api/figures/crops/...</text>
+      <text x="24" y="90" font-family="monospace" font-size="9" fill="#34d399">HTTP 200 (PNG Stream)</text>
+
+      <rect x="16" y="112" width="164" height="80" rx="4" fill="#172554" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="24" y="132" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#93c5fd">Zero Traversal Risk:</text>
+      <text x="24" y="150" font-family="monospace" font-size="9" fill="#bfdbfe">is_relative_to(CROPS_DIR)</text>
+      <text x="24" y="168" font-family="monospace" font-size="9" fill="#60a5fa">Security Gate Approved</text>
+    </g>
+  </g>
+
+  <!-- ==================== FLOW CONNECTIONS ==================== -->
+  <g class="edges-group">
+    <!-- Ingest to LoC Arms -->
+    <path class="edge" id="edge-ingest-arm-a" d="M 286 215 C 300 215, 300 115, 320 115" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-c3-blue)"/>
+    <path class="edge" id="edge-ingest-arm-b" d="M 286 235 L 320 315" stroke="#8b5cf6" stroke-width="2" fill="none" marker-end="url(#arr-c3-purple)"/>
+    <path class="edge" id="edge-ingest-arm-c" d="M 286 255 C 300 255, 300 520, 320 520" stroke="#34d399" stroke-width="2.5" fill="none" marker-end="url(#arr-c3-green)"/>
+
+    <!-- LoC Arms to ColPali ViT -->
+    <path class="edge" id="edge-arm-vit" d="M 640 315 C 660 315, 660 105, 680 105" stroke="#8b5cf6" stroke-width="2" fill="none" marker-end="url(#arr-c3-purple)"/>
+    <path class="edge" id="edge-vit-maxsim" d="M 824 180 L 824 340" stroke="#fbbf24" stroke-width="2" fill="none" marker-end="url(#arr-c3-amber)"/>
+    <path class="edge" id="edge-query-maxsim" d="M 824 315 L 824 340" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-c3-blue)"/>
+
+    <!-- MaxSim to Cross-Modal Fusion -->
+    <path class="edge" id="edge-maxsim-fusion" d="M 1000 430 C 1020 430, 1020 105, 1040 105" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arr-c3-blue)"/>
+    <path class="edge" id="edge-ranker-pack" d="M 1152 180 L 1152 210" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arr-c3-green)"/>
+    <path class="edge" id="edge-pack-deliver" d="M 1152 375 L 1152 405" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-c3-blue)"/>
+  </g>
+</svg>

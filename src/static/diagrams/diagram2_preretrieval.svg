@@ -1,0 +1,263 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 780" width="100%" height="100%" class="archify-svg" id="svg-preretrieval">
+  <defs>
+    <linearGradient id="bg-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#070d18"/>
+    </linearGradient>
+    <filter id="shadow-gate" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc"/>
+    </marker>
+  </defs>
+
+  <rect width="1300" height="780" fill="url(#bg-grad-2)"/>
+  <pattern id="dot-grid-2" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
+  </pattern>
+  <rect width="1300" height="780" fill="url(#dot-grid-2)"/>
+
+  <!-- HEADER -->
+  <g class="header-group" transform="translate(36, 32)">
+    <rect x="0" y="0" width="8" height="28" rx="4" fill="#34d399"/>
+    <text x="18" y="22" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc">Pre-Retrieval Policy, NativeScope &amp; Fail-Closed Gateways</text>
+    <text x="18" y="42" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#94a3b8">Active Clearance Enforcement | SKOS Transitive SQL CTEs | Zero-Hallucination Disjointness Gates (CQ-76/77/78)</text>
+  </g>
+
+  <!-- ==================== FLOW COLUMNS ==================== -->
+  <!-- COLUMN 1: INGRESS & CONTEXT -->
+  <g class="cluster" id="cluster-ingress" data-domain="ingress" transform="translate(36, 95)">
+    <rect width="250" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="140" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">1. QUERY INGRESS</text>
+
+    <!-- Node: Raw Query -->
+    <g class="node" id="node-raw-query" data-node-id="node-raw-query" data-domain="ingress" transform="translate(16, 30)">
+      <rect width="218" height="85" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Natural Language Query</text>
+      <rect x="14" y="32" width="190" height="42" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="22" y="48" font-family="monospace" font-size="10" fill="#f1f5f9">"Which UUV battery supplier</text>
+      <text x="22" y="64" font-family="monospace" font-size="10" fill="#f1f5f9"> holds an active OASIS+ PO?"</text>
+    </g>
+
+    <!-- Node: Caller Context -->
+    <g class="node" id="node-caller-ctx" data-node-id="node-caller-ctx" data-domain="ingress" transform="translate(16, 145)">
+      <rect width="218" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1" filter="url(#shadow-gate)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f8fafc">CallerContext</text>
+      <text x="14" y="42" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Clearance: SECRET / CUI / UNCLASS</text>
+      <text x="14" y="58" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Role: meia-authorized-evaluator</text>
+      <rect x="14" y="70" width="190" height="28" rx="4" fill="#1e3a8a" fill-opacity="0.3" stroke="#3b82f6" stroke-width="1"/>
+      <text x="22" y="88" font-family="monospace" font-size="10" fill="#93c5fd">Enabled: Org, Tech, CRM, Ev</text>
+    </g>
+
+    <!-- Node: Tokenizer & Intent Parser -->
+    <g class="node" id="node-intent-parser" data-node-id="node-intent-parser" data-domain="ingress" transform="translate(16, 285)">
+      <rect width="218" height="90" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1" filter="url(#shadow-gate)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f8fafc">Intent &amp; Entity Extractor</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Recognizes: CAGE, UEI, NAICS,</text>
+      <text x="14" y="60" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">TRL numbers, TEM Q-Codes, OASIS+</text>
+      <rect x="14" y="70" width="80" height="14" rx="3" fill="#334155"/>
+      <text x="54" y="81" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#e2e8f0">78 CQ Patterns</text>
+    </g>
+
+    <rect x="16" y="415" width="218" height="200" rx="8" fill="#091322" stroke="#1e293b" stroke-width="1"/>
+    <text x="30" y="445" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">PRE-RETRIEVAL INVARIANT</text>
+    <text x="30" y="475" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">No retrieval query or vector dot-</text>
+    <text x="30" y="493" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">product is executed until security</text>
+    <text x="30" y="511" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">boundaries and domain routing are</text>
+    <text x="30" y="529" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">statically proven satisfactory.</text>
+    <rect x="30" y="555" width="190" height="36" rx="4" fill="#0369a1" fill-opacity="0.2" stroke="#0284c7" stroke-width="1"/>
+    <text x="125" y="577" text-anchor="middle" font-family="monospace" font-size="10" fill="#38bdf8">pre_retrieval.py (0 ms)</text>
+  </g>
+
+  <!-- COLUMN 2: NATIVESCOPE & SKOS RECURSIVE SQL CTE -->
+  <g class="cluster" id="cluster-scope" data-domain="scope" transform="translate(320, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="210" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">2. NATIVESCOPE &amp; SKOS CTE</text>
+
+    <!-- Node: NativeScope -->
+    <g class="node" id="node-nativescope" data-node-id="node-nativescope" data-domain="scope" transform="translate(16, 30)">
+      <rect width="288" height="120" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">NativeScope Boundary Verifier</text>
+      <text x="16" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Validates multi-hop graph traversal depth.</text>
+      <rect x="16" y="52" width="256" height="52" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="24" y="70" font-family="monospace" font-size="10" fill="#34d399">ScopeRule: max_hops = 3</text>
+      <text x="24" y="86" font-family="monospace" font-size="10" fill="#93c5fd">Disallowed: Cross-Compartment Crawl</text>
+    </g>
+
+    <!-- Node: SKOS Recursive CTE -->
+    <g class="node" id="node-skos-cte" data-node-id="node-skos-cte" data-domain="scope" transform="translate(16, 175)">
+      <rect width="288" height="210" rx="8" fill="#1e293b" stroke="#c084fc" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#c084fc">SKOS Transitive Hierarchy CTE</text>
+      <text x="16" y="42" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">WITH RECURSIVE broader_taxonomy AS (</text>
+      
+      <rect x="16" y="52" width="256" height="105" rx="4" fill="#0f172a" stroke="#581c87" stroke-width="1"/>
+      <text x="24" y="70" font-family="monospace" font-size="9" fill="#e9d5ff">SELECT concept_id, parent_id, 0 AS depth</text>
+      <text x="24" y="84" font-family="monospace" font-size="9" fill="#e9d5ff">FROM skos_taxonomy WHERE concept_id = ?</text>
+      <text x="24" y="98" font-family="monospace" font-size="9" fill="#e9d5ff">UNION ALL</text>
+      <text x="24" y="112" font-family="monospace" font-size="9" fill="#e9d5ff">SELECT t.concept_id, t.parent_id, depth+1</text>
+      <text x="24" y="126" font-family="monospace" font-size="9" fill="#e9d5ff">FROM skos_taxonomy t JOIN broader_taxonomy b</text>
+      <text x="24" y="140" font-family="monospace" font-size="9" fill="#e9d5ff">ON t.concept_id = b.parent_id)</text>
+
+      <text x="16" y="178" font-family="Inter, sans-serif" font-size="10" fill="#c084fc">Expands OSRA 2021 &amp; MEIA Q2 Topics</text>
+      <text x="16" y="196" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">BFO:is_a transitive closure in SQL</text>
+    </g>
+
+    <!-- Node: Minimum-Sufficient Router -->
+    <g class="node" id="node-min-router" data-node-id="node-min-router" data-domain="scope" transform="translate(16, 410)">
+      <rect width="288" height="205" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Minimum-Sufficient Router</text>
+      <text x="16" y="42" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Resolves precise target partitions:</text>
+
+      <g transform="translate(16, 54)">
+        <rect width="120" height="28" rx="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1"/>
+        <text x="60" y="18" text-anchor="middle" font-family="monospace" font-size="10" fill="#93c5fd">ROUTE_ORG</text>
+        <rect x="136" width="120" height="28" rx="4" fill="#4c1d95" stroke="#8b5cf6" stroke-width="1"/>
+        <text x="196" y="18" text-anchor="middle" font-family="monospace" font-size="10" fill="#ddd6fe">ROUTE_TECH</text>
+      </g>
+      <g transform="translate(16, 90)">
+        <rect width="120" height="28" rx="4" fill="#78350f" stroke="#f59e0b" stroke-width="1"/>
+        <text x="60" y="18" text-anchor="middle" font-family="monospace" font-size="10" fill="#fde68a">ROUTE_CRM</text>
+        <rect x="136" width="120" height="28" rx="4" fill="#065f46" stroke="#10b981" stroke-width="1"/>
+        <text x="196" y="18" text-anchor="middle" font-family="monospace" font-size="10" fill="#a7f3d0">ROUTE_PAIRWISE</text>
+      </g>
+      <g transform="translate(16, 126)">
+        <rect width="256" height="30" rx="4" fill="#0c4a6e" stroke="#0284c7" stroke-width="1"/>
+        <text x="128" y="20" text-anchor="middle" font-family="monospace" font-size="10" fill="#bae6fd">ROUTE_ALL_TRI_STORE</text>
+      </g>
+      <text x="16" y="180" font-family="Inter, sans-serif" font-size="10" fill="#94a3b8">Prevents cross-domain index pollution</text>
+      <text x="16" y="196" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Only relevant graph stores are activated</text>
+    </g>
+  </g>
+
+  <!-- COLUMN 3: FAIL-CLOSED GATEWAYS (CQ-76, CQ-77, CQ-78) -->
+  <g class="cluster" id="cluster-gates" data-domain="gates" transform="translate(680, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="220" height="24" rx="6" fill="#881337" stroke="#f43f5e" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffe4e6">3. FAIL-CLOSED GATEWAYS</text>
+
+    <!-- Gateway 1: CQ-76 Zero Evidence -->
+    <g class="node gate-node" id="node-gate-cq76" data-node-id="node-gate-cq76" data-domain="gates" transform="translate(16, 30)">
+      <rect width="288" height="175" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <circle cx="22" cy="22" r="8" fill="#f43f5e"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#fda4af">Gate 1: CQ-76 Zero-Evidence Trigger</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Scans registry for matching entities &amp; claims.</text>
+
+      <rect x="16" y="60" width="256" height="52" rx="4" fill="#4c0519" stroke="#9f1239" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="10" fill="#fecdd3">IF match_count == 0:</text>
+      <text x="24" y="96" font-family="monospace" font-size="10" fill="#f43f5e">  ABORT: "No verifiable evidence in POC"</text>
+
+      <text x="16" y="132" font-family="Inter, sans-serif" font-size="10" fill="#fb7185">Guarantees 0% Hallucination Rate</text>
+      <text x="16" y="150" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Bypasses LLM entirely; protects evaluation integrity</text>
+    </g>
+
+    <!-- Gateway 2: CQ-77 Strict Disjointness -->
+    <g class="node gate-node" id="node-gate-cq77" data-node-id="node-gate-cq77" data-domain="gates" transform="translate(16, 220)">
+      <rect width="288" height="185" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <circle cx="22" cy="22" r="8" fill="#f59e0b"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#fde68a">Gate 2: CQ-77 Disjointness Enforcement</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">OWL 2 DL Disjoint Classes Validation:</text>
+
+      <rect x="16" y="60" width="256" height="62" rx="4" fill="#451a03" stroke="#b45309" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#fef3c7">ContractAward owl:disjointWith Grant</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#fde68a">CommercialProduct disjointWith Prototype</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#fbbf24">DISALLOWS cross-category substitution</text>
+
+      <text x="16" y="142" font-family="Inter, sans-serif" font-size="10" fill="#fbbf24">Blocks Vendor Category Smuggling</text>
+      <text x="16" y="160" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Prevents grant funding masquerading as past performance</text>
+    </g>
+
+    <!-- Gateway 3: CQ-78 Historical Lineage -->
+    <g class="node gate-node" id="node-gate-cq78" data-node-id="node-gate-cq78" data-domain="gates" transform="translate(16, 420)">
+      <rect width="288" height="195" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <circle cx="22" cy="22" r="8" fill="#3b82f6"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#bfdbfe">Gate 3: CQ-78 Lineage &amp; CAGE Resolver</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Resolves corporate mergers, acquisitions &amp;</text>
+      <text x="16" y="66" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">successor-in-interest entity transformations.</text>
+
+      <rect x="16" y="76" width="256" height="52" rx="4" fill="#172554" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="24" y="94" font-family="monospace" font-size="10" fill="#93c5fd">Entity A (Legacy CAGE) --&gt;</text>
+      <text x="24" y="112" font-family="monospace" font-size="10" fill="#60a5fa">[:ACQUIRED_BY] --&gt; Parent Org B</text>
+
+      <text x="16" y="148" font-family="Inter, sans-serif" font-size="10" fill="#60a5fa">Preserves Immutable Audit Chain</text>
+      <text x="16" y="166" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Past contract performance correctly inherited</text>
+    </g>
+  </g>
+
+  <!-- COLUMN 4: RETRIEVAL TARGETS & DISPATCH -->
+  <g class="cluster" id="cluster-dispatch" data-domain="dispatch" transform="translate(1040, 95)">
+    <rect width="224" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="140" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">4. EXECUTION PLAN</text>
+
+    <!-- Node: Fast-Path Target -->
+    <g class="node" id="node-fastpath" data-node-id="node-fastpath" data-domain="dispatch" transform="translate(14, 30)">
+      <rect width="196" height="150" rx="8" fill="#064e3b" fill-opacity="0.3" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Deterministic Route</text>
+      <text x="16" y="46" font-family="Inter, sans-serif" font-size="10" fill="#a7f3d0">Exact Graph Proofs</text>
+      <text x="16" y="64" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">SQLite CTEs + FTS5</text>
+      <text x="16" y="82" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">Zero Model Latency</text>
+      <rect x="16" y="102" width="164" height="32" rx="4" fill="#065f46" stroke="#059669" stroke-width="1"/>
+      <text x="98" y="122" text-anchor="middle" font-family="monospace" font-size="11" fill="#ecfdf5">&lt; 35ms Proof</text>
+    </g>
+
+    <!-- Node: Multimodal Target -->
+    <g class="node" id="node-mmtarget" data-node-id="node-mmtarget" data-domain="dispatch" transform="translate(14, 205)">
+      <rect width="196" height="150" rx="8" fill="#1e1b4b" fill-opacity="0.3" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#818cf8">Visual Reader Route</text>
+      <text x="16" y="46" font-family="Inter, sans-serif" font-size="10" fill="#c7d2fe">ColPali Multi-Vector</text>
+      <text x="16" y="64" font-family="Inter, sans-serif" font-size="10" fill="#a5b4fc">LoC 3-Arm BBox Crops</text>
+      <text x="16" y="82" font-family="Inter, sans-serif" font-size="10" fill="#a5b4fc">Schematic Extraction</text>
+      <rect x="16" y="102" width="164" height="32" rx="4" fill="#312e81" stroke="#4f46e5" stroke-width="1"/>
+      <text x="98" y="122" text-anchor="middle" font-family="monospace" font-size="11" fill="#e0e7ff">MaxSim Score</text>
+    </g>
+
+    <!-- Node: Live LLM Target -->
+    <g class="node" id="node-llmtarget" data-node-id="node-llmtarget" data-domain="dispatch" transform="translate(14, 380)">
+      <rect width="196" height="150" rx="8" fill="#4a044e" fill-opacity="0.3" stroke="#d946ef" stroke-width="1.5" filter="url(#shadow-gate)"/>
+      <text x="16" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#f0abfc">Active Skill Route</text>
+      <text x="16" y="46" font-family="Inter, sans-serif" font-size="10" fill="#f5d0fe">DeepSeek / Gemini</text>
+      <text x="16" y="64" font-family="Inter, sans-serif" font-size="10" fill="#fbcfe8">meia-exact-weld</text>
+      <text x="16" y="82" font-family="Inter, sans-serif" font-size="10" fill="#fbcfe8">meia-compliance</text>
+      <rect x="16" y="102" width="164" height="32" rx="4" fill="#701a75" stroke="#a21caf" stroke-width="1"/>
+      <text x="98" y="122" text-anchor="middle" font-family="monospace" font-size="11" fill="#fdf4ff">Skill Injection</text>
+    </g>
+
+    <!-- Fail-Closed Terminal Sink -->
+    <g class="node" id="node-sink-abort" data-node-id="node-sink-abort" data-domain="dispatch" transform="translate(14, 550)">
+      <rect width="196" height="70" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="1.5"/>
+      <text x="98" y="28" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#fda4af">FAIL_CLOSED_ABORT</text>
+      <text x="98" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#fecdd3">0 Tokens Synthesized</text>
+      <text x="98" y="60" text-anchor="middle" font-family="monospace" font-size="9" fill="#f43f5e">CQ-76 / CQ-77 Exit</text>
+    </g>
+  </g>
+
+  <!-- ==================== FLOW CONNECTIONS ==================== -->
+  <g class="edges-group">
+    <!-- Ingress to NativeScope -->
+    <path class="edge" id="edge-ingress-scope" d="M 286 160 L 320 160" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arr-blue)"/>
+    <!-- NativeScope to SKOS CTE -->
+    <path class="edge" id="edge-scope-skos" d="M 480 215 L 480 270" stroke="#c084fc" stroke-width="2" fill="none" marker-end="url(#arr-purple)"/>
+    <!-- SKOS to Router -->
+    <path class="edge" id="edge-skos-router" d="M 480 480 L 480 505" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-blue)"/>
+    <!-- Router to Gateways -->
+    <path class="edge" id="edge-router-gates" d="M 640 512 C 660 512, 660 180, 696 180" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-blue)"/>
+    <!-- Fail Closed Branch -->
+    <path class="edge" id="edge-gate-abort" d="M 984 215 C 1010 215, 1010 680, 1054 680" stroke="#f43f5e" stroke-width="2.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arr-red)"/>
+    <!-- Passing Execution Paths -->
+    <path class="edge" id="edge-gate-fast" d="M 984 140 L 1054 140" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arr-green)"/>
+    <path class="edge" id="edge-gate-mm" d="M 984 315 L 1054 315" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-blue)"/>
+    <path class="edge" id="edge-gate-llm" d="M 984 490 L 1054 490" stroke="#c084fc" stroke-width="2" fill="none" marker-end="url(#arr-purple)"/>
+  </g>
+</svg>

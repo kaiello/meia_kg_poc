@@ -1,0 +1,102 @@
+/* Archify Interactive Diagram Theming & SVG Lighting Styles */
+
+.archify-svg {
+  display: block;
+  user-select: none;
+  transition: transform 0.15s ease-out;
+}
+
+/* NODES */
+.node {
+  cursor: pointer;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
+}
+
+.node rect {
+  transition: stroke 0.25s ease, stroke-width 0.25s ease, filter 0.25s ease;
+}
+
+.node:hover rect {
+  stroke-width: 2.5px !important;
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6)) !important;
+}
+
+.node.is-active rect {
+  stroke: #38bdf8 !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.8)) !important;
+  animation: pulse-node 2s infinite ease-in-out;
+}
+
+.node.is-dimmed {
+  opacity: 0.16 !important;
+}
+
+/* EDGES */
+.edge {
+  transition: opacity 0.3s ease, stroke-width 0.25s ease, stroke 0.25s ease;
+}
+
+.edge.is-active {
+  stroke: #38bdf8 !important;
+  stroke-width: 3.5px !important;
+  stroke-dasharray: 8, 4 !important;
+  animation: dash-flow 1.2s linear infinite !important;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8)) !important;
+}
+
+.edge.is-dimmed {
+  opacity: 0.08 !important;
+}
+
+/* CLUSTERS */
+.cluster {
+  transition: opacity 0.3s ease;
+}
+
+.cluster.is-dimmed {
+  opacity: 0.25 !important;
+}
+
+/* REACH HIGHLIGHTING (UPSTREAM / DOWNSTREAM) */
+.node.reach-target rect {
+  stroke: #34d399 !important;
+  stroke-width: 2.5px !important;
+  filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.7)) !important;
+}
+
+.node.reach-source rect {
+  stroke: #fbbf24 !important;
+  stroke-width: 2.5px !important;
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.7)) !important;
+}
+
+/* ANIMATIONS */
+@keyframes dash-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes pulse-node {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* PRESENTATION MODE */
+body.presentation-mode .navbar {
+  display: none;
+}
+
+body.presentation-mode .main-layout {
+  grid-template-columns: 380px 1fr;
+  height: 100vh;
+}

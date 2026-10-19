@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEIA Federated Tri-Graph — Interactive Architecture Explainer</title>
+  <meta name="description" content="OUSD(R&E) MEIA Federated Tri-Graph System Architecture & Epistemic Decision Explainer. 100% Air-Gapped, BFO/SKOS Aligned, 78/78 Competency Questions Validated.">
+  <link rel="stylesheet" href="/static/css/explainer.css">
+  <link rel="stylesheet" href="/static/css/diagram_theme.css">
+</head>
+<body>
+
+  <!-- TOP NAVIGATION -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-badge">OUSD(R&amp;E) MEIA</span>
+      <div>
+        <div class="brand-title">
+          <span>Federated Tri-Graph Explainer</span>
+          <span style="font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(52,211,153,0.15); color:#34d399; font-weight:700;">78/78 CQs PASS</span>
+        </div>
+        <div class="brand-meta">BFO 2020 / SKOS Aligned | Reified Claim Ledger | ColPali Late-Interaction</div>
+      </div>
+    </div>
+
+    <!-- PANEL TABS -->
+    <nav class="nav-tabs" id="navTabsContainer">
+      <!-- Injected via JavaScript -->
+    </nav>
+
+    <!-- ACTIONS -->
+    <div class="nav-actions">
+      <button class="btn-icon" id="guideBtn" title="Keyboard Shortcuts (?)">
+        <span>⌨️</span> <span>Guide (?)</span>
+      </button>
+      <button class="btn-icon" id="themeToggleBtn" title="Cycle Theme (T)">
+        <span>🎨</span> <span>Theme</span>
+      </button>
+      <button class="btn-icon" id="fullscreenBtn" title="Presentation Mode (F)">
+        <span>🖥️</span> <span>Present</span>
+      </button>
+      <button class="btn-icon" onclick="window.print()" title="Print or Export to PDF">
+        <span>📄</span> <span>Export PDF</span>
+      </button>
+      <a href="/" class="btn-icon" style="text-decoration:none;" title="Return to Live NLQ Explorer">
+        <span>🔍</span> <span>NLQ Query</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN SPLIT LAYOUT -->
+  <main class="main-layout">
+    <!-- LEFT NARRATIVE PANE -->
+    <section class="narrative-pane">
+      <!-- Executive Conclusion First -->
+      <div class="conclusion-card" id="conclusionCard">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Stepper List -->
+      <div class="stepper-section">
+        <div class="stepper-header">
+          <h3>Architectural Walkthrough</h3>
+          <span style="font-size:11px; color:var(--text-dim);">Hover/Click to light diagram</span>
+        </div>
+        <div class="stepper-list" id="stepperList">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT DIAGRAM PANE -->
+    <section class="diagram-pane">
+      <!-- Canvas Toolbar -->
+      <div class="canvas-toolbar">
+        <button class="canvas-btn" id="zoomInBtn" title="Zoom In (+)">➕</button>
+        <button class="canvas-btn" id="zoomOutBtn" title="Zoom Out (-)">➖</button>
+        <button class="canvas-btn" id="zoomResetBtn" title="Reset View (0)">Reset (0)</button>
+      </div>
+
+      <!-- Reach Controls -->
+      <div class="reach-controls">
+        <span style="font-weight:700; color:var(--text-main);">Reach Tracer:</span>
+        <button class="reach-btn" id="reachDownstreamBtn" title="Trace Downstream Dependencies">Downstream &gt;</button>
+        <button class="reach-btn" id="reachUpstreamBtn" title="Trace Upstream Sources">&lt; Upstream</button>
+        <button class="reach-btn" id="reachResetBtn" title="Reset Path Highlight">Reset</button>
+      </div>
+
+      <!-- SVG Viewport -->
+      <div class="svg-viewport" id="svgViewport">
+        <!-- Active SVG dynamically injected -->
+      </div>
+    </section>
+  </main>
+
+  <!-- SLIDE-OVER EVIDENCE DRAWER -->
+  <aside class="source-drawer" id="sourceDrawer">
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-title">Source Evidence Receipt</div>
+        <div class="drawer-meta">ontology/meia_ontology.ttl</div>
+      </div>
+      <button class="drawer-close" aria-label="Close drawer">&times;</button>
+    </div>
+    <div class="drawer-content">
+      <!-- Injected code lines -->
+    </div>
+  </aside>
+
+  <!-- SHORTCUT / GUIDE MODAL -->
+  <div class="modal-overlay" id="guideModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span>Keyboard Navigation Guide</span>
+        <button class="drawer-close" id="closeGuideBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-row">
+          <span>Toggle Help Guide</span>
+          <span class="kbd-badge">?</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Cycle Theme (Dark / Light / High-Contrast)</span>
+          <span class="kbd-badge">T</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Toggle Presentation Mode</span>
+          <span class="kbd-badge">F</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Switch to Panel 1 – 5</span>
+          <span class="kbd-badge">1 – 5</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Zoom In / Out</span>
+          <span class="kbd-badge">+ / -</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Reset Zoom &amp; Pan</span>
+          <span class="kbd-badge">0</span>
+        </div>
+        <div class="shortcut-row">
+          <span>Close Drawer or Modal</span>
+          <span class="kbd-badge">Esc</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT INCLUDES -->
+  <script src="/static/js/diagram_controller.js"></script>
+  <script src="/static/js/source_drawer.js"></script>
+  <script src="/static/js/explainer_app.js"></script>
+</body>
+</html>

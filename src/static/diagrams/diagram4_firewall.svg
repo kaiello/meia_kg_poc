@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 780" width="100%" height="100%" class="archify-svg" id="svg-firewall">
+  <defs>
+    <linearGradient id="bg-grad-4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#070d18"/>
+    </linearGradient>
+    <filter id="shadow-card-4" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <marker id="arr-c4-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e"/>
+    </marker>
+    <marker id="arr-c4-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arr-c4-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arr-c4-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect width="1300" height="780" fill="url(#bg-grad-4)"/>
+  <pattern id="dot-grid-4" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1" fill="#1e293b" opacity="0.6"/>
+  </pattern>
+  <rect width="1300" height="780" fill="url(#dot-grid-4)"/>
+
+  <!-- HEADER -->
+  <g class="header-group" transform="translate(36, 32)">
+    <rect x="0" y="0" width="8" height="28" rx="4" fill="#f43f5e"/>
+    <text x="18" y="22" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#f8fafc">Epistemic Authority Firewall &amp; Reified Claim Ledger</text>
+    <text x="18" y="42" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#94a3b8">Statutory Tiers vs Marketing Claims | Anti-Conflation Barriers (CQ-74/75) | Reified RDF Statements with Provenance</text>
+  </g>
+
+  <!-- ==================== COLUMN 1: THREE-TIER AUTHORITY HIERARCHY ==================== -->
+  <g class="cluster" id="cluster-tiers" data-domain="tiers" transform="translate(36, 95)">
+    <rect width="280" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="180" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">1. AUTHORITY TIERS</text>
+
+    <!-- Tier 1 -->
+    <g class="node" id="node-tier-1" data-node-id="node-tier-1" data-domain="tiers" transform="translate(16, 30)">
+      <rect width="248" height="175" rx="8" fill="#064e3b" fill-opacity="0.3" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <circle cx="22" cy="22" r="8" fill="#10b981"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Tier 1: Sovereign &amp; Statutory</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#a7f3d0">Highest Normative Weight (1.00)</text>
+      
+      <rect x="16" y="60" width="216" height="65" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#ecfdf5">• FAR / DFARS Statutory Clauses</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#ecfdf5">• Executed Contract Obligations</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#ecfdf5">• Signed Contracting Officer Determinations</text>
+
+      <text x="16" y="146" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">Legally Binding Truth Baseline</text>
+      <text x="16" y="162" font-family="monospace" font-size="9" fill="#a7f3d0">Authority: STATUTORY_GOVERNMENT</text>
+    </g>
+
+    <!-- Tier 2 -->
+    <g class="node" id="node-tier-2" data-node-id="node-tier-2" data-domain="tiers" transform="translate(16, 230)">
+      <rect width="248" height="175" rx="8" fill="#1e1b4b" fill-opacity="0.3" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <circle cx="22" cy="22" r="8" fill="#6366f1"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#a5b4fc">Tier 2: Official Program &amp; Eval</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#c7d2fe">Programmatic Evidence Weight (0.85)</text>
+      
+      <rect x="16" y="60" width="216" height="65" rx="4" fill="#312e81" stroke="#4f46e5" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#e0e7ff">• Formal RFP Evaluation Instructions</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#e0e7ff">• Government Evaluator TEM Notes</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#e0e7ff">• AFSIM Hardware-in-the-Loop Logs</text>
+
+      <text x="16" y="146" font-family="Inter, sans-serif" font-size="10" fill="#818cf8">Official Evaluation Records</text>
+      <text x="16" y="162" font-family="monospace" font-size="9" fill="#c7d2fe">Authority: PROGRAM_OFFICE_EVAL</text>
+    </g>
+
+    <!-- Tier 3 -->
+    <g class="node" id="node-tier-3" data-node-id="node-tier-3" data-domain="tiers" transform="translate(16, 430)">
+      <rect width="248" height="185" rx="8" fill="#451a03" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <circle cx="22" cy="22" r="8" fill="#f59e0b"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#fde68a">Tier 3: Vendor Self-Asserted</text>
+      <text x="16" y="50" font-family="Inter, sans-serif" font-size="10" fill="#fef3c7">Marketing &amp; Self-Reported (0.40)</text>
+      
+      <rect x="16" y="60" width="216" height="65" rx="4" fill="#78350f" stroke="#b45309" stroke-width="1"/>
+      <text x="24" y="78" font-family="monospace" font-size="9" fill="#fffbeb">• Vulcan Intake Self-Submissions</text>
+      <text x="24" y="94" font-family="monospace" font-size="9" fill="#fffbeb">• Marketing Whitepapers &amp; Slideware</text>
+      <text x="24" y="110" font-family="monospace" font-size="9" fill="#fffbeb">• Unverified Commercial Claims</text>
+
+      <text x="16" y="146" font-family="Inter, sans-serif" font-size="10" fill="#fbbf24">Subject to Strict Firewall Review</text>
+      <text x="16" y="164" font-family="monospace" font-size="9" fill="#fef3c7">Authority: VENDOR_UNVERIFIED</text>
+    </g>
+  </g>
+
+  <!-- ==================== COLUMN 2: ANTI-CONFLATION FIREWALL ==================== -->
+  <g class="cluster" id="cluster-firewall-core" data-domain="firewall" transform="translate(350, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
+    <rect x="16" y="-12" width="220" height="24" rx="6" fill="#881337" stroke="#f43f5e" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffe4e6">2. ANTI-CONFLATION FIREWALL</text>
+
+    <!-- CQ-74 Barrier -->
+    <g class="node firewall-barrier" id="node-cq74-barrier" data-node-id="node-cq74-barrier" data-domain="firewall" transform="translate(16, 30)">
+      <rect width="288" height="260" rx="8" fill="#1e293b" stroke="#f43f5e" stroke-width="2" filter="url(#shadow-card-4)"/>
+      <rect x="16" y="14" width="256" height="30" rx="4" fill="#4c0519" stroke="#e11d48" stroke-width="1"/>
+      <text x="144" y="34" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#fda4af">CQ-74: AUTHORITY BARRIER</text>
+      
+      <text x="16" y="64" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#f87171">Axiom: Tier 3 NEVER overrides Tier 1 / Tier 2</text>
+      <text x="16" y="80" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">If a vendor claims "TRL 9 in Navy production"</text>
+      <text x="16" y="94" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">in a whitepaper, but contract awards show only</text>
+      <text x="16" y="108" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">Phase I SBIR, the firewall rejects the override.</text>
+
+      <rect x="16" y="120" width="256" height="75" rx="4" fill="#0f172a" stroke="#f43f5e" stroke-width="1"/>
+      <text x="24" y="138" font-family="monospace" font-size="9" fill="#fda4af">IF claim.tier &lt; existing.tier AND</text>
+      <text x="24" y="152" font-family="monospace" font-size="9" fill="#fda4af">   claim.statement != existing.statement:</text>
+      <text x="24" y="168" font-family="monospace" font-size="9" fill="#f43f5e">  STATUS = 'CONTRADICTED_BY_AUTHORITY'</text>
+      <text x="24" y="184" font-family="monospace" font-size="9" fill="#34d399">  EMIT: Warning Receipt + Retain Sovereign</text>
+
+      <text x="16" y="215" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#34d399">PASS: Sovereign contract record preserved</text>
+      <text x="16" y="235" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#f43f5e">BLOCKED: Unsubstantiated marketing hype</text>
+    </g>
+
+    <!-- CQ-75 Barrier -->
+    <g class="node firewall-barrier" id="node-cq75-barrier" data-node-id="node-cq75-barrier" data-domain="firewall" transform="translate(16, 320)">
+      <rect width="288" height="290" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2" filter="url(#shadow-card-4)"/>
+      <rect x="16" y="14" width="256" height="30" rx="4" fill="#451a03" stroke="#d97706" stroke-width="1"/>
+      <text x="144" y="34" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#fef3c7">CQ-75: CROSS-DOMAIN SEGREGATION</text>
+      
+      <text x="16" y="64" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#fbbf24">Axiom: Financial Ledger ≠ Technical Readiness</text>
+      <text x="16" y="80" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">Accounting ledgers, indirect rate audits, and</text>
+      <text x="16" y="94" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">DCAA billing history cannot be substituted for</text>
+      <text x="16" y="108" font-family="Inter, sans-serif" font-size="9" fill="#cbd5e1">technical TRL/MRL testing evidence.</text>
+
+      <rect x="16" y="120" width="256" height="95" rx="4" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+      <text x="24" y="138" font-family="monospace" font-size="9" fill="#fde68a">DISJOINT_PREDICATES = {</text>
+      <text x="24" y="152" font-family="monospace" font-size="9" fill="#fde68a">  'financialObligation': ['hasReadinessLevel',</text>
+      <text x="24" y="166" font-family="monospace" font-size="9" fill="#fde68a">                          'testedInEnvironment'],</text>
+      <text x="24" y="180" font-family="monospace" font-size="9" fill="#fde68a">  'indirectRate':        ['hasSystemSpec']</text>
+      <text x="24" y="196" font-family="monospace" font-size="9" fill="#fde68a">}</text>
+
+      <text x="16" y="235" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#34d399">PASS: Strict typed domain boundaries</text>
+      <text x="16" y="255" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#f59e0b">BLOCKED: Cross-domain evidence conflation</text>
+      <text x="16" y="272" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Prevents financial health from faking technical maturity</text>
+    </g>
+  </g>
+
+  <!-- ==================== COLUMN 3: REIFIED CLAIM LEDGER ==================== -->
+  <g class="cluster" id="cluster-ledger" data-domain="ledger" transform="translate(705, 95)">
+    <rect width="320" height="640" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="200" height="24" rx="6" fill="#0369a1" stroke="#38bdf8" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffffff">3. REIFIED CLAIM LEDGER</text>
+
+    <!-- Node: Statement Reification -->
+    <g class="node" id="node-reified-stmt" data-node-id="node-reified-stmt" data-domain="ledger" transform="translate(16, 30)">
+      <rect width="288" height="240" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <circle cx="22" cy="22" r="8" fill="#38bdf8"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Reified Statement Entity</text>
+      <text x="16" y="48" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Triples lifted to verifiable graph nodes:</text>
+
+      <rect x="16" y="58" width="256" height="130" rx="4" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+      <text x="24" y="76" font-family="monospace" font-size="9" fill="#93c5fd">:Claim_8892 a meia:ReifiedStatement ;</text>
+      <text x="24" y="90" font-family="monospace" font-size="9" fill="#93c5fd">  rdf:subject :Vendor_Prometheus ;</text>
+      <text x="24" y="104" font-family="monospace" font-size="9" fill="#93c5fd">  rdf:predicate :hasTRL ;</text>
+      <text x="24" y="118" font-family="monospace" font-size="9" fill="#93c5fd">  rdf:object 7 ;</text>
+      <text x="24" y="132" font-family="monospace" font-size="9" fill="#fde68a">  meia:hasAuthorityTier :Tier2 ;</text>
+      <text x="24" y="146" font-family="monospace" font-size="9" fill="#a7f3d0">  meia:epistemicStatus :CONFIRMED ;</text>
+      <text x="24" y="160" font-family="monospace" font-size="9" fill="#38bdf8">  meia:evidenceAnchor "Vulcan!R6:C12" ;</text>
+      <text x="24" y="174" font-family="monospace" font-size="9" fill="#c084fc">  meia:sha256Digest "7a4f91b..." .</text>
+
+      <text x="16" y="210" font-family="Inter, sans-serif" font-size="10" fill="#38bdf8">Immutable Claim History</text>
+      <text x="16" y="226" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Every assertion is permanently traceable to exact source</text>
+    </g>
+
+    <!-- Node: Audit Trail & Status -->
+    <g class="node" id="node-audit-trail" data-node-id="node-audit-trail" data-domain="ledger" transform="translate(16, 290)">
+      <rect width="288" height="180" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <circle cx="22" cy="22" r="8" fill="#10b981"/>
+      <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">Epistemic Status Audit</text>
+      <text x="16" y="48" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Tri-State Resolution Matrix:</text>
+
+      <g transform="translate(16, 58)">
+        <rect width="256" height="30" rx="4" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+        <text x="12" y="20" font-family="monospace" font-size="10" fill="#a7f3d0">CONFIRMED: Multi-source validated</text>
+      </g>
+      <g transform="translate(16, 94)">
+        <rect width="256" height="30" rx="4" fill="#451a03" stroke="#b45309" stroke-width="1"/>
+        <text x="12" y="20" font-family="monospace" font-size="10" fill="#fde68a">ASSERTED: Single vendor report only</text>
+      </g>
+      <g transform="translate(16, 130)">
+        <rect width="256" height="30" rx="4" fill="#4c0519" stroke="#9f1239" stroke-width="1"/>
+        <text x="12" y="20" font-family="monospace" font-size="10" fill="#fda4af">CONTRADICTED: Disproved by Tier 1</text>
+      </g>
+    </g>
+
+    <rect x="16" y="490" width="288" height="125" rx="8" fill="#091322" stroke="#1e293b" stroke-width="1"/>
+    <text x="30" y="515" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">PROVENANCE SEAL</text>
+    <text x="30" y="538" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Every query response includes the</text>
+    <text x="30" y="556" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">exact reified statement IDs and</text>
+    <text x="30" y="574" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">cryptographic source locators in the</text>
+    <text x="30" y="592" font-family="monospace" font-size="9" fill="#38bdf8">grounded_answer.epistemic_audit</text>
+  </g>
+
+  <!-- ==================== COLUMN 4: VERIFICATION DELIVERABLES ==================== -->
+  <g class="cluster" id="cluster-receipts" data-domain="receipts" transform="translate(1055, 95)">
+    <rect width="209" height="640" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <rect x="16" y="-12" width="160" height="24" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="28" y="4" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#cbd5e1">4. AUDIT RECEIPTS</text>
+
+    <!-- Node: Citation Stamp -->
+    <g class="node" id="node-citation-stamp" data-node-id="node-citation-stamp" data-domain="receipts" transform="translate(14, 30)">
+      <rect width="181" height="175" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#38bdf8">Citation Verifier</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">100% Claim Audit</text>
+      
+      <rect x="14" y="55" width="153" height="65" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="20" y="74" font-family="monospace" font-size="9" fill="#a7f3d0">Claims: 8/8</text>
+      <text x="20" y="90" font-family="monospace" font-size="9" fill="#a7f3d0">Verified: 8/8</text>
+      <text x="20" y="106" font-family="monospace" font-size="9" fill="#38bdf8">Citation Rate: 100%</text>
+
+      <text x="14" y="142" font-family="Inter, sans-serif" font-size="10" fill="#34d399">Zero Uncited Sentences</text>
+      <text x="14" y="158" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Bypasses ungrounded claims</text>
+    </g>
+
+    <!-- Node: DoD Audit Export -->
+    <g class="node" id="node-audit-export" data-node-id="node-audit-export" data-domain="receipts" transform="translate(14, 230)">
+      <rect width="181" height="185" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" filter="url(#shadow-card-4)"/>
+      <text x="14" y="24" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#34d399">DoD Audit Report</text>
+      <text x="14" y="44" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">Signed Cryptographic JSON:</text>
+
+      <rect x="14" y="55" width="153" height="75" rx="4" fill="#0f172a" stroke="#059669" stroke-width="1"/>
+      <text x="20" y="74" font-family="monospace" font-size="8" fill="#a7f3d0">"audit_timestamp":</text>
+      <text x="20" y="88" font-family="monospace" font-size="8" fill="#94a3b8">  "2026-10-19T09:15Z",</text>
+      <text x="20" y="102" font-family="monospace" font-size="8" fill="#a7f3d0">"firewall_pass": true,</text>
+      <text x="20" y="116" font-family="monospace" font-size="8" fill="#38bdf8">"triples_audited": 4188</text>
+
+      <text x="14" y="152" font-family="Inter, sans-serif" font-size="10" fill="#6ee7b7">Air-Gapped Compliance</text>
+      <text x="14" y="168" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Ready for Inspector General</text>
+    </g>
+
+    <rect x="14" y="440" width="181" height="175" rx="8" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
+    <text x="90" y="475" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#fda4af">BENCHMARK SEAL</text>
+    <text x="90" y="505" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#34d399">100% PASS RATE</text>
+    <text x="90" y="525" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#cbd5e1">78/78 Competency Qs</text>
+    <text x="90" y="550" text-anchor="middle" font-family="monospace" font-size="9" fill="#38bdf8">benchmark_receipt.md</text>
+    <text x="90" y="580" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#94a3b8">Zero Hallucination Proof</text>
+  </g>
+
+  <!-- ==================== FLOW CONNECTIONS ==================== -->
+  <g class="edges-group">
+    <!-- Tiers to Firewall -->
+    <path class="edge" id="edge-tier1-firewall" d="M 264 125 L 350 125" stroke="#34d399" stroke-width="2.5" fill="none" marker-end="url(#arr-c4-green)"/>
+    <path class="edge" id="edge-tier2-firewall" d="M 264 315 L 350 200" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-c4-blue)"/>
+    <path class="edge" id="edge-tier3-firewall" d="M 264 515 C 310 515, 310 240, 350 240" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-c4-red)"/>
+
+    <!-- Firewall to Reified Ledger -->
+    <path class="edge" id="edge-cq74-ledger" d="M 638 180 L 705 180" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arr-c4-blue)"/>
+    <path class="edge" id="edge-cq75-ledger" d="M 638 465 L 705 465" stroke="#fbbf24" stroke-width="2" fill="none" marker-end="url(#arr-c4-amber)"/>
+
+    <!-- Ledger to Deliverables -->
+    <path class="edge" id="edge-ledger-receipts" d="M 1025 180 L 1055 125" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arr-c4-green)"/>
+    <path class="edge" id="edge-ledger-audit" d="M 1025 400 L 1055 330" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#arr-c4-blue)"/>
+  </g>
+</svg>

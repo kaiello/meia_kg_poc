@@ -31,6 +31,7 @@ from src.figure_inspectors import CROPS_DIR, inspect_figure_loc, LoCInspectionAr
 from src.context_packet import ContextPacketBuilder
 from src.ontology_service import ONTOLOGY_FILE, TURTLE_EXPORT_PATH, get_ontology_service
 
+STATIC_DIR = REPO_ROOT / "src" / "static"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("meia_web")
@@ -513,6 +514,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             <span class="badge badge-spine">Epistemic Spine</span>
             <span class="badge badge-vectors">BGE-Large 1024d</span>
             <span class="badge badge-airgap">Zero Daemon Local</span>
+            <a href="/explainer" class="badge" style="cursor:pointer; border:1px solid #38bdf8; background:rgba(56,189,248,0.25); color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📊 Architecture Explainer</a>
             <button class="badge badge-vectors" onclick="openModelDrawer()" style="cursor:pointer; border:1px solid #38bdf8; background:rgba(56,189,248,0.25);">⚙️ Model & API Keys</button>
             <button class="badge badge-vectors" onclick="openReceiptModal()" style="cursor:pointer; border:1px solid #818cf8; background:rgba(99,102,241,0.25);">Audit Receipt (100%)</button>
             <button class="badge badge-spine" onclick="openStewardModal()" style="cursor:pointer; border:1px solid var(--accent-blue); background:rgba(56,189,248,0.25);">Steward Queue (U04)</button>
@@ -1699,6 +1701,79 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(HTML_DASHBOARD.encode("utf-8"))
+            return
+
+        if path in ("/explainer", "/explainer.html", "/architecture", "/architecture.html"):
+            explainer_file = STATIC_DIR / "explainer.html"
+            if explainer_file.exists():
+                with open(explainer_file, "rb") as f:
+                    content = f.read()
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+
+        if path.startswith("/static/"):
+            rel = unquote(path[len("/static/"):])
+            file_path = (STATIC_DIR / rel).resolve()
+            try:
+                if not file_path.is_relative_to(STATIC_DIR.resolve()):
+                    self.send_response(HTTPStatus.FORBIDDEN)
+                    self.end_headers()
+                    self.wfile.write(b"Forbidden: Path traversal")
+                    return
+                if not file_path.exists() or not file_path.is_file():
+                    self.send_response(HTTPStatus.NOT_FOUND)
+                    self.end_headers()
+                    self.wfile.write(b"Static file not found")
+                    return
+                mime, _ = mimetypes.guess_type(str(file_path))
+                if file_path.suffix == ".svg":
+                    mime = "image/svg+xml"
+                elif file_path.suffix == ".css":
+                    mime = "text/css"
+                elif file_path.suffix == ".js":
+                    mime = "application/javascript"
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", mime or "application/octet-stream")
+                self.send_header("Content-Length", str(file_path.stat().st_size))
+                self.end_headers()
+                with open(file_path, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+            except Exception as e:
+                self.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)
+                self.end_headers()
+                self.wfile.write(str(e).encode("utf-8"))
+                return
+
+        if path == "/api/explainer/data":
+            from src.explainer_service import get_all_panels
+            data = {"status": "ok", "panels": get_all_panels()}
+            resp_bytes = json.dumps(data).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path == "/api/explainer/source":
+            from urllib.parse import parse_qs
+            from src.explainer_service import read_source_excerpt
+            qs = parse_qs(url.query)
+            target_file = qs.get("file", [""])[0]
+            start_l = int(qs.get("start", [1])[0])
+            end_l = int(qs.get("end", [50])[0])
+            excerpt = read_source_excerpt(target_file, start_l, end_l)
+            resp_bytes = json.dumps(excerpt).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
             return
 
         if path == "/api/health":
