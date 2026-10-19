@@ -64,6 +64,7 @@ class GroundedAnswer:
     executive_dossier: Optional[ExecutiveDossier]
     epistemic_audit: Dict[str, Any] = field(default_factory=dict)
     context_packets: List[Dict[str, Any]] = field(default_factory=list)  # R03 Functional Context Packets
+    graph_lineage: Dict[str, Any] = field(default_factory=dict)          # Multi-graph lineage and topology
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -76,7 +77,8 @@ class GroundedAnswer:
             "visual_figures": self.visual_figures,
             "executive_dossier": self.executive_dossier.to_dict() if self.executive_dossier else None,
             "epistemic_audit": self.epistemic_audit,
-            "context_packets": self.context_packets
+            "context_packets": self.context_packets,
+            "graph_lineage": self.graph_lineage
         }
 
 
@@ -136,7 +138,8 @@ class GroundedAnswerComposer:
             visual_figures=bundle.visual_assets,
             executive_dossier=executive_dossier,
             epistemic_audit={},
-            context_packets=getattr(bundle, "context_packets", [])
+            context_packets=getattr(bundle, "context_packets", []),
+            graph_lineage=getattr(bundle, "graph_lineage", {})
         )
 
         # 5. Execute Epistemic Verification (CQ-73, CQ-74, CQ-75)
@@ -193,7 +196,8 @@ class GroundedAnswerComposer:
             visual_figures=[],
             executive_dossier=None,
             epistemic_audit={},
-            context_packets=[]
+            context_packets=[],
+            graph_lineage=getattr(bundle, "graph_lineage", {})
         )
 
         audit_res = self.verifier.audit(draft, bundle)

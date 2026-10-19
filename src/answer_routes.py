@@ -42,6 +42,7 @@ class AnswerRouteBundle:
     cell_citations: List[str]                    # Exact Sheet!Row:Col citations
     execution_trace: Dict[str, Any]              # Timing, candidate count, policy logs
     context_packets: List[Dict[str, Any]] = field(default_factory=list)  # R03 Functional Context Packets
+    graph_lineage: Dict[str, Any] = field(default_factory=dict)          # Multi-graph lineage and topology
 
 
 class AnswerRouteBundler:
@@ -91,7 +92,13 @@ class AnswerRouteBundler:
                 text_chunks=[],
                 visual_assets=[],
                 cell_citations=gate_cits,
-                execution_trace=trace
+                execution_trace=trace,
+                graph_lineage={
+                    "summary": {"total_nodes": 0, "total_edges": 0, "graphs_involved": [], "route_profile": decision.route_profile.value},
+                    "nodes": [],
+                    "edges": [],
+                    "claims": []
+                }
             )
 
         if not self.db_path.exists():
@@ -105,7 +112,13 @@ class AnswerRouteBundler:
                 text_chunks=[],
                 visual_assets=[],
                 cell_citations=[],
-                execution_trace=trace
+                execution_trace=trace,
+                graph_lineage={
+                    "summary": {"total_nodes": 0, "total_edges": 0, "graphs_involved": [], "route_profile": decision.route_profile.value},
+                    "nodes": [],
+                    "edges": [],
+                    "claims": []
+                }
             )
 
         conn = sqlite3.connect(str(self.db_path))
@@ -199,7 +212,51 @@ class AnswerRouteBundler:
                     "properties": _filter_props_for_clearance(json.loads(props_str or "{}"))
                 }
 
-        # 4. Fetch Epistemic Claims from claim_ledger
+        # 3b. Fetch Intra-Domain Edges connecting active entities for Lineage Explorer
+        domain_edges = []
+        current_node_ids = list(entities_dict.keys())
+        lineage_nodes_dict = dict(entities_dict)
+        if current_node_ids:
+            placeholders = ",".join("?" for _ in current_node_ids)
+            sql = f"""
+            SELECT edge_id, source_id, target_id, edge_type, graph_domain, properties_json
+            FROM domain_edges
+            WHERE source_id IN ({placeholders}) OR target_id IN ({placeholders})
+            """
+            c.execute(sql, current_node_ids + current_node_ids)
+            neighbor_node_ids = set()
+            for row in c.fetchall():
+                eid, src, tgt, etype, gdomain, props_str = row
+                domain_edges.append({
+                    "edge_id": eid,
+                    "source_id": src,
+                    "target_id": tgt,
+                    "predicate": etype,
+                    "graph_domain": gdomain,
+                    "edge_kind": "INTRA_DOMAIN",
+                    "properties": json.loads(props_str or "{}")
+                })
+                if src not in lineage_nodes_dict:
+                    neighbor_node_ids.add(src)
+                if tgt not in lineage_nodes_dict:
+                    neighbor_node_ids.add(tgt)
+
+            if neighbor_node_ids:
+                n_placeholders = ",".join("?" for _ in neighbor_node_ids)
+                n_sql = f"SELECT id, graph_domain, bfo_category, skos_concepts, label, properties_json FROM domain_nodes WHERE id IN ({n_placeholders})"
+                c.execute(n_sql, list(neighbor_node_ids))
+                for row in c.fetchall():
+                    nid, domain, bfo, skos_str, label, props_str = row
+                    lineage_nodes_dict[nid] = {
+                        "id": nid,
+                        "graph_domain": domain,
+                        "bfo_category": bfo,
+                        "skos_concepts": json.loads(skos_str or "[]"),
+                        "label": label,
+                        "properties": _filter_props_for_clearance(json.loads(props_str or "{}"))
+                    }
+
+        # 4. Fetch Epistemic Claims from claim_ledger (strictly for primary and bridged entities)
         all_relevant_node_ids = list(entities_dict.keys())
         epistemic_claims = []
         evidence_ids = set()
@@ -293,30 +350,34 @@ class AnswerRouteBundler:
                     "locator": chunk_loc
                 })
 
-        # 7. Pull Visual Assets & BBox Chips
+        # 7. Pull Visual Assets & BBox Chips (Vendor Schematics Only)
         self._load_bbox_cache()
         visual_assets = []
         if self.bbox_cache:
-            # Map retrieved entities or documents to figures
+            # Map retrieved entities or documents to genuine vendor technical figures
             relevant_docs = {ch.get("doc_id") for ch in text_chunks if ch.get("doc_id")}
             for rent in decision.resolved_entities:
                 ename = rent.get("name", "").lower()
-                if "ghostfin" in ename or "albacore" in ename:
-                    relevant_docs.add("doc:meia_charter_2026")
-                elif "klas" in ename:
+                if "klas" in ename:
                     relevant_docs.add("doc:klas_c5isr_truetactical")
+                    relevant_docs.add("doc:klas_voyager_2")
                 elif "fluor" in ename:
                     relevant_docs.add("doc:fluor_gov_overview")
                 elif "prometheus" in ename:
                     relevant_docs.add("doc:prometheus_energy_ai")
+                elif "ghostfin" in ename or "albacore" in ename:
+                    relevant_docs.add("doc:meia_charter_2026")
 
-            # Match figures
+            # Match figures only when genuine vendor docs are relevant (skipping generic charter p1 memo)
             matched_figs = {}
-            for fname, fmeta in self.bbox_cache.get("figures", {}).items():
-                if not relevant_docs or fmeta.get("doc_id") in relevant_docs:
-                    matched_figs[fname] = fmeta
-                    if len(matched_figs) >= 3:
-                        break
+            if relevant_docs:
+                for fname, fmeta in self.bbox_cache.get("figures", {}).items():
+                    if fmeta.get("doc_id") == "doc:meia_charter_2026" and fmeta.get("page_ordinal") == 1:
+                        continue
+                    if fmeta.get("doc_id") in relevant_docs:
+                        matched_figs[fname] = fmeta
+                        if len(matched_figs) >= 3:
+                            break
 
             # Find chips for matched figures
             for fname, fmeta in matched_figs.items():
@@ -332,6 +393,70 @@ class AnswerRouteBundler:
                 })
 
         conn.close()
+
+        # Assemble Graph Lineage (LANL Multi-Graph Lineage Pattern)
+        all_edges = []
+        for e in domain_edges:
+            src_domain = entities_dict.get(e["source_id"], {}).get("graph_domain", e["graph_domain"])
+            tgt_domain = entities_dict.get(e["target_id"], {}).get("graph_domain", e["graph_domain"])
+            all_edges.append({
+                "edge_id": e["edge_id"],
+                "source": e["source_id"],
+                "source_graph": src_domain,
+                "target": e["target_id"],
+                "target_graph": tgt_domain,
+                "graph_domain": src_domain,
+                "predicate": e["predicate"],
+                "edge_kind": "INTRA_DOMAIN",
+                "properties": e["properties"],
+                "status": "CONFIRMED"
+            })
+        for b in cross_bridges:
+            all_edges.append({
+                "edge_id": b["link_id"],
+                "source": b["source_id"],
+                "source_graph": b["source_graph"],
+                "target": b["target_id"],
+                "target_graph": b["target_graph"],
+                "graph_domain": f"{b['source_graph']}->{b['target_graph']}",
+                "predicate": b["predicate"],
+                "edge_kind": "CROSS_GRAPH_SPINE",
+                "match_method": b.get("match_method", "EXACT"),
+                "status": b.get("review_status", "CONFIRMED"),
+                "properties": b.get("properties", {})
+            })
+
+        domain_counts = {}
+        for n in lineage_nodes_dict.values():
+            d = n.get("graph_domain", "UNKNOWN")
+            domain_counts[d] = domain_counts.get(d, 0) + 1
+
+        graph_lineage = {
+            "summary": {
+                "total_nodes": len(lineage_nodes_dict),
+                "total_edges": len(all_edges),
+                "graphs_involved": sorted(list(set(n["graph_domain"] for n in lineage_nodes_dict.values()))),
+                "domain_breakdown": domain_counts,
+                "route_profile": decision.route_profile.value
+            },
+            "nodes": [
+                {
+                    "id": n["id"],
+                    "node_id": n["id"],
+                    "domain": n["graph_domain"],
+                    "graph": n["graph_domain"],
+                    "graph_label": f"{n['graph_domain']}-KG" if n['graph_domain'] != 'CRM' else "CRM-Graph",
+                    "label": n["label"],
+                    "category": n["bfo_category"],
+                    "bfo_category": n["bfo_category"],
+                    "skos_concepts": n["skos_concepts"],
+                    "properties": n["properties"]
+                }
+                for n in lineage_nodes_dict.values()
+            ],
+            "edges": all_edges,
+            "claims": epistemic_claims
+        }
 
         # Assemble R03 Functional Context Packets
         packets = bundle_context_packets_for_route(
@@ -354,7 +479,8 @@ class AnswerRouteBundler:
             visual_assets=visual_assets,
             cell_citations=cell_citations,
             execution_trace=trace,
-            context_packets=packet_dicts
+            context_packets=packet_dicts,
+            graph_lineage=graph_lineage
         )
 
 

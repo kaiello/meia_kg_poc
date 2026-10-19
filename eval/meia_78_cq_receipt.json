@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "receipt_id": "receipt:meia:78cq:1792370864",
-  "generated_at": "2026-10-19T00:47:44.539364+00:00",
+  "receipt_id": "receipt:meia:78cq:1792372877",
+  "generated_at": "2026-10-19T01:21:17.452503+00:00",
   "cryptographic_fingerprints": {
     "meia_poc_manifest_sha256": "f30ffdd3ca88200c19f5ea31b3afe54e0872b7d57e722cfa2f48a0289d77f028",
     "tri_graph_registry_db_sha256": "3135afad2e82f2f49bb7264828d4d66ad87f239690e36129ac34c22f969241ba",
@@ -17,8 +17,8 @@
   },
   "scorecard": {
     "total_cqs": 78,
-    "elapsed_seconds": 12.81,
-    "avg_seconds_per_cq": 0.164,
+    "elapsed_seconds": 12.11,
+    "avg_seconds_per_cq": 0.155,
     "route_accuracy_pct": 100.0,
     "status_accuracy_pct": 100.0,
     "epistemic_audit_pass_rate_pct": 100.0,
@@ -81,7 +81,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -115,7 +115,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 15,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -149,7 +149,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 36,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -251,7 +251,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 31,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -268,7 +268,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 12,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -285,7 +285,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 31,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -302,7 +302,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 11,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -336,7 +336,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 16,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -353,7 +353,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 21,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -693,7 +693,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -710,7 +710,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -727,7 +727,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -744,7 +744,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -761,7 +761,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -778,7 +778,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -795,7 +795,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -812,7 +812,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -829,7 +829,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -846,7 +846,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -863,7 +863,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -880,7 +880,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -897,7 +897,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -914,7 +914,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -1050,7 +1050,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 38,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -1067,7 +1067,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 9,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -1084,7 +1084,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -1101,7 +1101,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 25,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },
@@ -1118,7 +1118,7 @@
       "locator_score": 1.0,
       "promotions_count": 0,
       "citations_count": 36,
-      "figures_count": 3,
+      "figures_count": 0,
       "has_dossier": false,
       "has_context_packets": true
     },

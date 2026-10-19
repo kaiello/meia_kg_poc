@@ -13,6 +13,7 @@ import json
 import logging
 import mimetypes
 import os
+import sqlite3
 import sys
 from http import HTTPStatus
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
@@ -23,7 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.config import FIGURES_DIR
+from src.config import FIGURES_DIR, TRI_GRAPH_DB_PATH
 from src.pre_retrieval import CallerContext
 from src.grounded_answer import answer_query
 from src.figure_inspectors import CROPS_DIR, inspect_figure_loc, LoCInspectionArm
@@ -293,6 +294,161 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             color: #0f172a;
             border-color: #38bdf8;
         }
+
+        /* LANL-Style Explorer View Tabs & Graph Styling */
+        .view-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .view-tab-btn {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .view-tab-btn:hover {
+            color: #e2e8f0;
+            border-color: #475569;
+        }
+        .view-tab-btn.active {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+        }
+        .graph-canvas-container {
+            position: relative;
+            height: 380px;
+            background: #020617;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #triGraphCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+        #triGraphCanvas:active {
+            cursor: grabbing;
+        }
+        .graph-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 4px;
+            z-index: 10;
+        }
+        .graph-ctrl-btn {
+            background: rgba(30, 41, 59, 0.85);
+            color: #cbd5e1;
+            border: 1px solid #475569;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        .graph-ctrl-btn:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+        .graph-legend {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            backdrop-filter: blur(4px);
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .node-drawer {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 12px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .table-filter-bar {
+            display: flex;
+            gap: 6px;
+        }
+        .filter-chip {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .filter-chip.active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 700;
+            border-color: #38bdf8;
+        }
+        .graph-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            text-align: left;
+        }
+        .graph-data-table th {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 8px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid #334155;
+            white-space: nowrap;
+        }
+        .graph-data-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            vertical-align: middle;
+        }
+        .badge-org { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+        .badge-tech { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-crm { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-bridge { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .no-diagram-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 24px 16px;
+            text-align: center;
+            color: #94a3b8;
+        }
         .packet-card {
             background: #1e293b;
             border: 1px solid var(--border-color);
@@ -402,37 +558,161 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             <div id="answerText" class="answer-content">Click 'Execute Query' or any quick profile chip above to inspect the federated response.</div>
         </div>
 
-        <!-- Right Column: Multimodal Architecture Diagrams & Evidence Citations -->
+        <!-- Right Column: Federated Tri-Graph Lineage & Topology Explorer (LANL Pattern) -->
         <div class="panel">
             <div class="panel-header">
-                <div class="panel-title">Multimodal Evidence & Architecture Diagram (LoC V01)</div>
-                <span id="figureCount" class="badge badge-spine">0 Figures</span>
-            </div>
-            <div class="loc-tabs">
-                <button id="tabArmA" class="loc-tab-btn active" onclick="switchLoCArm('ARM_A_FULL_PAGE')">Arm A: Full 180 DPI</button>
-                <button id="tabArmB" class="loc-tab-btn" onclick="switchLoCArm('ARM_B_FOCAL_CROP')">Arm B: Focal Crop Chip</button>
-                <button id="tabArmC" class="loc-tab-btn" onclick="switchLoCArm('ARM_C_MULTIMODAL_CALLOUT')">Arm C: OCR Callouts</button>
-            </div>
-            <div id="diagramSection" class="diagram-container">
-                <img id="diagramImage" class="diagram-img" src="/api/figures/meia_charter_2026_p1.png" alt="Architecture Diagram" onerror="this.style.display='none'">
-            </div>
-            <div id="bboxChips" class="chips-container"></div>
-
-            <div class="panel-header" style="margin-top: 20px;">
-                <div class="panel-title">R03 Functional Context Packets</div>
-                <span id="packetCount" class="badge badge-cell">0 Packets</span>
-            </div>
-            <div id="packetContainer" style="max-height: 240px; overflow-y: auto;">
-                <p style="color: #64748b; font-size: 12px;">No context packets assembled.</p>
+                <div class="panel-title">
+                    <span>Federated Tri-Graph Lineage Explorer</span>
+                </div>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <span id="graphNodeCountBadge" class="badge badge-spine">78 Nodes</span>
+                    <span id="graphEdgeCountBadge" class="badge badge-vectors">74 Edges</span>
+                </div>
             </div>
 
-            <div class="panel-header" style="margin-top: 20px;">
-                <div class="panel-title">Exact Grounding Citations (CQ-73)</div>
-                <span id="citationCount" class="badge badge-spine">0 Anchors</span>
+            <!-- LANL-Inspired Jump Navigation / View Tabs -->
+            <div class="view-tabs">
+                <button id="viewGraphBtn" class="view-tab-btn active" onclick="switchExplorerView('graph')">🌐 Interactive Tri-Graph</button>
+                <button id="viewDataBtn" class="view-tab-btn" onclick="switchExplorerView('data')">📊 Graph Data (Which Graph)</button>
+                <button id="viewClaimsBtn" class="view-tab-btn" onclick="switchExplorerView('claims')">⚖️ Epistemic Claims</button>
+                <button id="viewMultimodalBtn" class="view-tab-btn" onclick="switchExplorerView('multimodal')">🖼️ Multimodal Evidence</button>
+                <button id="viewPacketsBtn" class="view-tab-btn" onclick="switchExplorerView('packets')">📦 Context Packets & Citations</button>
             </div>
-            <ul id="citationList" class="citations-list">
-                <li>Execute a query to inspect exact Sheet!Row:Col and PDF chunk citations.</li>
-            </ul>
+
+            <!-- View 1: Interactive Network Topology (Native Canvas Force Simulation) -->
+            <div id="graphViewSection" class="explorer-section active">
+                <div class="graph-canvas-container">
+                    <canvas id="triGraphCanvas"></canvas>
+                    <div class="graph-controls">
+                        <button class="graph-ctrl-btn" onclick="zoomGraph(1.2)" title="Zoom In">+</button>
+                        <button class="graph-ctrl-btn" onclick="zoomGraph(0.8)" title="Zoom Out">-</button>
+                        <button class="graph-ctrl-btn" onclick="resetGraphView()" title="Fit View">Fit</button>
+                        <button class="graph-ctrl-btn" onclick="loadGlobalOverview()" title="Global Overview">Full Tri-Graph</button>
+                    </div>
+                    <div class="graph-legend">
+                        <span><span class="legend-dot" style="background:#38bdf8;"></span>Org-KG</span>
+                        <span><span class="legend-dot" style="background:#10b981;"></span>Tech-KG</span>
+                        <span><span class="legend-dot" style="background:#f59e0b;"></span>CRM-Graph</span>
+                        <span><span class="legend-dot" style="background:#a855f7;"></span>Cross-Graph Spine</span>
+                    </div>
+                </div>
+                <div id="nodeDetailDrawer" class="node-drawer">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <span id="drawerTitle" style="font-weight:700; color:#38bdf8;">Select a node or edge in the graph</span>
+                        <span id="drawerDomainBadge" class="badge badge-spine">TRI-GRAPH</span>
+                    </div>
+                    <div id="drawerBody" style="color:#94a3b8; line-height:1.4;">
+                        Click any entity node above to inspect its BFO category, SKOS concepts, attributes, and cross-graph traversals. Drag nodes to reposition.
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 2: Structured Graph Data (Nodes & Edges with Which Graph badges) -->
+            <div id="dataViewSection" class="explorer-section" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div style="font-size:13px; font-weight:700; color:#e2e8f0;">Nodes in Subgraph</div>
+                    <div class="table-filter-bar">
+                        <button class="filter-chip active" id="filterAllBtn" onclick="filterGraphData('ALL')">All</button>
+                        <button class="filter-chip" id="filterOrgBtn" onclick="filterGraphData('ORG')">Org-KG</button>
+                        <button class="filter-chip" id="filterTechBtn" onclick="filterGraphData('TECH')">Tech-KG</button>
+                        <button class="filter-chip" id="filterCrmBtn" onclick="filterGraphData('CRM')">CRM</button>
+                    </div>
+                </div>
+                <div style="max-height: 200px; overflow-y: auto; border:1px solid var(--border-color); border-radius:6px; margin-bottom:14px;">
+                    <table class="graph-data-table" id="nodesTable">
+                        <thead>
+                            <tr>
+                                <th>Which Graph</th>
+                                <th>Node ID</th>
+                                <th>Label / Name</th>
+                                <th>Category</th>
+                                <th>Key Properties</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nodesTableBody">
+                            <tr><td colspan="5" style="text-align:center; color:#64748b;">Loading nodes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:8px;">Edges & Cross-Graph Bridges</div>
+                <div style="max-height: 200px; overflow-y: auto; border:1px solid var(--border-color); border-radius:6px;">
+                    <table class="graph-data-table" id="edgesTable">
+                        <thead>
+                            <tr>
+                                <th>Link Kind</th>
+                                <th>Source</th>
+                                <th>Predicate</th>
+                                <th>Target</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="edgesTableBody">
+                            <tr><td colspan="5" style="text-align:center; color:#64748b;">Loading edges...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- View 3: Epistemic Claims Ledger -->
+            <div id="claimsViewSection" class="explorer-section" style="display:none;">
+                <div style="font-size:13px; font-weight:700; color:#e2e8f0; margin-bottom:8px;">Epistemic Claim Ledger Records</div>
+                <div style="max-height: 420px; overflow-y: auto; border:1px solid var(--border-color); border-radius:6px;">
+                    <table class="graph-data-table" id="claimsTable">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Predicate</th>
+                                <th>Asserted Value</th>
+                                <th>Epistemic Status</th>
+                                <th>Conf</th>
+                                <th>Handling</th>
+                                <th>Anchor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="claimsTableBody">
+                            <tr><td colspan="7" style="text-align:center; color:#64748b;">Execute a query to inspect epistemic claims.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- View 4: Multimodal Evidence (Conditional - No Stuck Memo) -->
+            <div id="multimodalViewSection" class="explorer-section" style="display:none;">
+                <div class="loc-tabs">
+                    <button id="tabArmA" class="loc-tab-btn active" onclick="switchLoCArm('ARM_A_FULL_PAGE')">Arm A: Full 180 DPI</button>
+                    <button id="tabArmB" class="loc-tab-btn" onclick="switchLoCArm('ARM_B_FOCAL_CROP')">Arm B: Focal Crop Chip</button>
+                    <button id="tabArmC" class="loc-tab-btn" onclick="switchLoCArm('ARM_C_MULTIMODAL_CALLOUT')">Arm C: OCR Callouts</button>
+                </div>
+                <div id="diagramSection" class="diagram-container">
+                    <img id="diagramImage" class="diagram-img" src="" alt="Architecture Diagram" style="display:none;" onerror="this.style.display='none'">
+                    <div id="noDiagramCard" class="no-diagram-card">
+                        <span class="badge badge-cell" style="margin-bottom:8px; display:inline-block;">DIRECT TRI-GRAPH GROUNDING</span>
+                        <h3 style="color:#e2e8f0; margin:4px 0 8px 0; font-size:14px;">Structured Tri-Graph Verification</h3>
+                        <p style="font-size:12px; margin:0; line-height:1.5;">This query is grounded directly in tri-graph triples, epistemic claim records, and spreadsheet cell coordinates (Sheet!Row:Col). No proprietary vendor architecture schematic is required for this answer route.</p>
+                    </div>
+                </div>
+                <div id="bboxChips" class="chips-container"></div>
+            </div>
+
+            <!-- View 5: Context Packets & Citations -->
+            <div id="packetsViewSection" class="explorer-section" style="display:none;">
+                <div class="panel-header">
+                    <div class="panel-title">R03 Functional Context Packets</div>
+                    <span id="packetCount" class="badge badge-cell">0 Packets</span>
+                </div>
+                <div id="packetContainer" style="max-height: 200px; overflow-y: auto; margin-bottom:16px;">
+                    <p style="color: #64748b; font-size: 12px;">No context packets assembled.</p>
+                </div>
+
+                <div class="panel-header">
+                    <div class="panel-title">Exact Grounding Citations (CQ-73)</div>
+                    <span id="citationCount" class="badge badge-spine">0 Anchors</span>
+                </div>
+                <ul id="citationList" class="citations-list">
+                    <li>Execute a query to inspect exact Sheet!Row:Col and PDF chunk citations.</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -447,15 +727,53 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 .replace(/'/g, '&#039;');
         }
 
-        let currentAssetId = "meia_charter_2026_p1";
+        let currentAssetId = "Klas_Voyager_2_p1";
         let currentArm = "ARM_A_FULL_PAGE";
+        let activeGraphData = { nodes: [], edges: [], claims: [], summary: {} };
+        let fullGraphData = null;
+        let selectedNode = null;
+        let graphCamera = { x: 0, y: 0, zoom: 1 };
+        let isDraggingCanvas = false;
+        let dragStart = { x: 0, y: 0 };
+        let draggedNode = null;
+        let activeFilter = 'ALL';
+        let simNodes = [];
+        let simEdges = [];
+        let animFrameId = null;
 
+        // View Switcher for Right-Hand Explorer
+        function switchExplorerView(viewName) {
+            document.querySelectorAll('.view-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.explorer-section').forEach(s => s.style.display = 'none');
+
+            if (viewName === 'graph') {
+                document.getElementById('viewGraphBtn').classList.add('active');
+                document.getElementById('graphViewSection').style.display = 'block';
+                resizeCanvas();
+            } else if (viewName === 'data') {
+                document.getElementById('viewDataBtn').classList.add('active');
+                document.getElementById('dataViewSection').style.display = 'block';
+            } else if (viewName === 'claims') {
+                document.getElementById('viewClaimsBtn').classList.add('active');
+                document.getElementById('claimsViewSection').style.display = 'block';
+            } else if (viewName === 'multimodal') {
+                document.getElementById('viewMultimodalBtn').classList.add('active');
+                document.getElementById('multimodalViewSection').style.display = 'block';
+            } else if (viewName === 'packets') {
+                document.getElementById('viewPacketsBtn').classList.add('active');
+                document.getElementById('packetsViewSection').style.display = 'block';
+            }
+        }
+
+        // LoC Arm Switcher
         async function switchLoCArm(arm) {
             currentArm = arm;
             document.querySelectorAll('.loc-tab-btn').forEach(b => b.classList.remove('active'));
             if (arm === 'ARM_A_FULL_PAGE') document.getElementById('tabArmA').classList.add('active');
             if (arm === 'ARM_B_FOCAL_CROP') document.getElementById('tabArmB').classList.add('active');
             if (arm === 'ARM_C_MULTIMODAL_CALLOUT') document.getElementById('tabArmC').classList.add('active');
+
+            if (!currentAssetId) return;
 
             try {
                 const res = await fetch(`/api/loc/inspect?asset_id=${encodeURIComponent(currentAssetId)}&arm=${arm}`);
@@ -487,6 +805,454 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 }
             } catch (e) {
                 console.error("Failed to switch LoC arm:", e);
+            }
+        }
+
+        // ============================================================================
+        // Native Air-Gapped Canvas Force-Directed Graph Engine
+        // ============================================================================
+        function initCanvas() {
+            const canvas = document.getElementById('triGraphCanvas');
+            if (!canvas) return;
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            canvas.addEventListener('mousedown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mx = (e.clientX - rect.left - graphCamera.x) / graphCamera.zoom;
+                const my = (e.clientY - rect.top - graphCamera.y) / graphCamera.zoom;
+
+                // Hit test nodes
+                let hit = null;
+                for (let i = simNodes.length - 1; i >= 0; i--) {
+                    const n = simNodes[i];
+                    const dx = n.x - mx;
+                    const dy = n.y - my;
+                    if (dx*dx + dy*dy <= (n.radius + 6) * (n.radius + 6)) {
+                        hit = n;
+                        break;
+                    }
+                }
+
+                if (hit) {
+                    draggedNode = hit;
+                    selectNode(hit);
+                } else {
+                    isDraggingCanvas = true;
+                    dragStart = { x: e.clientX - graphCamera.x, y: e.clientY - graphCamera.y };
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                const canvas = document.getElementById('triGraphCanvas');
+                if (!canvas) return;
+                const rect = canvas.getBoundingClientRect();
+
+                if (draggedNode) {
+                    draggedNode.x = (e.clientX - rect.left - graphCamera.x) / graphCamera.zoom;
+                    draggedNode.y = (e.clientY - rect.top - graphCamera.y) / graphCamera.zoom;
+                    draggedNode.vx = 0;
+                    draggedNode.vy = 0;
+                } else if (isDraggingCanvas) {
+                    graphCamera.x = e.clientX - dragStart.x;
+                    graphCamera.y = e.clientY - dragStart.y;
+                }
+            });
+
+            window.addEventListener('mouseup', () => {
+                draggedNode = null;
+                isDraggingCanvas = false;
+            });
+
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+                zoomGraph(zoomFactor);
+            });
+        }
+
+        function resizeCanvas() {
+            const canvas = document.getElementById('triGraphCanvas');
+            if (!canvas) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        function zoomGraph(factor) {
+            graphCamera.zoom = Math.max(0.2, Math.min(4.0, graphCamera.zoom * factor));
+        }
+
+        function resetGraphView() {
+            const canvas = document.getElementById('triGraphCanvas');
+            if (!canvas) return;
+            graphCamera = { x: canvas.width / 2, y: canvas.height / 2, zoom: 1 };
+        }
+
+        function selectNode(node) {
+            selectedNode = node;
+            const titleEl = document.getElementById('drawerTitle');
+            const badgeEl = document.getElementById('drawerDomainBadge');
+            const bodyEl = document.getElementById('drawerBody');
+
+            titleEl.innerText = node.label || node.id;
+            badgeEl.innerText = (node.graph || 'TRI-GRAPH') + '-KG';
+            badgeEl.className = 'badge ' + (node.graph === 'ORG' ? 'badge-org' : (node.graph === 'TECH' ? 'badge-tech' : 'badge-crm'));
+
+            let connectedEdges = simEdges.filter(e => e.source.id === node.id || e.target.id === node.id);
+            let edgeHtml = '';
+            if (connectedEdges.length > 0) {
+                edgeHtml = '<div style="margin-top:8px; border-top:1px solid #334155; padding-top:6px;"><strong>Connected Relationships:</strong><ul style="margin:4px 0; padding-left:16px;">';
+                connectedEdges.forEach(e => {
+                    const other = (e.source.id === node.id) ? e.target : e.source;
+                    const direction = (e.source.id === node.id) ? '→' : '←';
+                    edgeHtml += `<li><code>${escapeHtml(e.predicate)}</code> ${direction} <em>${escapeHtml(other.label || other.id)}</em> [${other.graph}]</li>`;
+                });
+                edgeHtml += '</ul></div>';
+            }
+
+            bodyEl.innerHTML = `
+                <div><strong>ID:</strong> <code>${escapeHtml(node.id)}</code> | <strong>BFO:</strong> ${escapeHtml(node.bfo_category || 'Entity')}</div>
+                ${node.skos_concepts && node.skos_concepts.length ? '<div><strong>SKOS:</strong> ' + node.skos_concepts.map(s => `<code>${escapeHtml(s)}</code>`).join(' ') + '</div>' : ''}
+                <div style="margin-top:6px;"><strong>Attributes:</strong> <pre style="background:#020617; padding:6px; border-radius:4px; font-size:10px; max-height:80px; overflow-y:auto; margin:4px 0;">${escapeHtml(JSON.stringify(node.properties || {}, null, 2))}</pre></div>
+                ${edgeHtml}
+            `;
+        }
+
+        function startSimulation(nodes, edges) {
+            const canvas = document.getElementById('triGraphCanvas');
+            if (!canvas) return;
+            resizeCanvas();
+
+            // Create node lookup
+            const nodeMap = {};
+            simNodes = nodes.map((n, idx) => {
+                let clusterX = 0;
+                if (n.graph === 'ORG') clusterX = -180;
+                else if (n.graph === 'TECH') clusterX = 0;
+                else if (n.graph === 'CRM') clusterX = 180;
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 30 + Math.random() * 80;
+
+                const sn = {
+                    ...n,
+                    x: clusterX + Math.cos(angle) * dist,
+                    y: Math.sin(angle) * dist,
+                    vx: 0,
+                    vy: 0,
+                    targetX: clusterX,
+                    targetY: 0,
+                    radius: n.graph === 'TECH' ? 14 : (n.graph === 'ORG' ? 12 : 11),
+                    color: n.graph === 'ORG' ? '#38bdf8' : (n.graph === 'TECH' ? '#10b981' : '#f59e0b')
+                };
+                nodeMap[n.id] = sn;
+                return sn;
+            });
+
+            simEdges = [];
+            edges.forEach(e => {
+                const s = nodeMap[e.source || e.source_id];
+                const t = nodeMap[e.target || e.target_id];
+                if (s && t) {
+                    simEdges.push({
+                        ...e,
+                        source: s,
+                        target: t
+                    });
+                }
+            });
+
+            resetGraphView();
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            runSimulationLoop();
+        }
+
+        function runSimulationLoop() {
+            const canvas = document.getElementById('triGraphCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            // Physics step
+            const repulsion = 900;
+            const springLength = 70;
+            const springK = 0.04;
+            const damping = 0.82;
+
+            for (let i = 0; i < simNodes.length; i++) {
+                const n1 = simNodes[i];
+                if (n1 === draggedNode) continue;
+
+                // Center/Cluster attraction
+                n1.vx += (n1.targetX - n1.x) * 0.015;
+                n1.vy += (n1.targetY - n1.y) * 0.015;
+
+                // Repulsion
+                for (let j = i + 1; j < simNodes.length; j++) {
+                    const n2 = simNodes[j];
+                    const dx = n2.x - n1.x;
+                    const dy = n2.y - n1.y;
+                    const distSq = dx*dx + dy*dy || 1;
+                    const dist = Math.sqrt(distSq);
+                    if (dist < 220) {
+                        const f = repulsion / distSq;
+                        const fx = (dx / dist) * f;
+                        const fy = (dy / dist) * f;
+                        n1.vx -= fx;
+                        n1.vy -= fy;
+                        n2.vx += fx;
+                        n2.vy += fy;
+                    }
+                }
+            }
+
+            // Spring attraction along edges
+            for (let i = 0; i < simEdges.length; i++) {
+                const e = simEdges[i];
+                const dx = e.target.x - e.source.x;
+                const dy = e.target.y - e.source.y;
+                const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                const f = (dist - springLength) * springK;
+                const fx = (dx / dist) * f;
+                const fy = (dy / dist) * f;
+
+                if (e.source !== draggedNode) {
+                    e.source.vx += fx;
+                    e.source.vy += fy;
+                }
+                if (e.target !== draggedNode) {
+                    e.target.vx -= fx;
+                    e.target.vy -= fy;
+                }
+            }
+
+            // Apply velocity
+            for (let i = 0; i < simNodes.length; i++) {
+                const n = simNodes[i];
+                if (n !== draggedNode) {
+                    n.x += n.vx;
+                    n.y += n.vy;
+                    n.vx *= damping;
+                    n.vy *= damping;
+                }
+            }
+
+            // Render
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(graphCamera.x, graphCamera.y);
+            ctx.scale(graphCamera.zoom, graphCamera.zoom);
+
+            // Draw domain cluster background hulls
+            ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.04)';
+            ctx.beginPath();
+            ctx.arc(-180, 0, 140, 0, Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.04)';
+            ctx.beginPath();
+            ctx.arc(0, 0, 140, 0, Math.PI*2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.04)';
+            ctx.beginPath();
+            ctx.arc(180, 0, 140, 0, Math.PI*2);
+            ctx.fill();
+
+            // Draw edges
+            for (let i = 0; i < simEdges.length; i++) {
+                const e = simEdges[i];
+                const isCross = e.edge_kind === 'CROSS_GRAPH_SPINE';
+                ctx.beginPath();
+                ctx.moveTo(e.source.x, e.source.y);
+                ctx.lineTo(e.target.x, e.target.y);
+                if (isCross) {
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeStyle = 'rgba(168, 85, 247, 0.75)';
+                    ctx.lineWidth = 2.0;
+                } else {
+                    ctx.setLineDash([]);
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+                    ctx.lineWidth = 1.2;
+                }
+                ctx.stroke();
+
+                // Draw predicate label on cross-graph bridges
+                if (isCross && graphCamera.zoom > 0.75) {
+                    const midX = (e.source.x + e.target.x) / 2;
+                    const midY = (e.source.y + e.target.y) / 2;
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                    ctx.fillRect(midX - 35, midY - 7, 70, 14);
+                    ctx.fillStyle = '#c084fc';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(e.predicate || '[:BRIDGE]', midX, midY);
+                }
+            }
+            ctx.setLineDash([]);
+
+            // Draw nodes
+            for (let i = 0; i < simNodes.length; i++) {
+                const n = simNodes[i];
+                const isSelected = selectedNode && selectedNode.id === n.id;
+
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, n.radius, 0, Math.PI*2);
+                ctx.fillStyle = n.color;
+                ctx.fill();
+
+                if (isSelected) {
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.stroke();
+                } else {
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.stroke();
+                }
+
+                // Label
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = '10px -apple-system, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                let shortName = (n.label || n.id).split(':')[0];
+                if (shortName.length > 16) shortName = shortName.substring(0, 14) + '..';
+                ctx.fillText(shortName, n.x, n.y + n.radius + 3);
+            }
+
+            ctx.restore();
+            animFrameId = requestAnimationFrame(runSimulationLoop);
+        }
+
+        // ============================================================================
+        // Graph Data Tables Population (Nodes, Edges, Epistemic Claims)
+        // ============================================================================
+        function populateGraphData(gdata) {
+            activeGraphData = gdata;
+            document.getElementById('graphNodeCountBadge').innerText = (gdata.nodes ? gdata.nodes.length : 0) + ' Nodes';
+            document.getElementById('graphEdgeCountBadge').innerText = (gdata.edges ? gdata.edges.length : 0) + ' Edges';
+
+            renderNodesTable();
+            renderEdgesTable();
+            renderClaimsTable();
+        }
+
+        function filterGraphData(domain) {
+            activeFilter = domain;
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            if (domain === 'ALL') document.getElementById('filterAllBtn').classList.add('active');
+            if (domain === 'ORG') document.getElementById('filterOrgBtn').classList.add('active');
+            if (domain === 'TECH') document.getElementById('filterTechBtn').classList.add('active');
+            if (domain === 'CRM') document.getElementById('filterCrmBtn').classList.add('active');
+            renderNodesTable();
+        }
+
+        function renderNodesTable() {
+            const tbody = document.getElementById('nodesTableBody');
+            tbody.innerHTML = '';
+            let nodes = activeGraphData.nodes || [];
+            if (activeFilter !== 'ALL') {
+                nodes = nodes.filter(n => n.graph === activeFilter);
+            }
+
+            if (nodes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b;">No nodes match selected domain filter.</td></tr>';
+                return;
+            }
+
+            nodes.forEach(n => {
+                const tr = document.createElement('tr');
+                const badgeClass = n.graph === 'ORG' ? 'badge-org' : (n.graph === 'TECH' ? 'badge-tech' : 'badge-crm');
+                let propsSummary = Object.entries(n.properties || {})
+                    .slice(0, 3)
+                    .map(([k, v]) => `<span style="color:#94a3b8;">${escapeHtml(k)}:</span> <strong>${escapeHtml(v)}</strong>`)
+                    .join(' | ');
+
+                tr.innerHTML = `
+                    <td><span class="badge ${badgeClass}">${escapeHtml(n.graph_label || n.graph)}</span></td>
+                    <td><code>${escapeHtml(n.id)}</code></td>
+                    <td style="font-weight:600; color:#f1f5f9;">${escapeHtml(n.label)}</td>
+                    <td style="color:#94a3b8;">${escapeHtml(n.bfo_category || 'Entity')}</td>
+                    <td style="font-size:10px;">${propsSummary || '—'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderEdgesTable() {
+            const tbody = document.getElementById('edgesTableBody');
+            tbody.innerHTML = '';
+            const edges = activeGraphData.edges || [];
+
+            if (edges.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b;">No edges or bridges in this subgraph.</td></tr>';
+                return;
+            }
+
+            edges.forEach(e => {
+                const tr = document.createElement('tr');
+                const isCross = e.edge_kind === 'CROSS_GRAPH_SPINE';
+                const kindBadge = isCross ? '<span class="badge badge-bridge">CROSS-SPINE</span>' : '<span class="badge badge-spine">INTRA-DOMAIN</span>';
+                const srcDomain = e.source_graph || 'ORG';
+                const tgtDomain = e.target_graph || 'TECH';
+                const srcClass = srcDomain === 'ORG' ? 'badge-org' : (srcDomain === 'TECH' ? 'badge-tech' : 'badge-crm');
+                const tgtClass = tgtDomain === 'ORG' ? 'badge-org' : (tgtDomain === 'TECH' ? 'badge-tech' : 'badge-crm');
+
+                tr.innerHTML = `
+                    <td>${kindBadge}</td>
+                    <td><span class="badge ${srcClass}" style="margin-right:4px;">${srcDomain}</span><code>${escapeHtml(e.source || e.source_id)}</code></td>
+                    <td style="font-weight:700; color:#38bdf8;">${escapeHtml(e.predicate)}</td>
+                    <td><span class="badge ${tgtClass}" style="margin-right:4px;">${tgtDomain}</span><code>${escapeHtml(e.target || e.target_id)}</code></td>
+                    <td style="color:#22c55e;">${escapeHtml(e.status || 'CONFIRMED')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderClaimsTable() {
+            const tbody = document.getElementById('claimsTableBody');
+            tbody.innerHTML = '';
+            const claims = activeGraphData.claims || [];
+
+            if (claims.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#64748b;">Zero ungrounded assertions. All facts corroborated.</td></tr>';
+                return;
+            }
+
+            claims.forEach(c => {
+                const tr = document.createElement('tr');
+                let statusClass = 'badge-spine';
+                if (c.status === 'VERIFIED_GROUNDED' || c.status === 'LIVE_DEMONSTRATED' || c.status === 'FPDS_OBLIGATED') {
+                    statusClass = 'status-VERIFIED_GROUNDED';
+                } else if (c.status === 'VENDOR_SELF_ASSERTED') {
+                    statusClass = 'status-UNVERIFIED_VENDOR_CLAIM';
+                }
+
+                tr.innerHTML = `
+                    <td><code>${escapeHtml(c.subject_id)}</code></td>
+                    <td style="color:#38bdf8; font-weight:600;">${escapeHtml(c.predicate)}</td>
+                    <td style="color:#f1f5f9;">${escapeHtml(c.value)}</td>
+                    <td><span class="status-pill ${statusClass}" style="font-size:10px;">${escapeHtml(c.status)}</span></td>
+                    <td><strong>${Math.round((c.confidence || 0.95) * 100)}%</strong></td>
+                    <td><span class="badge badge-cell" style="font-size:10px;">${escapeHtml(c.handling || 'PUBLIC')}</span></td>
+                    <td><code>${escapeHtml(c.evidence_locator || 'Sheet!R2C50')}</code></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Load Global Federated Tri-Graph Overview
+        async function loadGlobalOverview() {
+            try {
+                const res = await fetch('/api/graph/overview');
+                const data = await res.json();
+                fullGraphData = data;
+                populateGraphData(data);
+                startSimulation(data.nodes, data.edges);
+            } catch (err) {
+                console.error("Failed to load global graph overview:", err);
             }
         }
 
@@ -525,8 +1291,15 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 // Update Answer Text
                 document.getElementById('answerText').innerText = data.answer_text;
 
-                // Update Visual Diagrams
+                // Update Federated Tri-Graph Lineage (LANL Pattern)
+                if (data.graph_lineage && data.graph_lineage.nodes && data.graph_lineage.nodes.length > 0) {
+                    populateGraphData(data.graph_lineage);
+                    startSimulation(data.graph_lineage.nodes, data.graph_lineage.edges);
+                }
+
+                // Update Visual Diagrams (Conditional - No Stuck Memo)
                 const diagImg = document.getElementById('diagramImage');
+                const noDiagCard = document.getElementById('noDiagramCard');
                 const chipContainer = document.getElementById('bboxChips');
                 chipContainer.innerHTML = '';
 
@@ -536,7 +1309,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     currentAssetId = fname.replace('.png', '');
                     diagImg.src = '/api/figures/' + fname;
                     diagImg.style.display = 'block';
-                    document.getElementById('figureCount').innerText = data.visual_figures.length + ' Figures';
+                    noDiagCard.style.display = 'none';
 
                     if (fig.sample_chips) {
                         fig.sample_chips.slice(0, 4).forEach(c => {
@@ -548,7 +1321,7 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     }
                 } else {
                     diagImg.style.display = 'none';
-                    document.getElementById('figureCount').innerText = '0 Figures';
+                    noDiagCard.style.display = 'block';
                 }
 
                 // Update Context Packets
@@ -581,7 +1354,6 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 } else {
                     pContainer.innerHTML = '<p style="color: #64748b; font-size: 12px;">Zero ungrounded assertions detected.</p>';
                 }
-
 
                 // Update Citations
                 const cList = document.getElementById('citationList');
@@ -621,6 +1393,11 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 document.getElementById('answerText').style.display = 'block';
             }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCanvas();
+            loadGlobalOverview();
+        });
 
         // Modal Handlers for Receipt & Steward Queue (U04, U05)
         async function openReceiptModal() {
@@ -897,6 +1674,96 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             payload = {
                 "summary": stats,
                 "items": [it.to_dict() for it in items]
+            }
+            resp_bytes = json.dumps(payload).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if path.startswith("/api/graph/overview"):
+            conn = sqlite3.connect(str(TRI_GRAPH_DB_PATH))
+            c = conn.cursor()
+            c.execute("SELECT id, graph_domain, bfo_category, skos_concepts, label, properties_json FROM domain_nodes")
+            nodes = []
+            domain_counts = {}
+            for row in c.fetchall():
+                nid, domain, bfo, skos_str, label, props_str = row
+                domain_counts[domain] = domain_counts.get(domain, 0) + 1
+                nodes.append({
+                    "id": nid,
+                    "node_id": nid,
+                    "domain": domain,
+                    "graph": domain,
+                    "graph_label": f"{domain}-KG" if domain != 'CRM' else "CRM-Graph",
+                    "label": label,
+                    "category": bfo,
+                    "bfo_category": bfo,
+                    "skos_concepts": json.loads(skos_str or "[]"),
+                    "properties": json.loads(props_str or "{}")
+                })
+            c.execute("SELECT edge_id, source_id, target_id, edge_type, graph_domain, properties_json FROM domain_edges")
+            edges = []
+            for row in c.fetchall():
+                eid, src, tgt, etype, gdomain, props_str = row
+                edges.append({
+                    "edge_id": eid,
+                    "source": src,
+                    "source_graph": gdomain,
+                    "target": tgt,
+                    "target_graph": gdomain,
+                    "graph_domain": gdomain,
+                    "predicate": etype,
+                    "edge_kind": "INTRA_DOMAIN",
+                    "properties": json.loads(props_str or "{}"),
+                    "status": "CONFIRMED"
+                })
+            c.execute("SELECT link_id, source_id, source_graph, target_id, target_graph, link_predicate, match_method, review_status, properties_json FROM cross_graph_links")
+            for row in c.fetchall():
+                lid, src, sg, tgt, tg, pred, method, status, props_str = row
+                edges.append({
+                    "edge_id": lid,
+                    "source": src,
+                    "source_graph": sg,
+                    "target": tgt,
+                    "target_graph": tg,
+                    "graph_domain": f"{sg}->{tg}",
+                    "predicate": pred,
+                    "edge_kind": "CROSS_GRAPH_SPINE",
+                    "match_method": method,
+                    "status": status,
+                    "properties": json.loads(props_str or "{}")
+                })
+            c.execute("SELECT claim_id, subject_id, predicate, object_value, epistemic_status, confidence, handling_level, evidence_id, notes FROM claim_ledger")
+            claims = []
+            for row in c.fetchall():
+                cid, sub, pred, val, status, conf, hand, evid, notes = row
+                claims.append({
+                    "claim_id": cid,
+                    "subject_id": sub,
+                    "predicate": pred,
+                    "value": val,
+                    "status": status,
+                    "confidence": conf,
+                    "handling": hand,
+                    "evidence_id": evid,
+                    "notes": notes
+                })
+            conn.close()
+
+            payload = {
+                "summary": {
+                    "total_nodes": len(nodes),
+                    "total_edges": len(edges),
+                    "graphs_involved": ["ORG", "TECH", "CRM"],
+                    "domain_breakdown": domain_counts,
+                    "route_profile": "FEDERATED_TRI_STORE_OVERVIEW"
+                },
+                "nodes": nodes,
+                "edges": edges,
+                "claims": claims
             }
             resp_bytes = json.dumps(payload).encode("utf-8")
             self.send_response(HTTPStatus.OK)
