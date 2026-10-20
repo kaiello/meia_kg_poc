@@ -232,15 +232,78 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             font-size: 14px;
             line-height: 1.65;
             color: #cbd5e1;
-            white-space: pre-wrap;
+        }
+        .answer-content p {
+            margin-bottom: 12px;
         }
         .answer-content h1, .answer-content h2, .answer-content h3, .answer-content h4 {
             color: #f1f5f9;
-            margin: 14px 0 8px 0;
+            margin: 18px 0 8px 0;
+            font-weight: 700;
         }
-        .answer-content ul {
-            padding-left: 20px;
-            margin-bottom: 12px;
+        .answer-content h1 { font-size: 20px; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+        .answer-content h2 { font-size: 17px; color: #7dd3fc; }
+        .answer-content h3 { font-size: 15px; color: #93c5fd; }
+        .answer-content h4 { font-size: 13.5px; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.5px; }
+        .answer-content ul, .answer-content ol {
+            padding-left: 24px;
+            margin-bottom: 14px;
+        }
+        .answer-content li {
+            margin-bottom: 4px;
+        }
+        .answer-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 13px;
+        }
+        .answer-content th {
+            background: #1e293b;
+            color: #38bdf8;
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid #334155;
+            font-weight: 600;
+        }
+        .answer-content td {
+            padding: 8px 12px;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+        }
+        .answer-content tr:nth-child(even) td {
+            background: rgba(15, 23, 42, 0.4);
+        }
+        .answer-content blockquote {
+            border-left: 4px solid #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin: 14px 0;
+            color: #fde68a;
+        }
+        .answer-content code {
+            background: #020617;
+            border: 1px solid #334155;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 12.5px;
+            color: #e2e8f0;
+        }
+        .answer-content pre {
+            background: #020617;
+            border: 1px solid #334155;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 14px 0;
+            white-space: pre;
+        }
+        .answer-content hr {
+            border: 0;
+            border-top: 1px solid #334155;
+            margin: 18px 0;
         }
 
         .diagram-container {
@@ -746,6 +809,33 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+        }
+
+        function renderSimpleMarkdown(md) {
+            if (!md) return '';
+            let html = escapeHtml(md);
+            // Code blocks
+            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            // Headers
+            html = html.replace(/^#### (.*?)$/gm, '<h4>$1</h4>');
+            html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+            // Blockquotes
+            html = html.replace(/^> (.*?)$/gm, '<blockquote>$1</blockquote>');
+            // Bold & italic
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            // Unordered list items
+            html = html.replace(/^\s*[-*]\s+(.*?)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+            // Horizontal rule
+            html = html.replace(/^---$/gm, '<hr>');
+            // Paragraph line breaks
+            html = html.replace(/\n\n+/g, '</p><p>');
+            return '<p>' + html + '</p>';
         }
 
         let currentAssetId = "Klas_Voyager_2_p1";
@@ -1349,8 +1439,15 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     tSkills.innerText = `🧠 Active Skills: ${skillsList}`;
                 }
 
-                // Update Answer Text
-                document.getElementById('answerText').innerText = data.answer_text;
+                // Update Answer Text (Render Markdown as HTML)
+                const answerElem = document.getElementById('answerText');
+                if (data.answer_html) {
+                    answerElem.innerHTML = data.answer_html;
+                } else if (data.answer_text) {
+                    answerElem.innerHTML = renderSimpleMarkdown(data.answer_text);
+                } else {
+                    answerElem.innerHTML = '<span style="color:#64748b;">No answer content returned.</span>';
+                }
 
                 // Update Federated Tri-Graph Lineage (LANL Pattern)
                 if (data.graph_lineage && data.graph_lineage.nodes && data.graph_lineage.nodes.length > 0) {

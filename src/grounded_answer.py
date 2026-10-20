@@ -69,11 +69,22 @@ class GroundedAnswer:
     llm_metadata: Dict[str, Any] = field(default_factory=dict)           # Live LLM inference & skill telemetry
 
     def to_dict(self) -> Dict[str, Any]:
+        answer_html = ""
+        try:
+            import markdown
+            answer_html = markdown.markdown(
+                self.answer_text,
+                extensions=["extra", "tables", "fenced_code", "nl2br"]
+            )
+        except Exception:
+            answer_html = f"<p>{self.answer_text}</p>"
+
         return {
             "query": self.query,
             "route_profile": self.route_profile,
             "status": self.status,
             "answer_text": self.answer_text,
+            "answer_html": answer_html,
             "structured_facts": [f.to_dict() for f in self.structured_facts],
             "citations": self.citations,
             "visual_figures": self.visual_figures,
