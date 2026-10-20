@@ -381,8 +381,9 @@ class AnswerRouteBundler:
                     relevant_docs.add("doc:prometheus_energy_ai")
 
             # Prevent background text search from leaking Charter diagrams unless Charter/Framework was explicitly targeted
-            charter_triggers = {"charter", "framework", "meia process", "rrab", "jop", "implementation plan", "quick-sprint", "roadmap"}
-            if "doc:meia_charter_2026" in relevant_docs and not any(ct in query_lower for ct in charter_triggers):
+            charter_triggers = {"charter", "framework", "meia process", "rrab", "jop", "implementation plan", "quick-sprint", "roadmap", "dossier", "executive"}
+            is_dossier_route = decision.route_profile == RoutingProfile.ROUTE_ALL_TRI_STORE
+            if "doc:meia_charter_2026" in relevant_docs and not (is_dossier_route or any(ct in query_lower for ct in charter_triggers)):
                 relevant_docs.remove("doc:meia_charter_2026")
 
             # Whitelist only genuine process/architecture diagrams for MEIA Charter (Figs 1, 2, 3 on pages 23, 25, 26)

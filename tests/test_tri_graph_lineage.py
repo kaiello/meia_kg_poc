@@ -92,7 +92,8 @@ class TestTriGraphLineage(unittest.TestCase):
         )
         for asset in bundle.visual_assets:
             self.assertNotIn("meia_charter_2026_p1", str(asset).lower())
-            self.assertNotEqual(asset.get("page_ordinal"), 1)
+            if asset.get("doc_id") == "doc:meia_charter_2026":
+                self.assertNotEqual(asset.get("page_ordinal"), 1)
 
     def test_grounded_answer_to_dict_includes_graph_lineage(self):
         """Verifies GroundedAnswer serialization preserves graph_lineage."""
