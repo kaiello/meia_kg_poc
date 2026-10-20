@@ -122,15 +122,20 @@ Try these queries directly in the Web UI search bar or via `curl`:
     - Status: `SUCCESS`
     - Prompt Tokens: ~1,800–2,050
     - Active Skills: `tri-graph-routing`, `trident-colpali-visual`, `epistemic-claim-audit`, `executive-dossier-composer`
-  - **Visual Figures:** Attached slide figures from `MEIA_Charter_2026_p2.png` with interactive bounding box chips.
+  - **Multimodal Evidence Panel:**
+    - Shows **Direct Tri-Graph Grounding** card (since Ghostfin/Albacore facts are directly grounded in Vulcan spreadsheet cells and tri-graph triples without requiring proprietary vendor diagrams). Zero irrelevant "ATTACHMENTS" pages are attached.
 
-### Test 2.2: Fast Technical Extraction (Hermes 3 8B)
+### Test 2.2: Fast Technical Extraction & Interactive Diagram Chips (Hermes 3 / Qwen)
 - **Query:** `Summarize Klas Telecom Voyager SWaP-C and modular tactical chassis`
-- **Engine:** `ollama:hermes3:8b`
+- **Engine:** `ollama:hermes3:8b` (or `ollama:qwen3-vl:8b-instruct`)
 - **What to look for in the results:**
   - Model completes in **under 12 seconds**.
   - Accurately details the carbon-fiber chassis, Voyager 8 battery-backed power, and MIL-STD compliance.
-  - Cites exact documentation: `doc:klas_c5isr_truetactical#p1`.
+  - Cites exact documentation: `doc:klas_c5isr_truetactical#p1` and `doc:klas_voyager_2#p1`.
+  - **Multimodal Diagram & Interactive Chips:**
+    - Displays `Klas_Voyager_2_p1.png` (180 DPI high-resolution diagram).
+    - Features **interactive clickable component chips** (e.g. `Portable Rugged Low Power`, `EMEA Interface`, `Chassis Specs`).
+    - **Click any chip:** Instantly loads and displays the high-resolution focal crop (`ARM_B_FOCAL_CROP`) for that exact region, with an active glowing highlight and a **"↺ Full Diagram"** reset button.
 
 ### Test 2.3: 360° Multi-Graph Cross-Domain Dossier
 - **Query:** `Generate a complete MEIA Executive Business & Capability Dossier for Ghostfin: Long-Range, Hybrid Electric Medium UUV`

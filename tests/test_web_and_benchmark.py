@@ -151,6 +151,50 @@ class TestWebAndBenchmark(unittest.TestCase):
                 self.assertNotIn("not_found", pkt.get("packet_id", ""))
                 self.assertNotEqual(pkt.get("target_graph"), "UNKNOWN")
 
+    def test_albacore_corporate_query_has_no_spurious_visual_assets(self):
+        """Verifies Albacore CAGE code query returns zero visual assets (no ATTACHMENTS page leak)."""
+        url = f"http://127.0.0.1:{self.test_port}/api/query"
+        payload = json.dumps({
+            "query": "What is Albacore's CAGE code, location, and corporate subcategory?",
+            "clearance_level": "SECRET"
+        }).encode("utf-8")
+        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req) as response:
+            self.assertEqual(response.status, 200)
+            ans = json.loads(response.read().decode("utf-8"))
+            self.assertEqual(ans.get("route_profile"), "ROUTE_ORG")
+            self.assertEqual(len(ans.get("visual_figures", [])), 0)
+            # Confirm CAGE code 0QSF0 is present in structured facts
+            cage_facts = [f for f in ans.get("structured_facts", []) if f.get("key") == "cage" or "0QSF0" in str(f.get("value"))]
+            self.assertGreaterEqual(len(cage_facts), 1)
+
+    def test_loc_inspect_with_bbox_parameter(self):
+        """Verifies /api/loc/inspect accepts bbox parameter and produces targeted focal crop."""
+        bbox_json = urllib.parse.quote(json.dumps([0.7939, 0.547, 0.8084, 0.9018]))
+        url = f"http://127.0.0.1:{self.test_port}/api/loc/inspect?asset_id=Klas_Voyager_2_p1&arm=ARM_B_FOCAL_CROP&bbox={bbox_json}"
+        with urllib.request.urlopen(url) as response:
+            self.assertEqual(response.status, 200)
+            data = json.loads(response.read().decode("utf-8"))
+            self.assertEqual(data.get("arm"), "ARM_B_FOCAL_CROP")
+            self.assertIsNotNone(data.get("focal_crop_path"))
+            self.assertEqual(data.get("target_bbox"), [0.7939, 0.547, 0.8084, 0.9018])
+
+    def test_klas_schematic_query_returns_interactive_visual_chips(self):
+        """Verifies technical schematic queries return genuine vendor figures with interactive chips."""
+        url = f"http://127.0.0.1:{self.test_port}/api/query"
+        payload = json.dumps({
+            "query": "What is the form factor and chassis layout of Klas Voyager 2?",
+            "clearance_level": "SECRET"
+        }).encode("utf-8")
+        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req) as response:
+            self.assertEqual(response.status, 200)
+            ans = json.loads(response.read().decode("utf-8"))
+            figs = ans.get("visual_figures", [])
+            self.assertGreaterEqual(len(figs), 1)
+            self.assertIn("Klas_Voyager_2", figs[0].get("figure_image", ""))
+            self.assertGreaterEqual(len(figs[0].get("sample_chips", [])), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

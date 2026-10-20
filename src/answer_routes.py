@@ -353,7 +353,18 @@ class AnswerRouteBundler:
         # 7. Pull Visual Assets & BBox Chips (Vendor Schematics Only)
         self._load_bbox_cache()
         visual_assets = []
-        if self.bbox_cache:
+        visual_triggers = {
+            "diagram", "schematic", "figure", "slide", "layout", "chassis",
+            "architecture", "attachment", "flowchart", "drawing", "pinout",
+            "block diagram", "visual", "spec sheet"
+        }
+        query_lower = decision.clean_query.lower()
+        has_visual_intent = any(vt in query_lower for vt in visual_triggers)
+
+        # Pure corporate / organizational queries do not require technical schematics unless explicitly requested
+        is_pure_org = decision.route_profile == RoutingProfile.ROUTE_ORG and not has_visual_intent
+
+        if self.bbox_cache and not is_pure_org:
             # Map retrieved entities or documents to genuine vendor technical figures
             relevant_docs = {ch.get("doc_id") for ch in text_chunks if ch.get("doc_id")}
             for rent in decision.resolved_entities:
@@ -361,20 +372,30 @@ class AnswerRouteBundler:
                 if "klas" in ename:
                     relevant_docs.add("doc:klas_c5isr_truetactical")
                     relevant_docs.add("doc:klas_voyager_2")
+                    relevant_docs.add("doc:klas_voyager_mseries")
                 elif "fluor" in ename:
                     relevant_docs.add("doc:fluor_gov_overview")
+                    relevant_docs.add("doc:fluor_corp_profile")
+                    relevant_docs.add("doc:fluor_nuclear_security")
                 elif "prometheus" in ename:
                     relevant_docs.add("doc:prometheus_energy_ai")
-                elif "ghostfin" in ename or "albacore" in ename:
-                    relevant_docs.add("doc:meia_charter_2026")
 
-            # Match figures only when genuine vendor docs are relevant (skipping generic charter p1 memo)
+            # Prevent background text search from leaking Charter diagrams unless Charter/Framework was explicitly targeted
+            charter_triggers = {"charter", "framework", "meia process", "rrab", "jop", "implementation plan", "quick-sprint", "roadmap"}
+            if "doc:meia_charter_2026" in relevant_docs and not any(ct in query_lower for ct in charter_triggers):
+                relevant_docs.remove("doc:meia_charter_2026")
+
+            # Whitelist only genuine process/architecture diagrams for MEIA Charter (Figs 1, 2, 3 on pages 23, 25, 26)
+            CHARTER_DIAGRAM_PAGES = {23, 25, 26}
+
             matched_figs = {}
             if relevant_docs:
                 for fname, fmeta in self.bbox_cache.get("figures", {}).items():
-                    if fmeta.get("doc_id") == "doc:meia_charter_2026" and fmeta.get("page_ordinal") == 1:
+                    doc_id = fmeta.get("doc_id")
+                    page_ord = fmeta.get("page_ordinal", 1)
+                    if doc_id == "doc:meia_charter_2026" and page_ord not in CHARTER_DIAGRAM_PAGES:
                         continue
-                    if fmeta.get("doc_id") in relevant_docs:
+                    if doc_id in relevant_docs:
                         matched_figs[fname] = fmeta
                         if len(matched_figs) >= 3:
                             break
@@ -389,7 +410,7 @@ class AnswerRouteBundler:
                     "page_ordinal": fmeta.get("page_ordinal"),
                     "dpi": fmeta.get("dpi", 180),
                     "chips_count": len(chips),
-                    "sample_chips": chips[:4]
+                    "sample_chips": chips[:6]
                 })
 
         conn.close()

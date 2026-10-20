@@ -330,12 +330,57 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
         }
         .bbox-chip {
             background: #0f172a;
-            border: 1px solid #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
             color: #38bdf8;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 11px;
             font-family: monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            user-select: none;
+        }
+        .bbox-chip:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2);
+        }
+        .bbox-chip.active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 700;
+            border-color: #38bdf8;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+        }
+        .crop-reset-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #38bdf8;
+        }
+        .crop-reset-btn {
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .crop-reset-btn:hover {
+            background: #7dd3fc;
         }
 
         .loc-tabs {
@@ -768,6 +813,10 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     <button id="tabArmB" class="loc-tab-btn" onclick="switchLoCArm('ARM_B_FOCAL_CROP')">Arm B: Focal Crop Chip</button>
                     <button id="tabArmC" class="loc-tab-btn" onclick="switchLoCArm('ARM_C_MULTIMODAL_CALLOUT')">Arm C: OCR Callouts</button>
                 </div>
+                <div id="cropResetBanner" class="crop-reset-banner" style="display:none;">
+                    <span>🔍 <strong>Focal Crop Zoom:</strong> <span id="activeChipLabel">Component</span></span>
+                    <button type="button" class="crop-reset-btn" onclick="resetToFullDiagram()">↺ Full Diagram</button>
+                </div>
                 <div id="diagramSection" class="diagram-container">
                     <img id="diagramImage" class="diagram-img" src="" alt="Architecture Diagram" style="display:none;" onerror="this.style.display='none'">
                     <div id="noDiagramCard" class="no-diagram-card">
@@ -775,6 +824,9 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                         <h3 style="color:#e2e8f0; margin:4px 0 8px 0; font-size:14px;">Structured Tri-Graph Verification</h3>
                         <p style="font-size:12px; margin:0; line-height:1.5;">This query is grounded directly in tri-graph triples, epistemic claim records, and spreadsheet cell coordinates (Sheet!Row:Col). No proprietary vendor architecture schematic is required for this answer route.</p>
                     </div>
+                </div>
+                <div id="chipInstructionText" style="font-size:11px; color:#94a3b8; margin-top:8px; margin-bottom:4px; display:none;">
+                    <strong>Interactive BBox Chips:</strong> Click any component chip below to inspect pixel-accurate focal crop:
                 </div>
                 <div id="bboxChips" class="chips-container"></div>
             </div>
@@ -884,6 +936,12 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             if (arm === 'ARM_B_FOCAL_CROP') document.getElementById('tabArmB').classList.add('active');
             if (arm === 'ARM_C_MULTIMODAL_CALLOUT') document.getElementById('tabArmC').classList.add('active');
 
+            const banner = document.getElementById('cropResetBanner');
+            if (banner && arm === 'ARM_A_FULL_PAGE') {
+                banner.style.display = 'none';
+                document.querySelectorAll('.bbox-chip').forEach(el => el.classList.remove('active'));
+            }
+
             if (!currentAssetId) return;
 
             try {
@@ -900,13 +958,17 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                         cropSrc = '/' + cropSrc;
                     }
                     diagImg.src = cropSrc;
+                    if (banner) {
+                        document.getElementById('activeChipLabel').innerText = 'Focal Center';
+                        banner.style.display = 'flex';
+                    }
                 } else {
                     diagImg.src = data.full_page_path ? ('/api/figures/' + data.full_page_path.replace('parsed/figures/', '')) : `/api/figures/${encodeURIComponent(currentAssetId)}.png`;
                 }
 
                 const chipContainer = document.getElementById('bboxChips');
-                chipContainer.innerHTML = '';
                 if (arm === 'ARM_C_MULTIMODAL_CALLOUT' && data.ocr_callouts && data.ocr_callouts.length > 0) {
+                    chipContainer.innerHTML = '';
                     data.ocr_callouts.forEach(c => {
                         const span = document.createElement('span');
                         span.className = 'bbox-chip';
@@ -917,6 +979,73 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
             } catch (e) {
                 console.error("Failed to switch LoC arm:", e);
             }
+        }
+
+        function resetToFullDiagram() {
+            const banner = document.getElementById('cropResetBanner');
+            if (banner) banner.style.display = 'none';
+            document.querySelectorAll('.bbox-chip').forEach(el => el.classList.remove('active'));
+            switchLoCArm('ARM_A_FULL_PAGE');
+        }
+
+        function renderBBoxChips(chips) {
+            const chipContainer = document.getElementById('bboxChips');
+            const instruction = document.getElementById('chipInstructionText');
+            chipContainer.innerHTML = '';
+            if (!chips || chips.length === 0) {
+                if (instruction) instruction.style.display = 'none';
+                return;
+            }
+            if (instruction) instruction.style.display = 'block';
+
+            chips.forEach((c, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'bbox-chip';
+                const label = c.label || `Component #${idx+1}`;
+                btn.innerHTML = `<span style="opacity:0.75;">🔍</span> <span>${escapeHtml(label)}</span>`;
+                btn.title = `Click to zoom into focal crop [${(c.bbox||[]).map(v => Math.round(v*100)+'%').join(', ')}]`;
+
+                btn.onclick = async () => {
+                    // Deselect other chips
+                    document.querySelectorAll('.bbox-chip').forEach(el => el.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Show active label in banner
+                    const banner = document.getElementById('cropResetBanner');
+                    if (banner) {
+                        document.getElementById('activeChipLabel').innerText = label;
+                        banner.style.display = 'flex';
+                    }
+
+                    // Fetch focal crop with exact bbox
+                    try {
+                        const bboxParam = encodeURIComponent(JSON.stringify(c.bbox || [0.1, 0.1, 0.9, 0.9]));
+                        const res = await fetch(`/api/loc/inspect?asset_id=${encodeURIComponent(currentAssetId)}&arm=ARM_B_FOCAL_CROP&bbox=${bboxParam}`);
+                        const data = await res.json();
+                        const diagImg = document.getElementById('diagramImage');
+                        if (data.focal_crop_path) {
+                            let cropSrc = data.focal_crop_path;
+                            if (cropSrc.startsWith('parsed/figures/crops/')) {
+                                cropSrc = '/api/figures/crops/' + cropSrc.replace('parsed/figures/crops/', '');
+                            } else if (cropSrc.startsWith('parsed/figures/')) {
+                                cropSrc = '/api/figures/' + cropSrc.replace('parsed/figures/', '');
+                            } else if (!cropSrc.startsWith('/')) {
+                                cropSrc = '/' + cropSrc;
+                            }
+                            diagImg.src = cropSrc;
+
+                            // Mark ARM_B as active tab
+                            document.querySelectorAll('.loc-tab-btn').forEach(b => b.classList.remove('active'));
+                            document.getElementById('tabArmB').classList.add('active');
+                        }
+                    } catch (err) {
+                        console.error("Failed to load focal crop for chip:", err);
+                    }
+                };
+
+                chipContainer.appendChild(btn);
+            });
         }
 
         // ============================================================================
@@ -1459,7 +1588,9 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                 const diagImg = document.getElementById('diagramImage');
                 const noDiagCard = document.getElementById('noDiagramCard');
                 const chipContainer = document.getElementById('bboxChips');
-                chipContainer.innerHTML = '';
+                const banner = document.getElementById('cropResetBanner');
+                const instruction = document.getElementById('chipInstructionText');
+                if (banner) banner.style.display = 'none';
 
                 if (data.visual_figures && data.visual_figures.length > 0) {
                     const fig = data.visual_figures[0];
@@ -1469,17 +1600,16 @@ HTML_DASHBOARD = r"""<!DOCTYPE html>
                     diagImg.style.display = 'block';
                     noDiagCard.style.display = 'none';
 
-                    if (fig.sample_chips) {
-                        fig.sample_chips.slice(0, 4).forEach(c => {
-                            const span = document.createElement('span');
-                            span.className = 'bbox-chip';
-                            span.innerText = (c.label || 'Region') + ' ' + JSON.stringify(c.bbox);
-                            chipContainer.appendChild(span);
-                        });
-                    }
+                    // Reset LoC tab to full page
+                    document.querySelectorAll('.loc-tab-btn').forEach(b => b.classList.remove('active'));
+                    document.getElementById('tabArmA').classList.add('active');
+
+                    renderBBoxChips(fig.sample_chips || []);
                 } else {
                     diagImg.style.display = 'none';
                     noDiagCard.style.display = 'block';
+                    chipContainer.innerHTML = '';
+                    if (instruction) instruction.style.display = 'none';
                 }
 
                 // Update Context Packets
@@ -2069,7 +2199,14 @@ class MeiaWebHandler(BaseHTTPRequestHandler):
             qs = parse_qs(url.query)
             asset_id = qs.get("asset_id", [""])[0]
             arm = qs.get("arm", ["ARM_A_FULL_PAGE"])[0]
-            loc_data = inspect_figure_loc(asset_id, arm)
+            raw_bbox = qs.get("bbox", [None])[0]
+            bbox = None
+            if raw_bbox:
+                try:
+                    bbox = json.loads(raw_bbox)
+                except Exception:
+                    pass
+            loc_data = inspect_figure_loc(asset_id, arm, bbox=bbox)
             resp_bytes = json.dumps(loc_data).encode("utf-8")
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-Type", "application/json")

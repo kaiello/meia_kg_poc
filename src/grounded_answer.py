@@ -621,9 +621,9 @@ class GroundedAnswerComposer:
             vendor = "albacore"
 
         # Dynamically bind real extracted visual diagram if available in bundle
-        visual_diag = "parsed/figures/meia_charter_2026_p1.png"
+        visual_diag = None
         if bundle.visual_assets:
-            visual_diag = bundle.visual_assets[0].get("figure_image", visual_diag)
+            visual_diag = bundle.visual_assets[0].get("figure_image")
             vendor_keywords = [vendor] + (["fluor"] if vendor == "prometheus" else [])
             for va in bundle.visual_assets:
                 fig_name = va.get("figure_image", "")
@@ -907,7 +907,8 @@ class GroundedAnswerComposer:
         lines.append(f"- **Powertrain:** {t['powertrain']}")
         lines.append(f"- **Joint Operational Problem (Q1):** {t['joint_operational_problem']}")
         lines.append(f"- **Live Exercise Demonstrations (`LIVE_DEMONSTRATED`):** {', '.join(t['participated_exercises'])}")
-        lines.append(f"- **Visual Architecture Diagram:** `{t['visual_diagram']}`\n")
+        if t.get('visual_diagram'):
+            lines.append(f"- **Visual Architecture Diagram:** `{t['visual_diagram']}`\n")
 
         # Section 3: CRM Intake & Commercial Viability
         m = dossier.crm_intake_summary
