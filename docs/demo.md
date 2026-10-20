@@ -270,3 +270,5 @@ Expected benchmark results: **78 / 78 Competency Questions Passed (100.0% Ground
 | **Epistemic Verifier** | [`src/epistemic_verifier.py`](file:///C:/Users/kenai/meia_kg_poc/src/epistemic_verifier.py) | Audits claims, detects conflicts, gates hallucination |
 | **OWL 2 DL Ontology** | [`src/ontology_service.py`](file:///C:/Users/kenai/meia_kg_poc/src/ontology_service.py) | W3C RDF Turtle & OWL 2 DL reasoner validation |
 | **Architecture Explainer** | [`docs/meia_architecture_explainer.html`](file:///C:/Users/kenai/meia_kg_poc/docs/meia_architecture_explainer.html) | Standalone Archify interactive systems documentation |
+| **Windows Setup Script** | [`setup_windows.ps1`](file:///C:/Users/kenai/meia_kg_poc/setup_windows.ps1) | One-click automated setup for deploying to a new Windows PC |
+| **Portable Zip Packager** | [`scripts/create_portable_zip.py`](file:///C:/Users/kenai/meia_kg_poc/scripts/create_portable_zip.py) | Standalone script to package all data & models into a portable ZIP |

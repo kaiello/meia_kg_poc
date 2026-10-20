@@ -19,3 +19,7 @@ parsed/figures/*.png
 !parsed/figures/.gitkeep
 parsed/figures/crops/*.png
 !parsed/figures/crops/.gitkeep
+
+# Portable Archives
+*.zip
+meia_kg_poc_portable.zip

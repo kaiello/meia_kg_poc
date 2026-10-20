@@ -1,0 +1,27 @@
+# MEIA Knowledge Graph POC - Python Dependencies
+# Target Environment: Windows 10/11, Python 3.10 - 3.12, CUDA (optional)
+
+# Vector Embeddings & Transformers
+sentence-transformers>=3.0.0
+torch>=2.2.0
+transformers>=4.40.0
+tokenizers>=0.19.0
+
+# Graph Analytics & Epistemic Ontologies
+networkx>=3.2.0
+rdflib>=7.0.0
+
+# Structured Ingestion & PDF Multimodal Parsing
+openpyxl>=3.1.2
+PyMuPDF>=1.24.0
+Pillow>=10.2.0
+pytesseract>=0.3.10
+
+# Web Dashboard, Markdown & Utilities
+markdown>=3.6.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.1
+requests>=2.31.0
+
+# Evaluation & Test Automation
+pytest>=8.0.0
